@@ -1,4 +1,4 @@
-package ge.ted3x.revolt
+package chat.revolt.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
