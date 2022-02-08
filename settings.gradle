@@ -11,3 +11,4 @@ rootProject.name = "Revolt"
 include ':app'
 
 enableFeaturePreview('VERSION_CATALOGS')
+include ':core-navigation'
