@@ -1,3 +1,9 @@
+/*
+ * Created by Tedo Manvelidze(ted3x) on 2/9/22, 1:09 AM
+ * Copyright (c) 2022 . All rights reserved.
+ * Last modified 2/9/22, 1:00 AM
+ */
+
 package chat.revolt.app
 
 import android.os.Bundle
