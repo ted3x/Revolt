@@ -50,6 +50,7 @@ dependencies {
     implementation libs.material
     implementation libs.cicerone
     implementation libs.constraint.layout
+    implementation libs.hcaptcha
     implementation project(':core')
     implementation project(':styles')
     implementation project(':core-navigation')
