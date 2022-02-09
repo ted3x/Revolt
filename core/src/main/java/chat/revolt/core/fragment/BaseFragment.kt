@@ -11,8 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
 import chat.revolt.core.view_model.BaseViewModel
+import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val viewBinder: ViewBinder<VB>) : Fragment() {
 
@@ -35,6 +37,16 @@ abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val vie
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    protected fun showSnackBar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
+        Snackbar.make(requireView(), message, length).show()
+    }
+
+    protected fun <T> LiveData<T>.observe(callback: (T) -> Unit) {
+        this.observe(viewLifecycleOwner, {
+            callback.invoke(it)
+        })
     }
 }
 
