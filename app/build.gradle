@@ -35,7 +35,9 @@ dependencies {
 
     implementation libs.androidx.core
     implementation libs.appcompat
+    implementation libs.cicerone
     implementation project(':core-navigation')
+    implementation project(':auth')
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
 }

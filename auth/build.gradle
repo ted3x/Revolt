@@ -47,8 +47,11 @@ dependencies {
 
     implementation libs.androidx.core
     implementation libs.appcompat
+    implementation libs.material
+    implementation libs.cicerone
     implementation libs.constraint.layout
     implementation project(':core')
+    implementation project(':styles')
     implementation project(':core-navigation')
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
