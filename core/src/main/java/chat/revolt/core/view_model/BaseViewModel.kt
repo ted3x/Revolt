@@ -6,6 +6,9 @@
 
 package chat.revolt.core.view_model
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-abstract class BaseViewModel: ViewModel()
+abstract class BaseViewModel: ViewModel() {
+    val snackBarMessage = MutableLiveData<String>()
+}

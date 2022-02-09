@@ -34,6 +34,10 @@ abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val vie
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.snackBarMessage.observe { showSnackBar(it) }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
