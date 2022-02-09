@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 2/9/22, 7:50 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 2/9/22, 7:50 PM
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <size android:width="@dimen/dimen_p_1" />
+    <solid android:color="@color/accent" />
+</shape>
