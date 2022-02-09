@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 2/9/22, 2:28 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 2/9/22, 2:28 PM
+  -->
+
+<resources>
+    <color name="accent">#FD6671</color>
+    <color name="background">#191919</color>
+    <color name="foreground">#F6F6F6</color>
+    <color name="block">#2D2D2D</color>
+    <color name="message_box">#363636</color>
+    <color name="mention">#0FFBFF00</color>
+    <color name="success">#65E572</color>
+    <color name="warning">#FAA352</color>
+    <color name="tooltip">#000000</color>
+    <color name="error">#ED4245</color>
+    <color name="hover">#1A000000</color>
+    <color name="status_online">#3ABF7E</color>
+    <color name="status_away">#F39F00</color>
+    <color name="status_busy">#F84848</color>
+    <color name="status_streaming">#977EFF</color>
+    <color name="status_invisible">#A5A5A5</color>
+</resources>
