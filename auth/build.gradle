@@ -37,6 +37,8 @@ dependencies {
     implementation libs.constraint.layout
     implementation libs.hcaptcha
     implementation libs.moshi.core
+    implementation libs.retrofit.retrofit
+    implementation libs.retrofit.moshi
     ksp(libs.moshi.ksp)
     implementation project(':core')
     implementation project(':styles')
