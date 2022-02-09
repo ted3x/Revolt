@@ -6,6 +6,7 @@
 
 package chat.revolt.app.global_navigator
 
+import chat.revolt.auth.navigator.AuthNavigatorImpl
 import chat.revolt.core_navigation.features.Feature
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
@@ -13,7 +14,7 @@ import chat.revolt.core_navigation.router.RVRouter
 class GlobalNavigatorImpl(override val router: RVRouter) : GlobalNavigator {
     override fun <T> navigateTo(feature: Feature<T>) {
         when (feature) {
-            is Feature.Auth -> TODO()
+            is Feature.Auth -> AuthNavigatorImpl(router).navigateTo(feature.state)
         }
     }
 
