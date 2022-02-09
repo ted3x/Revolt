@@ -6,32 +6,14 @@
 
 package chat.revolt.auth
 
-import androidx.lifecycle.ViewModelProvider
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import chat.revolt.auth.databinding.SignInFragmentBinding
+import chat.revolt.core.fragment.BaseFragment
 
-class SignInFragment : Fragment() {
+class SignInFragment : BaseFragment<SignInViewModel, SignInFragmentBinding>(SignInFragmentBinding::inflate) {
 
-    companion object {
-        fun newInstance() = SignInFragment()
-    }
-
-    private lateinit var viewModel: SignInViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.sign_in_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SignInViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
+    override val viewModel: SignInViewModel
+        get() {
+            TODO()
+        }
 
 }
