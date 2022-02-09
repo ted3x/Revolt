@@ -37,6 +37,7 @@ dependencies {
     implementation libs.appcompat
     implementation libs.cicerone
     implementation libs.material
+    implementation project(':core')
     implementation project(':core-navigation')
     implementation project(':auth')
     implementation project(':styles')
