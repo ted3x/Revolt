@@ -4,11 +4,11 @@
  * Last modified 2/9/22, 8:14 PM
  */
 
-package chat.revolt.auth.data.dto.response
+package chat.revolt.auth.domain.models.response
 
 import com.squareup.moshi.Json
 
-data class LoginResponseDTO(
+data class SignInResponse(
     @Json(name = "_id")
     val id: String?,
     @Json(name = "user_id")

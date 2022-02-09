@@ -6,7 +6,7 @@
 
 package chat.revolt.auth.domain.models.request
 
-data class LoginRequest(
+data class SignInRequest(
     val email: String,
     val password: String,
     val challenge: String? = null,
