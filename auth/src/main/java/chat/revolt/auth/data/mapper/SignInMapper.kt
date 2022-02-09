@@ -10,10 +10,12 @@ import chat.revolt.auth.data.dto.request.SignInRequestDTO
 import chat.revolt.auth.data.dto.response.SignInResponseDTO
 import chat.revolt.auth.domain.models.request.SignInRequest
 import chat.revolt.auth.domain.models.response.SignInResponse
-import chat.revolt.core.mapper.Mapper
+import chat.revolt.core.mapper.ServiceMapper
 
-class SignInRequestMapper : Mapper<SignInRequest, SignInRequestDTO> {
-    override fun map(from: SignInRequest): SignInRequestDTO {
+class SignInMapper :
+    ServiceMapper<SignInRequestDTO, SignInRequest, SignInResponseDTO, SignInResponse> {
+
+    override fun mapToRequest(from: SignInRequest): SignInRequestDTO {
         return SignInRequestDTO(
             email = from.email,
             password = from.password,
@@ -22,11 +24,8 @@ class SignInRequestMapper : Mapper<SignInRequest, SignInRequestDTO> {
             captcha = from.captcha
         )
     }
-}
 
-
-class SignInResponseMapper : Mapper<SignInResponseDTO, SignInResponse> {
-    override fun map(from: SignInResponseDTO): SignInResponse {
+    override fun mapToResponse(from: SignInResponseDTO): SignInResponse {
         return SignInResponse(
             id = from.id,
             userId = from.userId,
