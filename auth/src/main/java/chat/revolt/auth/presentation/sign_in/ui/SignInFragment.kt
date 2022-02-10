@@ -1,10 +1,10 @@
 /*
- * Created by Tedo Manvelidze(ted3x) on 2/9/22, 1:31 AM
+ * Created by Tedo Manvelidze(ted3x) on 2/10/22, 2:26 PM
  * Copyright (c) 2022 . All rights reserved.
- * Last modified 2/9/22, 1:31 AM
+ * Last modified 2/10/22, 12:09 AM
  */
 
-package chat.revolt.auth
+package chat.revolt.auth.presentation.sign_in.ui
 
 import android.os.Bundle
 import android.view.View
@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import chat.revolt.auth.presentation.sign_in.vm.SignInViewModel
 import chat.revolt.auth.databinding.SignInFragmentBinding
 import chat.revolt.auth.states.EmailStates
 import chat.revolt.auth.states.PasswordStates
