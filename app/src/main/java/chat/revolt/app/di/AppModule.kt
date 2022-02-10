@@ -15,6 +15,7 @@ import chat.revolt.app.resource_provider.ResourceProviderImpl
 import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
+import chat.revolt.data.database.databaseModule
 import com.github.terrakok.cicerone.BaseRouter
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
@@ -56,6 +57,6 @@ val networkModule = module {
             .build()
     }
 }
-val appModules = globalNavigatorModule + resourceProviderModule + networkModule
+val appModules = globalNavigatorModule + resourceProviderModule + networkModule + databaseModule
 
 const val BASE_URL = "https://api.revolt.chat/"
