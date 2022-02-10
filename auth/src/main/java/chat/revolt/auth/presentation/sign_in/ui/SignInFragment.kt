@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import chat.revolt.auth.presentation.sign_in.vm.SignInViewModel
 import chat.revolt.auth.databinding.SignInFragmentBinding
-import chat.revolt.auth.presentation.sign_in.di.signInModule
+import chat.revolt.auth.presentation.sign_in.di.signInModules
 import chat.revolt.auth.states.EmailStates
 import chat.revolt.auth.states.PasswordStates
 import chat.revolt.core.extensions.onChange
@@ -28,7 +28,7 @@ class SignInFragment :
     BaseFragment<SignInViewModel, SignInFragmentBinding>(SignInFragmentBinding::inflate) {
 
     override val viewModel: SignInViewModel by viewModel()
-    override val module: Module = signInModule
+    override val module: List<Module> = signInModules
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

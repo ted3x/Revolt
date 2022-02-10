@@ -23,7 +23,7 @@ import org.koin.core.module.Module
 abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val viewBinder: ViewBinder<VB>) : ScopeFragment() {
 
     abstract val viewModel: VM
-    abstract val module: Module
+    abstract val module: List<Module>
     private var _binding: VB? = null
     protected val binding: VB
         get() = _binding
