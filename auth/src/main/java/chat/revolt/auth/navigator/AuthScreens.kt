@@ -6,7 +6,7 @@
 
 package chat.revolt.auth.navigator
 
-import chat.revolt.auth.SignInFragment
+import chat.revolt.auth.presentation.sign_in.ui.SignInFragment
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 
 object AuthScreens {
