@@ -9,28 +9,26 @@ package chat.revolt.auth.presentation.sign_in.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import chat.revolt.auth.presentation.sign_in.vm.SignInViewModel
 import chat.revolt.auth.databinding.SignInFragmentBinding
+import chat.revolt.auth.presentation.sign_in.di.signInModule
 import chat.revolt.auth.states.EmailStates
 import chat.revolt.auth.states.PasswordStates
 import chat.revolt.core.extensions.onChange
 import chat.revolt.core.fragment.BaseFragment
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.module.Module
 import java.lang.ref.WeakReference
 
 class SignInFragment :
     BaseFragment<SignInViewModel, SignInFragmentBinding>(SignInFragmentBinding::inflate) {
 
-    override lateinit var viewModel: SignInViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[SignInViewModel::class.java]
-        // TODO: Use the ViewModel
-    }
+    override val viewModel: SignInViewModel by viewModel()
+    override val module: Module = signInModule
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
