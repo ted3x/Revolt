@@ -6,6 +6,7 @@
 
 package chat.revolt.auth.presentation.sign_in.di
 
+import chat.revolt.auth.data.api.SignInService
 import chat.revolt.auth.data.captcha_manager.CaptchaManagerImpl
 import chat.revolt.auth.domain.captcha_manager.CaptchaManager
 import chat.revolt.auth.domain.interactor.EmailValidation
@@ -14,6 +15,7 @@ import chat.revolt.auth.presentation.sign_in.ui.SignInFragment
 import chat.revolt.auth.presentation.sign_in.vm.SignInViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import retrofit2.Retrofit
 
 internal val signInModule = module {
     scope<SignInFragment> {
@@ -28,4 +30,8 @@ internal val signInModule = module {
         scoped { EmailValidation(resourceProvider = get()) }
         scoped<CaptchaManager> { CaptchaManagerImpl() }
     }
+}
+
+internal val signInApiModule = module {
+    single<SignInService> { get<Retrofit>().create(SignInService::class.java) }
 }

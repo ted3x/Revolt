@@ -6,10 +6,10 @@
 
 package chat.revolt.auth.data.data_source
 
-import chat.revolt.auth.data.dto.request.SignInRequestDTO
-import chat.revolt.auth.data.dto.response.SignInResponseDTO
+import chat.revolt.auth.data.dto.request.SignInRequestDto
+import chat.revolt.auth.data.dto.response.SignInResponseDto
 
 interface SignInDataSource {
 
-   suspend fun signIn(request: SignInRequestDTO): SignInResponseDTO
+   suspend fun signIn(request: SignInRequestDto): SignInResponseDto
 }

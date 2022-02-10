@@ -7,14 +7,14 @@
 package chat.revolt.auth.data.data_source
 
 import chat.revolt.auth.data.api.SignInService
-import chat.revolt.auth.data.dto.request.SignInRequestDTO
-import chat.revolt.auth.data.dto.response.SignInResponseDTO
+import chat.revolt.auth.data.dto.request.SignInRequestDto
+import chat.revolt.auth.data.dto.response.SignInResponseDto
 import chat.revolt.core.extensions.bodyOrThrow
 import chat.revolt.core.extensions.withRetry
 import retrofit2.awaitResponse
 
 class SignInDataSourceImpl(private val service: SignInService): SignInDataSource {
-    override suspend fun signIn(request: SignInRequestDTO): SignInResponseDTO {
+    override suspend fun signIn(request: SignInRequestDto): SignInResponseDto {
         return withRetry {
             service.signIn(request).awaitResponse().bodyOrThrow()
         }

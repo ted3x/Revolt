@@ -8,7 +8,7 @@ package chat.revolt.auth.data.dto.response
 
 import com.squareup.moshi.Json
 
-data class SignInResponseDTO(
+data class SignInResponseDto(
     @Json(name = "_id")
     val id: String?,
     @Json(name = "user_id")

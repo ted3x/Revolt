@@ -6,13 +6,14 @@
 
 package chat.revolt.auth.data.api
 
-import chat.revolt.auth.data.dto.request.SignInRequestDTO
-import chat.revolt.auth.data.dto.response.SignInResponseDTO
+import chat.revolt.auth.data.dto.request.SignInRequestDto
+import chat.revolt.auth.data.dto.response.SignInResponseDto
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface SignInService {
 
     @POST("auth/sessions/login")
-    suspend fun signIn(request: SignInRequestDTO): Call<SignInResponseDTO>
+    suspend fun signIn(@Body request: SignInRequestDto): Call<SignInResponseDto>
 }

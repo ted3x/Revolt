@@ -6,17 +6,17 @@
 
 package chat.revolt.auth.data.mapper
 
-import chat.revolt.auth.data.dto.request.SignInRequestDTO
-import chat.revolt.auth.data.dto.response.SignInResponseDTO
+import chat.revolt.auth.data.dto.request.SignInRequestDto
+import chat.revolt.auth.data.dto.response.SignInResponseDto
 import chat.revolt.auth.domain.models.request.SignInRequest
 import chat.revolt.auth.domain.models.response.SignInResponse
 import chat.revolt.core.mapper.ServiceMapper
 
 class SignInMapper :
-    ServiceMapper<SignInRequestDTO, SignInRequest, SignInResponseDTO, SignInResponse> {
+    ServiceMapper<SignInRequestDto, SignInRequest, SignInResponseDto, SignInResponse> {
 
-    override fun mapToRequest(from: SignInRequest): SignInRequestDTO {
-        return SignInRequestDTO(
+    override fun mapToRequest(from: SignInRequest): SignInRequestDto {
+        return SignInRequestDto(
             email = from.email,
             password = from.password,
             challenge = from.challenge,
@@ -25,7 +25,7 @@ class SignInMapper :
         )
     }
 
-    override fun mapToResponse(from: SignInResponseDTO): SignInResponse {
+    override fun mapToResponse(from: SignInResponseDto): SignInResponse {
         return SignInResponse(
             id = from.id,
             userId = from.userId,
