@@ -42,6 +42,7 @@ dependencies {
     implementation libs.retrofit.retrofit
     implementation libs.retrofit.moshi
     implementation project(':core')
+    implementation project(':data')
     implementation project(':core-navigation')
     implementation project(':auth')
     implementation project(':styles')
