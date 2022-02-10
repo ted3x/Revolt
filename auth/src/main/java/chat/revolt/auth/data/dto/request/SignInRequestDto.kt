@@ -7,7 +7,9 @@
 package chat.revolt.auth.data.dto.request
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class SignInRequestDto(
     val email: String,
     val password: String,
