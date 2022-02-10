@@ -15,11 +15,12 @@ import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
 import chat.revolt.core.view_model.BaseViewModel
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.scope.ScopeFragment
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import org.koin.core.module.Module
 
-abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val viewBinder: ViewBinder<VB>) : Fragment() {
+abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val viewBinder: ViewBinder<VB>) : ScopeFragment() {
 
     abstract val viewModel: VM
     abstract val module: Module
