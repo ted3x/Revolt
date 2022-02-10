@@ -38,7 +38,6 @@ dependencies {
     implementation libs.hcaptcha
     implementation libs.moshi.core
     implementation libs.retrofit.retrofit
-    implementation libs.retrofit.moshi
     implementation libs.koin.core
     implementation libs.koin.android
     ksp(libs.moshi.ksp)

@@ -39,6 +39,8 @@ dependencies {
     implementation libs.material
     implementation libs.koin.core
     implementation libs.koin.android
+    implementation libs.retrofit.retrofit
+    implementation libs.retrofit.moshi
     implementation project(':core')
     implementation project(':core-navigation')
     implementation project(':auth')
