@@ -39,6 +39,7 @@ dependencies {
     implementation libs.material
     implementation libs.koin.core
     implementation libs.koin.android
+    implementation libs.okhttp.loggingInterceptor
     implementation libs.retrofit.retrofit
     implementation libs.retrofit.moshi
     implementation project(':core')

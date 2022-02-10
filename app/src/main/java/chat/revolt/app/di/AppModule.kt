@@ -22,6 +22,7 @@ import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import okhttp3.Authenticator
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.binds
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -49,10 +50,14 @@ val resourceProviderModule = module {
 val networkModule = module {
     single { MoshiConverterFactory.create() }
     single<Authenticator> { RevoltAuthenticator() }
-    single { OkHttpClient.Builder().authenticator(get()).build() }
+    single { HttpLoggingInterceptor() }
+    single {
+        OkHttpClient.Builder().addInterceptor(get<HttpLoggingInterceptor>()).authenticator(get())
+            .build()
+    }
     single {
         Retrofit.Builder().baseUrl(BASE_URL)
-            .addConverterFactory(get())
+            .addConverterFactory(get<MoshiConverterFactory>())
             .client(get())
             .build()
     }
