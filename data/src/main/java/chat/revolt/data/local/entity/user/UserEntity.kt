@@ -1,21 +1,26 @@
 /*
- * Created by Tedo Manvelidze(ted3x) on 2/10/22, 4:33 PM
+ * Created by Tedo Manvelidze(ted3x) on 2/10/22, 8:42 PM
  * Copyright (c) 2022 . All rights reserved.
- * Last modified 2/10/22, 4:33 PM
+ * Last modified 2/10/22, 8:42 PM
  */
 
-package chat.revolt.domain.models
+package chat.revolt.data.local.entity.user
 
-data class User(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "user")
+data class UserEntity(
+    @PrimaryKey
     val id: String,
     val username: String,
-    var avatarUrl: String?,
-    var backgroundUrl: String? = null,
+    val avatarUrl: String?,
+    val backgroundUrl: String?,
     val relations: List<Relationship>?,
     val badges: Int?,
-    val status: Status,
-    val relationship: RelationshipStatus,
-    val online: Boolean,
+    val status: Status?,
+    val relationship: RelationshipStatus = RelationshipStatus.None,
+    val online: Boolean = false,
     val flags: Int?,
     val bot: Bot?
 ) {
@@ -32,12 +37,7 @@ data class User(
         User
     }
 
-    data class Status(val text: String, val presence: Presence) {
-
-        companion object {
-            val NOT_LOADED = Status(text = "", presence = Presence.Idle)
-        }
-    }
+    data class Status(val text: String, val presence: Presence)
 
     enum class Presence {
         Busy,

@@ -25,6 +25,8 @@ dependencies {
 
     implementation project(':domain')
     implementation project(':core')
+    implementation libs.retrofit.retrofit
+    implementation libs.moshi.core
     implementation libs.koin.core
     implementation libs.androidx.core
     implementation libs.androidx.room.ktx

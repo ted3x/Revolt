@@ -4,7 +4,7 @@
  * Last modified 2/10/22, 4:17 PM
  */
 
-package chat.revolt.data.database
+package chat.revolt.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
