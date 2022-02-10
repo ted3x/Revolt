@@ -8,9 +8,11 @@ package chat.revolt.app.di
 
 import androidx.fragment.app.FragmentActivity
 import chat.revolt.app.MainActivity
+import chat.revolt.app.global_navigator.GlobalNavigatorImpl
 import chat.revolt.app.global_navigator.RVRouterImpl
 import chat.revolt.app.resource_provider.ResourceProviderImpl
 import chat.revolt.core.resource_provider.ResourceProvider
+import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
 import com.github.terrakok.cicerone.BaseRouter
 import com.github.terrakok.cicerone.Cicerone
@@ -31,6 +33,7 @@ val globalNavigatorModule = module {
             )
         }
     }
+    single<GlobalNavigator> { GlobalNavigatorImpl(router = get()) }
 }
 
 val resourceProviderModule = module {

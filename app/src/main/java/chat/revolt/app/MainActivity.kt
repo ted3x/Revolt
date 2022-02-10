@@ -14,9 +14,10 @@ import chat.revolt.core_navigation.navigator.GlobalNavigator
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import org.koin.android.ext.android.inject
+import org.koin.androidx.scope.ScopeActivity
 import org.koin.core.parameter.parametersOf
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ScopeActivity() {
     private val navigatorHolder by inject<NavigatorHolder>()
     private val appNavigator by inject<AppNavigator> { parametersOf(this, R.id.container) }
     private val globalNavigator by inject<GlobalNavigator>()
