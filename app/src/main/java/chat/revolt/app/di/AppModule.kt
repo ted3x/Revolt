@@ -15,7 +15,7 @@ import chat.revolt.app.resource_provider.ResourceProviderImpl
 import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
-import chat.revolt.data.database.databaseModule
+import chat.revolt.data.local.database.databaseModule
 import com.github.terrakok.cicerone.BaseRouter
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
