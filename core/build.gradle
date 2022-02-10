@@ -33,4 +33,5 @@ dependencies {
     implementation libs.material
     implementation libs.retrofit.retrofit
     implementation libs.kotlin.coroutines.core
+    implementation libs.koin.core
 }
