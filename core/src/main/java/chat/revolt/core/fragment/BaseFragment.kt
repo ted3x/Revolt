@@ -15,16 +15,23 @@ import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
 import chat.revolt.core.view_model.BaseViewModel
 import com.google.android.material.snackbar.Snackbar
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
+import org.koin.core.module.Module
 
 abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val viewBinder: ViewBinder<VB>) : Fragment() {
 
     abstract val viewModel: VM
-
+    abstract val module: Module
     private var _binding: VB? = null
     protected val binding: VB
         get() = _binding
             ?: throw IllegalStateException("Binding was not created yet or already destroyed!")
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loadKoinModules(module)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +48,11 @@ abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val vie
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        unloadKoinModules(module)
+        super.onDestroy()
     }
 
     protected fun showSnackBar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
