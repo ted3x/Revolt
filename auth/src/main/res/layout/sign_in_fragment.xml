@@ -1,19 +1,118 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Created by Tedo Manvelidze(ted3x) on 2/9/22, 1:31 AM
   ~ Copyright (c) 2022 . All rights reserved.
   ~ Last modified 2/9/22, 1:31 AM
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#242424"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
     tools:context=".SignInFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_p_30">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/welcomeBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_semi_bold"
+            android:text="@string/sign_in_welcome_back"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/dimen_sp_20"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/signInInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/sign_in_sign_into_revolt"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/dimen_sp_14"
+            app:layout_constraintStart_toStartOf="@id/welcomeBack"
+            app:layout_constraintTop_toBottomOf="@id/welcomeBack" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_p_20"
+            android:hint="@string/sign_in_email"
+            android:labelFor="@id/emailEditText"
+            app:layout_constraintTop_toBottomOf="@id/signInInfo"
+            app:placeholderText="@string/sign_in_enter_your_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_p_20"
+            android:hint="@string/sign_in_password"
+            android:labelFor="@id/passwordEditText"
+            app:layout_constraintTop_toBottomOf="@id/textField"
+            app:placeholderText="@string/sign_in_enter_your_password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_sp_30"
+            android:text="@string/sign_in_new_to_revolt_create_a_new_account"
+            android:textColor="@color/foreground"
+            android:textSize="@dimen/dimen_sp_14"
+            app:layout_constraintStart_toStartOf="@id/passwordTextField"
+            app:layout_constraintTop_toBottomOf="@id/passwordTextField" />
+
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_sp_15"
+            android:text="@string/sign_in_forgot_your_password_reset_password"
+            android:textColor="@color/foreground"
+            android:textSize="@dimen/dimen_sp_14"
+            app:layout_constraintStart_toStartOf="@id/passwordTextField"
+            app:layout_constraintTop_toBottomOf="@id/signUp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signIn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_p_50"
+            android:layout_marginTop="@dimen/dimen_sp_20"
+            android:text="@string/sign_in_login"
+            android:textAllCaps="false"
+            android:textColor="@color/foreground"
+            android:textSize="@dimen/dimen_sp_14"
+            app:backgroundTint="@color/accent"
+            app:cornerRadius="@dimen/dimen_p_4"
+            app:layout_constraintTop_toBottomOf="@id/forgotPassword"
+            app:strokeColor="@android:color/transparent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
