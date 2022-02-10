@@ -16,17 +16,12 @@ class RevoltAuthenticator(private val token: String = ""): Authenticator {
         TODO()
     }
 
-    private fun isRequestWithAccessToken(response: Response): Boolean {
-        val header = response.request().header("Authorization")
-        return header != null
-    }
-
     private fun newRequestWithAccessToken(
         request: Request,
         accessToken: String
     ): Request? {
         return request.newBuilder()
-            .header("Authorization", accessToken)
+            .header("x-access-token", accessToken)
             .build()
     }
 }
