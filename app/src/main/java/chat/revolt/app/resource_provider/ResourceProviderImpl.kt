@@ -4,7 +4,7 @@
  * Last modified 2/9/22, 11:59 PM
  */
 
-package chat.revolt.app
+package chat.revolt.app.resource_provider
 
 import android.content.Context
 import chat.revolt.core.resource_provider.ResourceProvider
