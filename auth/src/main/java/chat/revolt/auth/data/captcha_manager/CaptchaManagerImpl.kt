@@ -12,7 +12,7 @@ import chat.revolt.auth.domain.captcha_manager.CaptchaManager
 import com.hcaptcha.sdk.HCaptcha
 import java.lang.ref.WeakReference
 
-class CaptchaManagerImpl(private val siteKey: String): CaptchaManager {
+class CaptchaManagerImpl(private val siteKey: String = ""): CaptchaManager {
 
     private var listener: CaptchaListener? = null
 

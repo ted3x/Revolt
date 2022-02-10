@@ -26,6 +26,6 @@ internal val signInModule = module {
         }
         scoped { PasswordValidation(resourceProvider = get()) }
         scoped { EmailValidation(resourceProvider = get()) }
-        scoped<CaptchaManager> { CaptchaManagerImpl(siteKey = get()) }
+        scoped<CaptchaManager> { CaptchaManagerImpl() }
     }
 }

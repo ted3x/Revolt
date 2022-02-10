@@ -1,7 +1,7 @@
 /*
- * Created by Tedo Manvelidze(ted3x) on 2/9/22, 1:37 AM
+ * Created by Tedo Manvelidze(ted3x) on 2/10/22, 2:35 PM
  * Copyright (c) 2022 . All rights reserved.
- * Last modified 2/9/22, 1:31 AM
+ * Last modified 2/10/22, 2:27 PM
  */
 
 package chat.revolt.auth.presentation.sign_in.vm
@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference
 class SignInViewModel(
     private val passwordValidation: PasswordValidation,
     private val emailValidation: EmailValidation,
-    private val captchaManager: CaptchaManager = CaptchaManagerImpl(""),
+    private val captchaManager: CaptchaManager
 ) :
     BaseViewModel() {
 
