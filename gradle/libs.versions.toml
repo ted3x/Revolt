@@ -8,6 +8,7 @@ paging = "3.1.0"
 retrofit = "2.9.0"
 room = "2.4.0"
 moshi = "1.13.0"
+koin = "3.1.5"
 
 [libraries]
 android-pluginGradle = "com.android.tools.build:gradle:7.0.4"
@@ -50,3 +51,6 @@ material = "com.google.android.material:material:1.5.0"
 
 moshi-core = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-ksp = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
