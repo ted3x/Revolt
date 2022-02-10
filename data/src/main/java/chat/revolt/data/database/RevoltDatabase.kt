@@ -8,10 +8,8 @@ package chat.revolt.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import chat.revolt.data.user.UserDao
 
-@Database(version = 1, exportSchema = false, entities = [UserDao::class])
+@Database(version = 1, exportSchema = false, entities = [])
 abstract class RevoltDatabase: RoomDatabase() {
 
-    abstract fun userDao()
 }

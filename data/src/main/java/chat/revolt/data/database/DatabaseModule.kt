@@ -11,5 +11,5 @@ import org.koin.dsl.module
 
 val databaseModule = module {
     single { Room.databaseBuilder(get(), RevoltDatabase::class.java, "Revolt-Database").build()}
-    single { get<RevoltDatabase>().userDao() }
+    //single { get<RevoltDatabase>().userDao() }
 }
