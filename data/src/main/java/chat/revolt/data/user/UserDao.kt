@@ -11,18 +11,18 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
-@Dao
-interface UserDao {
-
-    @Query("SELECT * FROM `user` WHERE `id` LIKE :userId LIMIT 1")
-    suspend fun getUser(userId: String): UserEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addUser(user: UserEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addUsers(users: List<UserEntity>)
-
-    @Query("DELETE FROM `user` WHERE id LIKE :userId")
-    suspend fun deleteUser(userId: String)
-}
+//@Dao
+//interface UserDao {
+//
+//    @Query("SELECT * FROM `user` WHERE `id` LIKE :userId LIMIT 1")
+//    suspend fun getUser(userId: String): UserEntity?
+//
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun addUser(user: UserEntity)
+//
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun addUsers(users: List<UserEntity>)
+//
+//    @Query("DELETE FROM `user` WHERE id LIKE :userId")
+//    suspend fun deleteUser(userId: String)
+//}
