@@ -4,7 +4,7 @@
  * Last modified 2/9/22, 1:31 AM
  */
 
-package chat.revolt.auth
+package chat.revolt.auth.presentation.sign_in.vm
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
