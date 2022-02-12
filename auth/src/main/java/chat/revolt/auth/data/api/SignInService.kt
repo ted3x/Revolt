@@ -14,6 +14,6 @@ import retrofit2.http.POST
 
 interface SignInService {
 
-    @POST("auth/sessions/login")
+    @POST("auth/session/login")
     fun signIn(@Body request: SignInRequestDto): Call<SignInResponseDto>
 }
