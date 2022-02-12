@@ -9,11 +9,12 @@ package chat.revolt.auth.presentation.sign_in.vm
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import chat.revolt.auth.data.captcha_manager.CaptchaManagerImpl
 import chat.revolt.auth.domain.captcha_manager.CaptchaListener
 import chat.revolt.auth.domain.captcha_manager.CaptchaManager
 import chat.revolt.auth.domain.interactor.EmailValidation
 import chat.revolt.auth.domain.interactor.PasswordValidation
+import chat.revolt.auth.domain.interactor.SignInUseCase
+import chat.revolt.auth.domain.models.request.SignInRequest
 import chat.revolt.auth.states.EmailStates
 import chat.revolt.auth.states.PasswordStates
 import chat.revolt.auth.utils.isValidEmail
@@ -26,7 +27,8 @@ import java.lang.ref.WeakReference
 class SignInViewModel(
     private val passwordValidation: PasswordValidation,
     private val emailValidation: EmailValidation,
-    private val captchaManager: CaptchaManager
+    private val captchaManager: CaptchaManager,
+    private val signInUseCase: SignInUseCase
 ) :
     BaseViewModel() {
 
@@ -60,7 +62,15 @@ class SignInViewModel(
     }
 
     fun signIn() {
-        TODO()
+        viewModelScope.launch {
+            signInUseCase.invoke(
+                SignInRequest(
+                    email = email.value!!,
+                    password = password.value!!,
+                    captcha = captcha.value!!
+                )
+            )
+        }
     }
 
     fun onEmailTextFieldChange(email: String) {
