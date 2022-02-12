@@ -62,23 +62,6 @@ class SignInViewModel(
         }
     }
 
-    fun signIn() {
-        viewModelScope.launch {
-            val request = SignInRequest(
-                email = email.value!!,
-                password = password.value!!,
-                captcha = captcha.value!!
-            )
-            signInUseCase.execute(params = request,
-                onLoading = {
-                    loadingManager.toggleLoading(it)
-                }, onSuccess = {
-
-                }
-            )
-        }
-    }
-
     fun onEmailTextFieldChange(email: String) {
         this@SignInViewModel.email.value = email
     }
@@ -96,6 +79,22 @@ class SignInViewModel(
     fun validatePassword(password: String?) {
         viewModelScope.launch {
             passwordState.emit(passwordValidation.invoke(password))
+        }
+    }
+
+    fun signIn() {
+        viewModelScope.launch {
+            val request = SignInRequest(
+                email = email.value!!,
+                password = password.value!!,
+                captcha = captcha.value!!
+            )
+            signInUseCase.execute(params = request,
+                onLoading = { loadingManager.showLoading() },
+                onSuccess = {
+                    TODO("navigateToDashboard")
+                }
+            )
         }
     }
 
