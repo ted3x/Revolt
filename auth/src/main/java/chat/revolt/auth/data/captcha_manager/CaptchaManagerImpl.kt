@@ -18,7 +18,7 @@ class CaptchaManagerImpl(private val revoltConfigManager: RevoltConfigManager): 
     private var listener: CaptchaListener? = null
 
     override fun solveCaptcha(contextRef: WeakReference<Context>) {
-        val siteKey = revoltConfigManager.getConfig().features.captcha.siteKey
+        val siteKey = revoltConfigManager.getConfigFeatures().captcha.siteKey
         contextRef.get()?.let { context ->
             HCaptcha.getClient(context).verifyWithHCaptcha(siteKey)
                 .addOnSuccessListener { listener?.onSuccess(it.tokenResult) }
