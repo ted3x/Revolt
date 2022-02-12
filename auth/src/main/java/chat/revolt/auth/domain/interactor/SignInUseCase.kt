@@ -9,10 +9,12 @@ package chat.revolt.auth.domain.interactor
 import chat.revolt.auth.domain.models.request.SignInRequest
 import chat.revolt.auth.domain.models.response.SignInResponse
 import chat.revolt.auth.domain.repository.SignInRepository
+import chat.revolt.domain.interactors.BaseUseCase
 
-class SignInUseCase(private val repository: SignInRepository) {
+class SignInUseCase(private val repository: SignInRepository) :
+    BaseUseCase<SignInRequest, SignInResponse>() {
 
-    suspend operator fun invoke(request: SignInRequest): SignInResponse {
-        return repository.signIn(request)
+    override suspend operator fun invoke(params: SignInRequest): SignInResponse {
+        return repository.signIn(params)
     }
 }
