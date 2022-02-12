@@ -59,3 +59,5 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+
+scarlet-scalet = "com.tinder.scarlet:scarlet:0.1.12"
