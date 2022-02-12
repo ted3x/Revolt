@@ -16,6 +16,8 @@ import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
 import chat.revolt.data.local.database.databaseModule
+import chat.revolt.data.repository.AccountRepositoryImpl
+import chat.revolt.domain.repository.AccountRepository
 import com.github.terrakok.cicerone.BaseRouter
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
@@ -49,8 +51,9 @@ val resourceProviderModule = module {
 
 val networkModule = module {
     single { MoshiConverterFactory.create() }
-    single<Authenticator> { RevoltAuthenticator() }
-    single { HttpLoggingInterceptor() }
+    single<AccountRepository> { AccountRepositoryImpl(accountDao = get()) }
+    single<Authenticator> { RevoltAuthenticator(accountRepository = get()) }
+    single { HttpLoggingInterceptor().also { it.level = HttpLoggingInterceptor.Level.BODY } }
     single {
         OkHttpClient.Builder().addInterceptor(get<HttpLoggingInterceptor>()).authenticator(get())
             .build()
@@ -62,6 +65,6 @@ val networkModule = module {
             .build()
     }
 }
-val appModules = globalNavigatorModule + resourceProviderModule + networkModule + databaseModule
+val appModules = globalNavigatorModule + resourceProviderModule + databaseModule + networkModule
 
 const val BASE_URL = "https://api.revolt.chat/"
