@@ -14,9 +14,11 @@ import chat.revolt.app.loading_manager.LoadingManagerImpl
 import chat.revolt.app.network.NetworkErrorHandlerImpl
 import chat.revolt.app.network.RevoltAuthenticator
 import chat.revolt.app.resource_provider.ResourceProviderImpl
+import chat.revolt.app.revolt_config_manager.RevoltConfigManagerImpl
 import chat.revolt.core.NetworkErrorHandler
 import chat.revolt.core.loading_manager.LoadingManager
 import chat.revolt.core.resource_provider.ResourceProvider
+import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
 import chat.revolt.data.local.database.databaseModule
@@ -75,7 +77,18 @@ val networkModule = module {
 val loadingManagerModule = module {
     single<LoadingManager> { LoadingManagerImpl(context = androidContext()) }
 }
+
+val revoltConfigModule = module {
+    single<RevoltConfigManager> { RevoltConfigManagerImpl() }
+}
 val appModules =
-    globalNavigatorModule + resourceProviderModule + databaseModule + networkModule + loadingManagerModule
+    listOf(
+        globalNavigatorModule,
+        resourceProviderModule,
+        databaseModule,
+        networkModule,
+        loadingManagerModule,
+        revoltConfigModule
+    )
 
 const val BASE_URL = "https://api.revolt.chat/"
