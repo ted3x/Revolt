@@ -44,6 +44,7 @@ dependencies {
     implementation project(':core')
     implementation project(':styles')
     implementation project(':core-navigation')
+    implementation project(':domain')
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
