@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 2/12/22, 4:16 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 2/12/22, 4:16 PM
+  -->
+
+<resources>
+    <string name="network_an_error_occured_please_try_again">An error occurred! Please try again.</string>
+</resources>

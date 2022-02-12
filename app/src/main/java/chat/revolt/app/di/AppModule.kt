@@ -10,8 +10,10 @@ import androidx.fragment.app.FragmentActivity
 import chat.revolt.app.MainActivity
 import chat.revolt.app.global_navigator.GlobalNavigatorImpl
 import chat.revolt.app.global_navigator.RVRouterImpl
+import chat.revolt.app.network.NetworkErrorHandlerImpl
 import chat.revolt.app.network.RevoltAuthenticator
 import chat.revolt.app.resource_provider.ResourceProviderImpl
+import chat.revolt.core.NetworkErrorHandler
 import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
@@ -25,6 +27,7 @@ import com.github.terrakok.cicerone.androidx.AppNavigator
 import okhttp3.Authenticator
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.binds
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -50,6 +53,7 @@ val resourceProviderModule = module {
 }
 
 val networkModule = module {
+    single<NetworkErrorHandler> { NetworkErrorHandlerImpl(context = androidContext()) }
     single { MoshiConverterFactory.create() }
     single<AccountRepository> { AccountRepositoryImpl(accountDao = get()) }
     single<Authenticator> { RevoltAuthenticator(accountRepository = get()) }
