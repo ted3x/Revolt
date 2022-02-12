@@ -32,16 +32,7 @@ suspend fun <T> withRetry(
                     throw exception
                 }
 
-                var nextDelay = attempt * attempt * defaultDelay
-
-                if (exception is HttpException) {
-                    // If we have a HttpException, check whether we have a Retry-After
-                    // header to decide how long to delay
-                    exception.retryAfter?.let {
-                        nextDelay = it.coerceAtLeast(defaultDelay)
-                    }
-                }
-
+                val nextDelay = attempt * attempt * defaultDelay
                 delay(nextDelay)
             }
         }
@@ -50,20 +41,6 @@ suspend fun <T> withRetry(
     // We should never hit here
     throw IllegalStateException("Unknown exception from executeWithRetry")
 }
-
-private val HttpException.retryAfter: Long?
-    get() {
-        val retryAfterHeader = response()?.headers()?.get("Retry-After")
-        if (retryAfterHeader != null && retryAfterHeader.isNotEmpty()) {
-            // Got a Retry-After value, try and parse it to an long
-            try {
-                return retryAfterHeader.toLong() + 10
-            } catch (nfe: NumberFormatException) {
-                // Probably won't happen, ignore the value and use the generated default above
-            }
-        }
-        return null
-    }
 
 private fun defaultShouldRetry(throwable: Throwable) = when (throwable) {
     is HttpException -> throwable.code() == 429
