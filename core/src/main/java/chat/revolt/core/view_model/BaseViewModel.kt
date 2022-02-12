@@ -8,7 +8,10 @@ package chat.revolt.core.view_model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import chat.revolt.core.loading_manager.LoadingManager
+import org.koin.java.KoinJavaComponent.inject
 
-abstract class BaseViewModel: ViewModel() {
+abstract class BaseViewModel : ViewModel() {
     val snackBarMessage = MutableLiveData<String>()
+    protected val loadingManager by inject<LoadingManager>(LoadingManager::class.java)
 }
