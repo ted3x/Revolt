@@ -29,17 +29,21 @@ data class RevoltConfigDto(
         val january: FileUploadServerDto,
         val voso: VoiceServerOptionsDto
     ) {
+
+        @JsonClass(generateAdapter = true)
         data class CaptchaDto(
             val enabled: Boolean,
             @Json(name = "key")
             val siteKey: String
         )
 
+        @JsonClass(generateAdapter = true)
         data class FileUploadServerDto(
             val enabled: Boolean,
             val url: String
         )
 
+        @JsonClass(generateAdapter = true)
         data class VoiceServerOptionsDto(
             val enabled: Boolean,
             val url: String,
