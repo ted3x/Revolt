@@ -93,6 +93,7 @@ val revoltConfigModule = module {
 val appModules =
     listOf(
         globalNavigatorModule,
+        navigatorsModule,
         resourceProviderModule,
         databaseModule,
         networkModule,
