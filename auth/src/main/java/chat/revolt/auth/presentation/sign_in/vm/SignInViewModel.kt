@@ -19,6 +19,7 @@ import chat.revolt.auth.states.EmailStates
 import chat.revolt.auth.states.PasswordStates
 import chat.revolt.auth.utils.isValidEmail
 import chat.revolt.auth.utils.isValidPassword
+import chat.revolt.core.extensions.execute
 import chat.revolt.core.view_model.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -63,12 +64,17 @@ class SignInViewModel(
 
     fun signIn() {
         viewModelScope.launch {
-            signInUseCase.invoke(
-                SignInRequest(
-                    email = email.value!!,
-                    password = password.value!!,
-                    captcha = captcha.value!!
-                )
+            val request = SignInRequest(
+                email = email.value!!,
+                password = password.value!!,
+                captcha = captcha.value!!
+            )
+            signInUseCase.execute(params = request,
+                onLoading = {
+
+                }, onSuccess = {
+
+                }
             )
         }
     }
