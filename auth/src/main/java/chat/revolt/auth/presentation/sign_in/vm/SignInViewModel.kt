@@ -42,18 +42,20 @@ class SignInViewModel(
     val captcha = MutableLiveData<String>()
     private val isCaptchaEnabled: Boolean = revoltConfigManager.getConfigFeatures().captcha.enabled
 
-    private val captchaListener = object : CaptchaListener {
-        override fun onSuccess(captcha: String) {
-            this@SignInViewModel.captcha.value = captcha
-        }
+    private val captchaListener by lazy {
+        object : CaptchaListener {
+            override fun onSuccess(captcha: String) {
+                this@SignInViewModel.captcha.value = captcha
+            }
 
-        override fun onFail(error: String?) {
-            error?.let { snackBarMessage.value = it }
+            override fun onFail(error: String?) {
+                error?.let { snackBarMessage.value = it }
+            }
         }
     }
 
     init {
-        if(isCaptchaEnabled) captchaManager.setListener(captchaListener)
+        if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
     }
 
     fun solveCaptcha(ctx: WeakReference<Context>) {
@@ -94,7 +96,7 @@ class SignInViewModel(
             val request = SignInRequest(
                 email = email.value!!,
                 password = password.value!!,
-                captcha = if(isCaptchaEnabled) captcha.value else null
+                captcha = if (isCaptchaEnabled) captcha.value else null
             )
             signInUseCase.execute(params = request,
                 onLoading = { loadingManager.toggleLoading(it) },
