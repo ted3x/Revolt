@@ -30,19 +30,24 @@ internal val signInViewModelModule = module {
                 passwordValidation = get(),
                 emailValidation = get(),
                 captchaManager = get(),
-                signInUseCase = get()
+                signInUseCase = get(),
             )
         }
         scoped { PasswordValidation(resourceProvider = get()) }
         scoped { EmailValidation(resourceProvider = get()) }
-        scoped<CaptchaManager> { CaptchaManagerImpl() }
+        scoped<CaptchaManager> { CaptchaManagerImpl(revoltConfigManager = get()) }
     }
 }
 
 internal val signInApiModule = module {
     single<SignInService> { get<Retrofit>().create(SignInService::class.java) }
     single<SignInDataSource> { SignInDataSourceImpl(service = get()) }
-    single<SignInRepository> { SignInRepositoryImpl(dataSource = get(), mapper = get()) }
+    single<SignInRepository> {
+        SignInRepositoryImpl(
+            dataSource = get(),
+            mapper = get(),
+        )
+    }
     single { SignInMapper() }
     single { SignInUseCase(repository = get()) }
 }
