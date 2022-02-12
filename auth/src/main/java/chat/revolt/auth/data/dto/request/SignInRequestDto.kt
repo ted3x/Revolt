@@ -16,5 +16,5 @@ data class SignInRequestDto(
     val challenge: String? = null,
     @Json(name = "friendly_name")
     val friendlyName: String = "Android",
-    val captcha: String
+    val captcha: String? = null
 )

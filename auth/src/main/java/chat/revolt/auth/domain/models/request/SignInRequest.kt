@@ -11,5 +11,5 @@ data class SignInRequest(
     val password: String,
     val challenge: String? = null,
     val friendlyName: String = "Android",
-    val captcha: String
+    val captcha: String? = null
 )

@@ -20,16 +20,18 @@ import chat.revolt.auth.states.PasswordStates
 import chat.revolt.auth.utils.isValidEmail
 import chat.revolt.auth.utils.isValidPassword
 import chat.revolt.core.extensions.execute
+import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.core.view_model.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 class SignInViewModel(
+    revoltConfigManager: RevoltConfigManager,
     private val passwordValidation: PasswordValidation,
     private val emailValidation: EmailValidation,
     private val captchaManager: CaptchaManager,
-    private val signInUseCase: SignInUseCase
+    private val signInUseCase: SignInUseCase,
 ) :
     BaseViewModel() {
 
@@ -38,6 +40,7 @@ class SignInViewModel(
     val password = MutableLiveData<String>()
     val passwordState = MutableStateFlow<PasswordStates>(PasswordStates.Valid)
     val captcha = MutableLiveData<String>()
+    private val isCaptchaEnabled: Boolean = revoltConfigManager.getConfigFeatures().captcha.enabled
 
     private val captchaListener = object : CaptchaListener {
         override fun onSuccess(captcha: String) {
@@ -50,13 +53,17 @@ class SignInViewModel(
     }
 
     init {
-        captchaManager.setListener(captchaListener)
+        if(isCaptchaEnabled) captchaManager.setListener(captchaListener)
     }
 
     fun solveCaptcha(ctx: WeakReference<Context>) {
-        if (email.value.isValidEmail() && password.value.isValidPassword())
-            captchaManager.solveCaptcha(ctx)
-        else {
+        if (email.value.isValidEmail() && password.value.isValidPassword()) {
+            if (isCaptchaEnabled) {
+                captchaManager.solveCaptcha(ctx)
+            } else {
+                signIn()
+            }
+        } else {
             validateEmail(email.value)
             validatePassword(password.value)
         }
@@ -87,10 +94,10 @@ class SignInViewModel(
             val request = SignInRequest(
                 email = email.value!!,
                 password = password.value!!,
-                captcha = captcha.value!!
+                captcha = if(isCaptchaEnabled) captcha.value else null
             )
             signInUseCase.execute(params = request,
-                onLoading = { loadingManager.showLoading() },
+                onLoading = { loadingManager.toggleLoading(it) },
                 onSuccess = {
                     TODO("navigateToDashboard")
                 }

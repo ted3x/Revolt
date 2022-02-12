@@ -31,6 +31,7 @@ internal val signInViewModelModule = module {
                 emailValidation = get(),
                 captchaManager = get(),
                 signInUseCase = get(),
+                revoltConfigManager = get()
             )
         }
         scoped { PasswordValidation(resourceProvider = get()) }
