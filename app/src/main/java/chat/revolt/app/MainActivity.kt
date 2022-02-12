@@ -8,11 +8,10 @@ package chat.revolt.app
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewStub
 import android.widget.FrameLayout
 import chat.revolt.core.BaseActivity
 import chat.revolt.core_navigation.features.Feature
-import chat.revolt.core_navigation.features.auth.AuthStates
+import chat.revolt.core_navigation.features.splash.SplashStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
@@ -27,7 +26,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        globalNavigator.navigateTo(Feature.Auth(state = AuthStates.SignIn))
+        globalNavigator.navigateTo(Feature.Splash(state = SplashStates.Splash))
     }
 
     override fun onResume() {
