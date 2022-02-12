@@ -6,15 +6,18 @@
 
 package chat.revolt.app.global_navigator
 
-import chat.revolt.auth.navigator.AuthNavigatorImpl
+import chat.revolt.auth.navigator.AuthNavigator
 import chat.revolt.core_navigation.features.Feature
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
+import chat.revolt.splash.navigator.SplashNavigator
+import org.koin.java.KoinJavaComponent.get
 
 class GlobalNavigatorImpl(override val router: RVRouter) : GlobalNavigator {
     override fun <T> navigateTo(feature: Feature<T>) {
         when (feature) {
-            is Feature.Auth -> AuthNavigatorImpl(router).navigateTo(feature.state)
+            is Feature.Splash -> get<SplashNavigator>(SplashNavigator::class.java).navigateTo(feature.state)
+            is Feature.Auth -> get<AuthNavigator>(AuthNavigator::class.java).navigateTo(feature.state)
         }
     }
 

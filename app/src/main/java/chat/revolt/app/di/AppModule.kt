@@ -15,6 +15,8 @@ import chat.revolt.app.network.NetworkErrorHandlerImpl
 import chat.revolt.app.network.RevoltAuthenticator
 import chat.revolt.app.resource_provider.ResourceProviderImpl
 import chat.revolt.app.revolt_config_manager.RevoltConfigManagerImpl
+import chat.revolt.auth.navigator.AuthNavigator
+import chat.revolt.auth.navigator.AuthNavigatorImpl
 import chat.revolt.core.NetworkErrorHandler
 import chat.revolt.core.loading_manager.LoadingManager
 import chat.revolt.core.resource_provider.ResourceProvider
@@ -24,6 +26,8 @@ import chat.revolt.core_navigation.router.RVRouter
 import chat.revolt.data.local.database.databaseModule
 import chat.revolt.data.repository.AccountRepositoryImpl
 import chat.revolt.domain.repository.AccountRepository
+import chat.revolt.splash.navigator.SplashNavigator
+import chat.revolt.splash.navigator.SplashNavigatorImpl
 import com.github.terrakok.cicerone.BaseRouter
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
@@ -50,6 +54,11 @@ val globalNavigatorModule = module {
         }
     }
     single<GlobalNavigator> { GlobalNavigatorImpl(router = get()) }
+}
+
+val navigatorsModule = module {
+    single<SplashNavigator> { SplashNavigatorImpl(router = get()) }
+    single<AuthNavigator> { AuthNavigatorImpl(router = get()) }
 }
 
 val resourceProviderModule = module {

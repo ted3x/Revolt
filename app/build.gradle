@@ -49,6 +49,7 @@ dependencies {
     implementation project(':core-navigation')
     implementation project(':auth')
     implementation project(':styles')
+    implementation project(':splash')
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
 }
