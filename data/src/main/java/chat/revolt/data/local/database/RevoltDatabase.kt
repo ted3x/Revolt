@@ -8,9 +8,15 @@ package chat.revolt.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import chat.revolt.data.local.dao.AccountDao
 import chat.revolt.data.local.dao.UserDao
+import chat.revolt.data.local.entity.account.AccountEntity
+import chat.revolt.data.local.entity.user.UserEntity
 
-@Database(version = 1, exportSchema = false, entities = [])
+@Database(version = 1, exportSchema = false, entities = [UserEntity::class, AccountEntity::class])
+@TypeConverters(DatabaseConverters::class)
 abstract class RevoltDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun accountDao(): AccountDao
 }
