@@ -50,7 +50,6 @@ class SignInViewModel(
     }
 
     init {
-        loadingManager.showLoading()
         captchaManager.setListener(captchaListener)
     }
 

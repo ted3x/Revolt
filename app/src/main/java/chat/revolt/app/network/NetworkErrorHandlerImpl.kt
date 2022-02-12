@@ -7,6 +7,7 @@
 package chat.revolt.app.network
 
 import android.content.Context
+import android.widget.FrameLayout
 import chat.revolt.app.MainActivity
 import chat.revolt.app.RVApp
 import chat.revolt.core.NetworkErrorHandler
@@ -17,12 +18,12 @@ import java.lang.ref.WeakReference
 class NetworkErrorHandlerImpl(private val context: Context) :
     NetworkErrorHandler {
 
+    private val currentActivity get() = (context as? RVApp)?.currentActivity?.get()
     // TODO("Check based on exception type")
     override fun handleException(exception: Throwable) {
-        val view = (context as? RVApp)?.currentActivity?.get()?.window?.decorView?.rootView
-        view?.let {
+        currentActivity?.findViewById<FrameLayout>(R.id.container)?.let { view ->
             Snackbar.make(
-                it,
+                view,
                 context.getString(R.string.network_an_error_occured_please_try_again),
                 Snackbar.LENGTH_LONG
             ).show()
