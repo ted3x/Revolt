@@ -25,6 +25,7 @@ class RVApp : Application(), Application.ActivityLifecycleCallbacks {
             androidContext(this@RVApp)
             modules(appModules)
         }
+        registerActivityLifecycleCallbacks(this)
     }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {}
