@@ -10,12 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ViewStub
-        android:id="@+id/loadingViewStub"
-        android:inflatedId="@+id/loadingView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout="@layout/loading_view"
-        tools:visibility="visible" />
+    <include
+        android:id="@+id/loadingView"
+        layout="@layout/loading_view"
+        android:visibility="gone"/>
 
 </FrameLayout>

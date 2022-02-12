@@ -41,7 +41,7 @@ class MainActivity : BaseActivity() {
     }
 
    override fun showLoading() {
-        val loadingView = findViewById<ViewStub>(R.id.loadingViewStub).inflate()
+        val loadingView = findViewById<FrameLayout>(R.id.loadingView)
         val container = findViewById<FrameLayout>(R.id.container)
         container.alpha = 0.8f
         loadingView.visibility = View.VISIBLE
