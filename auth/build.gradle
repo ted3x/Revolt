@@ -30,6 +30,10 @@ android {
 
 dependencies {
 
+    implementation project(':core')
+    implementation project(':styles')
+    implementation project(':core-navigation')
+    implementation project(':domain')
     implementation libs.androidx.core
     implementation libs.appcompat
     implementation libs.material
@@ -41,11 +45,7 @@ dependencies {
     implementation libs.koin.core
     implementation libs.koin.android
     ksp(libs.moshi.ksp)
-    implementation project(':core')
-    implementation project(':styles')
-    implementation project(':core-navigation')
-    implementation project(':domain')
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    implementation libs.lifecycle.livedata
+    implementation libs.lifecycle.runtime
+    implementation libs.lifecycle.viewmodel
 }
