@@ -6,20 +6,26 @@
 
 package chat.revolt.app.network
 
-import okhttp3.*
+import chat.revolt.domain.repository.AccountRepository
+import kotlinx.coroutines.runBlocking
+import okhttp3.Authenticator
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.Route
 
-class RevoltAuthenticator(private val token: String = ""): Authenticator {
-    override fun authenticate(route: Route?, response: Response): Request? {
-       // val accessToken: String = accountRepository.getAccessToken()
-       // return newRequestWithAccessToken(response.request(), updatedAccessToken)
-        TODO()
+class RevoltAuthenticator(
+    private val accountRepository: AccountRepository,
+) : Authenticator {
+
+    override fun authenticate(route: Route?, response: Response): Request {
+        val accessToken = runBlocking { accountRepository.getToken() }
+        return if(accessToken != null) newRequestWithAccessToken(response.request, accessToken) else response.request
     }
 
     private fun newRequestWithAccessToken(
         request: Request,
         accessToken: String
-    ): Request? {
+    ): Request {
         return request.newBuilder()
             .header("x-access-token", accessToken)
             .build()
