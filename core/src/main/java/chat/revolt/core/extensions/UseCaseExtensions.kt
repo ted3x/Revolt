@@ -13,9 +13,9 @@ import org.koin.java.KoinJavaComponent.get
 suspend fun <I, O> BaseUseCase<I, O>.execute(
     errorHandler: NetworkErrorHandler = get(NetworkErrorHandler::class.java),
     params: I,
-    onLoading: ((isLoading: Boolean) -> Unit)? = null,
-    onSuccess: (O) -> Unit,
-    onError: ((Throwable) -> Unit)? = null
+    onLoading: (suspend (isLoading: Boolean) -> Unit)? = null,
+    onSuccess: suspend (O) -> Unit,
+    onError: (suspend (Throwable) -> Unit)? = null
 ) {
     onLoading?.invoke(true)
     try {

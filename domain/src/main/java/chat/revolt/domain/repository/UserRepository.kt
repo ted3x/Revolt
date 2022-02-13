@@ -11,5 +11,5 @@ import chat.revolt.domain.models.User
 interface UserRepository {
 
     suspend fun getUser(userId: String): User?
-    suspend fun fetchUser(userId: String): User?
+    suspend fun addUser(user: User)
 }

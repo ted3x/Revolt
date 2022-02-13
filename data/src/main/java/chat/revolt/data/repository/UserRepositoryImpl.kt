@@ -8,7 +8,7 @@ package chat.revolt.data.repository
 
 import chat.revolt.data.remote.data_source.UserDataSource
 import chat.revolt.data.local.dao.UserDao
-import chat.revolt.data.local.mappers.UserEntityToUserMapper
+import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.data.remote.mappers.user.UserDtoToUserMapper
 import chat.revolt.domain.models.User
 import chat.revolt.domain.repository.UserRepository
@@ -16,14 +16,20 @@ import chat.revolt.domain.repository.UserRepository
 class UserRepositoryImpl(
     private val userDao: UserDao,
     private val userDataSource: UserDataSource,
-    private val userEntityMapper: UserEntityToUserMapper,
+    private val userEntityMapper: UserDBMapper,
     private val userDtoMapper: UserDtoToUserMapper
 ) : UserRepository {
     override suspend fun getUser(userId: String): User? {
-        return userDao.getUser(userId)?.let { userEntityMapper.map(it) }
+        return userDataSource.getUser(userId)?.let { userDto ->
+            userDtoMapper.map(userDto).also {
+                val userEntity = userEntityMapper.mapToEntity(it)
+                userDao.addUser(userEntity)
+            }
+        }
     }
 
-    override suspend fun fetchUser(userId: String): User? {
-        return userDataSource.getUser(userId)?.let { userDtoMapper.map(it) }
+    override suspend fun addUser(user: User) {
+        val userEntity = userEntityMapper.mapToEntity(user)
+        userDao.addUser(userEntity)
     }
 }
