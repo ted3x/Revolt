@@ -23,6 +23,8 @@ import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
+import chat.revolt.dashboard.navigator.DashboardNavigator
+import chat.revolt.dashboard.navigator.DashboardNavigatorImpl
 import chat.revolt.data.local.database.databaseModule
 import chat.revolt.data.repository.AccountRepositoryImpl
 import chat.revolt.domain.repository.AccountRepository
@@ -60,6 +62,7 @@ val globalNavigatorModule = module {
 val navigatorsModule = module {
     single<SplashNavigator> { SplashNavigatorImpl(router = get()) }
     single<AuthNavigator> { AuthNavigatorImpl(router = get()) }
+    single<DashboardNavigator> { DashboardNavigatorImpl(router = get()) }
 }
 
 val resourceProviderModule = module {

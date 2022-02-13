@@ -27,6 +27,7 @@ internal val signInViewModelModule = module {
     scope<SignInFragment> {
         viewModel {
             SignInViewModel(
+                navigator = get(),
                 passwordValidation = get(),
                 emailValidation = get(),
                 captchaManager = get(),

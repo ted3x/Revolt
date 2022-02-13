@@ -22,12 +22,16 @@ import chat.revolt.auth.utils.isValidPassword
 import chat.revolt.core.extensions.execute
 import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.core.view_model.BaseViewModel
+import chat.revolt.core_navigation.features.Feature
+import chat.revolt.core_navigation.features.dashboard.DashboardStates
+import chat.revolt.core_navigation.navigator.GlobalNavigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 class SignInViewModel(
     revoltConfigManager: RevoltConfigManager,
+    private val navigator: GlobalNavigator,
     private val passwordValidation: PasswordValidation,
     private val emailValidation: EmailValidation,
     private val captchaManager: CaptchaManager,
@@ -55,7 +59,8 @@ class SignInViewModel(
     }
 
     init {
-        if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
+        navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+        //if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
     }
 
     fun solveCaptcha(ctx: WeakReference<Context>) {
@@ -101,7 +106,7 @@ class SignInViewModel(
             signInUseCase.execute(params = request,
                 onLoading = { loadingManager.toggleLoading(it) },
                 onSuccess = {
-                    //TODO("navigateToDashboard")
+                    navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
                 }
             )
         }
