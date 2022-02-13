@@ -67,4 +67,7 @@ scarlet-okhttp = { module = "com.tinder.scarlet:websocket-okhttp", version.ref =
 scarlet-moshi = { module = "com.tinder.scarlet:message-adapter-moshi", version.ref = "scarlet" }
 scarlet-lifecycle = { module = "com.tinder.scarlet:lifecycle-android", version.ref = "scarlet" }
 scarlet-coroutines = { module = "com.tinder.scarlet:stream-adapter-coroutines", version.ref = "scarlet" }
+
 overlappingPanels = "com.github.discord:OverlappingPanels:0.1.5"
+
+adapter-delegates = 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:4.3.1'
