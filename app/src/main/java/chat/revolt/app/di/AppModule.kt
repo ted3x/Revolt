@@ -26,6 +26,7 @@ import chat.revolt.core_navigation.router.RVRouter
 import chat.revolt.data.local.database.databaseModule
 import chat.revolt.data.repository.AccountRepositoryImpl
 import chat.revolt.domain.repository.AccountRepository
+import chat.revolt.socket.di.revoltSocketModule
 import chat.revolt.splash.navigator.SplashNavigator
 import chat.revolt.splash.navigator.SplashNavigatorImpl
 import com.github.terrakok.cicerone.BaseRouter
@@ -98,7 +99,8 @@ val appModules =
         databaseModule,
         networkModule,
         loadingManagerModule,
-        revoltConfigModule
+        revoltConfigModule,
+        revoltSocketModule
     )
 
 const val BASE_URL = "https://api.revolt.chat/"

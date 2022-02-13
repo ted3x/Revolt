@@ -44,6 +44,7 @@ dependencies {
     implementation libs.retrofit.retrofit
     implementation libs.koin.core
     implementation libs.koin.android
+    implementation project(':socket')
     ksp(libs.moshi.ksp)
     implementation libs.lifecycle.livedata
     implementation libs.lifecycle.runtime

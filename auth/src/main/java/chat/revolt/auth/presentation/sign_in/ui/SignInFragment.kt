@@ -11,15 +11,18 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import chat.revolt.auth.presentation.sign_in.vm.SignInViewModel
 import chat.revolt.auth.databinding.SignInFragmentBinding
 import chat.revolt.auth.presentation.sign_in.di.signInModules
+import chat.revolt.auth.presentation.sign_in.vm.SignInViewModel
 import chat.revolt.auth.states.EmailStates
 import chat.revolt.auth.states.PasswordStates
 import chat.revolt.core.extensions.onChange
 import chat.revolt.core.fragment.BaseFragment
+import chat.revolt.socket.api.RevoltSocketImpl
+import chat.revolt.socket.server.channel.ChannelEventManager
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
 import java.lang.ref.WeakReference
@@ -29,6 +32,7 @@ class SignInFragment :
 
     override val viewModel: SignInViewModel by viewModel()
     override val module: List<Module> = signInModules
+    val socket = get<RevoltSocketImpl>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +52,17 @@ class SignInFragment :
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.emailState.collect { onEmailStateChange(it) } }
                 launch { viewModel.passwordState.collect { onPasswordStateChange(it) } }
+                launch { socket.start() }
+                launch {
+                    get<ChannelEventManager>().onChannelStartTyping().collect {
+                        println(it)
+                    }
+                }
+                launch {
+                    get<ChannelEventManager>().onChannelStopTyping().collect {
+                        println(it)
+                    }
+                }
             }
         }
     }

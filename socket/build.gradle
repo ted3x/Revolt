@@ -1,0 +1,39 @@
+/*
+ * Created by Tedo Manvelidze(ted3x) on 2/13/22, 1:16 AM
+ * Copyright (c) 2022 . All rights reserved.
+ * Last modified 2/13/22, 1:16 AM
+ */
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id("com.google.devtools.ksp").version("1.6.10-1.0.2")
+}
+
+android {
+    compileSdk 32
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation libs.scarlet.scarlet
+    implementation libs.scarlet.okhttp
+    implementation libs.scarlet.moshi
+    implementation libs.moshi.adapter
+    ksp(libs.moshi.ksp)
+    implementation libs.scarlet.lifecycle
+    implementation libs.scarlet.coroutines
+    implementation libs.okhttp.okhttp
+    implementation libs.okhttp.loggingInterceptor
+    implementation libs.koin.core
+    implementation libs.kotlin.coroutines.core
+    implementation project(':core')
+}
