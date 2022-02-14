@@ -13,4 +13,5 @@ val databaseModule = module {
     single { Room.databaseBuilder(get(), RevoltDatabase::class.java, "Revolt-Database").build() }
     single { get<RevoltDatabase>().userDao() }
     single { get<RevoltDatabase>().accountDao() }
+    single { get<RevoltDatabase>().messageDao() }
 }

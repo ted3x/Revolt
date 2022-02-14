@@ -8,8 +8,10 @@ package chat.revolt.data.local.entity.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 
 @Entity(tableName = "user")
+@JsonClass(generateAdapter = true)
 data class UserEntity(
     @PrimaryKey
     val id: String,
@@ -25,6 +27,7 @@ data class UserEntity(
     val bot: Bot?
 ) {
 
+    @JsonClass(generateAdapter = true)
     data class Relationship(val userId: String, val status: RelationshipStatus)
 
     enum class RelationshipStatus {
@@ -37,6 +40,7 @@ data class UserEntity(
         User
     }
 
+    @JsonClass(generateAdapter = true)
     data class Status(val text: String, val presence: Presence)
 
     enum class Presence {
@@ -45,6 +49,6 @@ data class UserEntity(
         Invisible,
         Online
     }
-
+    @JsonClass(generateAdapter = true)
     data class Bot(val ownerId: String)
 }

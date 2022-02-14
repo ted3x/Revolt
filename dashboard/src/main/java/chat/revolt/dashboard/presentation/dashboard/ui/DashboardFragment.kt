@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.ExperimentalPagingApi
 import chat.revolt.core.fragment.BaseFragment
 import chat.revolt.dashboard.databinding.DashboardFragmentBinding
 import chat.revolt.dashboard.presentation.chat_fragment.ui.ChatFragment
@@ -18,6 +19,7 @@ import chat.revolt.dashboard.presentation.dashboard.vm.DashboardViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
 
+@ExperimentalPagingApi
 class DashboardFragment :
     BaseFragment<DashboardViewModel, DashboardFragmentBinding>(DashboardFragmentBinding::inflate) {
     override val viewModel: DashboardViewModel by viewModel()

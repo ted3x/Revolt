@@ -11,13 +11,13 @@ data class User(
     val username: String,
     var avatarUrl: String?,
     var backgroundUrl: String? = null,
-    val relations: List<Relationship>?,
-    val badges: Int?,
+    val relations: List<Relationship>? = null,
+    val badges: Int? = null,
     val status: Status,
     val relationship: RelationshipStatus,
     val online: Boolean,
-    val flags: Int?,
-    val bot: Bot?
+    val flags: Int? = null,
+    val bot: Bot? = null
 ) {
 
     data class Relationship(val userId: String, val status: RelationshipStatus)

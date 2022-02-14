@@ -16,16 +16,12 @@ class DatabaseConverters {
     private val moshi = Moshi.Builder().build()
 
     private val relationshipType =
-        Types.newParameterizedType(List::class.java,UserEntity.Relationship::class.java)
+        Types.newParameterizedType(List::class.java, UserEntity.Relationship::class.java)
     private val relationshipAdapter = moshi.adapter<List<UserEntity.Relationship>>(relationshipType)
 
-    private val statusType =
-        Types.newParameterizedType(UserEntity.Status::class.java)
-    private val statusAdapter = moshi.adapter<UserEntity.Status>(statusType)
+    private val statusAdapter = moshi.adapter(UserEntity.Status::class.java)
 
-    private val botType =
-        Types.newParameterizedType(UserEntity.Bot::class.java)
-    private val botAdapter = moshi.adapter<UserEntity.Bot>(botType)
+    private val botAdapter = moshi.adapter(UserEntity.Bot::class.java)
 
     @TypeConverter
     fun stringToRelationships(string: String): List<UserEntity.Relationship> {
@@ -39,7 +35,8 @@ class DatabaseConverters {
 
     @TypeConverter
     fun stringToStatus(string: String): UserEntity.Status {
-        return statusAdapter.fromJson(string) ?: throw IllegalStateException("Wrong $string as UserEntity.Status")
+        return statusAdapter.fromJson(string)
+            ?: throw IllegalStateException("Wrong $string as UserEntity.Status")
     }
 
     @TypeConverter
@@ -55,5 +52,17 @@ class DatabaseConverters {
     @TypeConverter
     fun botToString(bot: UserEntity.Bot): String {
         return botAdapter.toJson(bot)
+    }
+
+    @TypeConverter
+    fun stringToList(string: String): List<String>? {
+        val type = Types.newParameterizedType(List::class.java, String::class.java)
+        return moshi.adapter<List<String>>(type).fromJson(string)
+    }
+
+    @TypeConverter
+    fun listToString(list: List<String>?): String {
+        val type = Types.newParameterizedType(List::class.java, String::class.java)
+        return moshi.adapter<List<String>>(type).toJson(list)
     }
 }

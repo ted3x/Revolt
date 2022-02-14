@@ -11,12 +11,15 @@ moshi = "1.13.0"
 koin = "3.1.5"
 lifecycle = "2.4.1"
 scarlet = "0.1.12"
+glide = "4.13.0"
 
 [libraries]
 android-pluginGradle = "com.android.tools.build:gradle:7.0.4"
 
 androidx-core = "androidx.core:core-ktx:1.7.0"
 androidx-emoji = "androidx.emoji:emoji:1.1.0"
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+androidx-paging-common = { module = "androidx.paging:paging-common-ktx", version.ref = "paging" }
 
 androidx-room-common = { module = "androidx.room:room-common", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -70,4 +73,10 @@ scarlet-coroutines = { module = "com.tinder.scarlet:stream-adapter-coroutines", 
 
 overlappingPanels = "com.github.discord:OverlappingPanels:0.1.5"
 
-adapter-delegates = 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:4.3.1'
+adapter-delegates-core = 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:4.3.1'
+
+circleImageView = 'de.hdodenhof:circleimageview:3.1.0'
+
+glide-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide-kapt = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+exoplayer = "com.google.android.exoplayer:exoplayer:2.16.1"

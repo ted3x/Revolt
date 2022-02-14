@@ -12,7 +12,7 @@ import chat.revolt.app.global_navigator.GlobalNavigatorImpl
 import chat.revolt.app.global_navigator.RVRouterImpl
 import chat.revolt.app.loading_manager.LoadingManagerImpl
 import chat.revolt.app.network.NetworkErrorHandlerImpl
-import chat.revolt.app.network.RevoltAuthenticator
+import chat.revolt.app.network.RevoltInterceptor
 import chat.revolt.app.resource_provider.ResourceProviderImpl
 import chat.revolt.app.revolt_config_manager.RevoltConfigManagerImpl
 import chat.revolt.auth.navigator.AuthNavigator
@@ -36,6 +36,7 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import okhttp3.Authenticator
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -73,10 +74,11 @@ val networkModule = module {
     single<NetworkErrorHandler> { NetworkErrorHandlerImpl(context = androidContext()) }
     single { MoshiConverterFactory.create() }
     single<AccountRepository> { AccountRepositoryImpl(accountDao = get()) }
-    single<Authenticator> { RevoltAuthenticator(accountRepository = get()) }
+    single { RevoltInterceptor(accountRepository = get()) }
     single { HttpLoggingInterceptor().also { it.level = HttpLoggingInterceptor.Level.BODY } }
     single {
-        OkHttpClient.Builder().addInterceptor(get<HttpLoggingInterceptor>()).authenticator(get())
+        OkHttpClient.Builder()
+            .addInterceptor(get<RevoltInterceptor>())
             .build()
     }
     single {

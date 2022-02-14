@@ -8,26 +8,18 @@ package chat.revolt.app.network
 
 import chat.revolt.domain.repository.AccountRepository
 import kotlinx.coroutines.runBlocking
-import okhttp3.Authenticator
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.Route
+import okhttp3.*
 
-class RevoltAuthenticator(
+class RevoltInterceptor(
     private val accountRepository: AccountRepository,
-) : Authenticator {
+) : Interceptor {
 
-    override fun authenticate(route: Route?, response: Response): Request {
-        val accessToken = runBlocking { accountRepository.getToken() }
-        return if(accessToken != null) newRequestWithAccessToken(response.request, accessToken) else response.request
-    }
-
-    private fun newRequestWithAccessToken(
-        request: Request,
-        accessToken: String
-    ): Request {
-        return request.newBuilder()
-            .header("x-access-token", accessToken)
-            .build()
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val accessToken = "qUL5nTUE0PR6XOI7V2URjhA8A25y0FVmMYfmdeNwFH8OZG4W6ftJJAiYAAAS8PR1" ?: runBlocking { accountRepository.getToken()  }
+        val newRequest = chain.request().newBuilder()
+            .addHeader("Content-Type", "application/json")
+            .addHeader("x-session-token", accessToken!!)
+            .build();
+        return chain.proceed(newRequest);
     }
 }
