@@ -23,7 +23,7 @@ val chatModule = module {
         scoped<ChannelService> { get<Retrofit>().create(ChannelService::class.java) }
         scoped<ChannelDataSource> { ChannelDataSourceImpl(service = get()) }
         scoped { FetchMessageMapper() }
-        scoped<ChannelRepository> { ChannelRepositoryImpl(dataSource = get(), mapper = get()) }
+        scoped<ChannelRepository> { ChannelRepositoryImpl(messageDao = get(), dataSource = get(), mapper = get()) }
         viewModel { ChatViewModel(messageDao = get(), channelRepository = get()) }
     }
 }

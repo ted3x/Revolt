@@ -7,17 +7,16 @@
 package chat.revolt.dashboard.presentation.chat_fragment.vm
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
+import androidx.paging.ExperimentalPagingApi
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.ChannelRepository
-import chat.revolt.dashboard.presentation.chat_fragment.mediator.ChatMediator
+import chat.revolt.dashboard.presentation.chat_fragment.PagingData
+import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
 import chat.revolt.data.local.dao.MessageDao
-import chat.revolt.data.local.database.RevoltDatabase
-import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.mappers.MessageDBMapper
-import kotlinx.coroutines.flow.*
-import org.koin.java.KoinJavaComponent
-import org.koin.java.KoinJavaComponent.get
+import chat.revolt.domain.models.Message
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagingApi::class)
 class ChatViewModel(
@@ -25,16 +24,20 @@ class ChatViewModel(
     private val channelRepository: ChannelRepository
 ) : BaseViewModel() {
 
-    val flow: Flow<PagingData<MessageEntity>> = Pager(
-        config = PagingConfig(pageSize = 20, enablePlaceholders = true, initialLoadSize = 20),
-        remoteMediator = ChatMediator(
-            revoltDatabase = get(RevoltDatabase::class.java),
-            messageDao = messageDao,
-            repository = channelRepository,
-            mapper = MessageDBMapper()
-        )
-    ) {
-        messageDao.pagingSource()
-    }.flow
-        .cachedIn(viewModelScope)
+    val data = PagingManager(messageDao, channelRepository, mapper = MessageDBMapper())
+    var pagingData: PagingData? = null
+    var isLoading: Boolean = true
+    var flow: Flow<List<Message>> = channelRepository.getMessages(channelId = "")
+
+    init {
+        load()
+    }
+
+    fun load() {
+        if (pagingData?.isPaginationEndReached == true) return
+        isLoading = true
+        viewModelScope.launch {
+            pagingData = data.load(channelId = "01F7ZSBSFHCAAJQ92ZGTY67HMN", pagingData?.lastId)
+        }
+    }
 }

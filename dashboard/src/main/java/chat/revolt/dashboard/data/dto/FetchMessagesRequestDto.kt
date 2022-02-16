@@ -14,7 +14,7 @@ data class FetchMessagesRequestDto(
     val limit: Int = 10,
     val before: String? = null,
     val after: String? = null,
-    val sort: String = "Oldest",
+    val sort: String,
     val nearby: String? = null,
     @Json(name = "include_users")
     val includeUsers: Boolean = false
