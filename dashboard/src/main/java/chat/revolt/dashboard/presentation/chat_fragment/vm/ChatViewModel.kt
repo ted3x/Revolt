@@ -14,6 +14,7 @@ import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
 import chat.revolt.data.local.dao.MessageDao
 import chat.revolt.data.local.mappers.MessageDBMapper
 import chat.revolt.domain.models.Message
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -34,7 +35,8 @@ class ChatViewModel(
         if (pagingData?.isPaginationEndReached == true) return
         isLoading = true
         viewModelScope.launch {
-            pagingData = pagingManager.load(channelId = "01F7ZSBSFHCAAJQ92ZGTY67HMN", pagingData?.lastId)
+            delay(3500)
+            pagingData = pagingManager.load(channelId = "01FVSDSHJ6QSH0DZJYEBTZ2FES", pagingData?.lastId)
         }
     }
 }

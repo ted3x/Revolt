@@ -13,21 +13,30 @@ import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.core_navigation.features.Feature
 import chat.revolt.core_navigation.features.auth.AuthStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
+import chat.revolt.domain.interactors.AddUserInDbUseCase
+import chat.revolt.domain.interactors.GetUserUseCase
 import chat.revolt.splash.domain.interactors.GetRevoltConfigUseCase
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
     private val globalNavigator: GlobalNavigator,
     private val getRevoltConfigUseCase: GetRevoltConfigUseCase,
-    private val revoltConfigManager: RevoltConfigManager
+    private val revoltConfigManager: RevoltConfigManager,
+    private val getUserUseCase: GetUserUseCase,
+    private val addUserInDbUseCase: AddUserInDbUseCase
 ) : BaseViewModel() {
 
     fun fetchRevoltConfig() {
         viewModelScope.launch {
             getRevoltConfigUseCase.execute(params = Unit,
                 onSuccess = { revoltConfig ->
-                    revoltConfigManager.setConfig(revoltConfig)
-                    globalNavigator.navigateTo(Feature.Auth(state = AuthStates.SignIn))
+                    getUserUseCase.execute(params = "01FVDATAJD2V5XTSZQ2B9DA876", onSuccess = {
+                        addUserInDbUseCase.execute(params = it!!,
+                        onSuccess = {
+                            revoltConfigManager.setConfig(revoltConfig)
+                            globalNavigator.navigateTo(Feature.Auth(state = AuthStates.SignIn))
+                        })
+                    })
                 }
             )
         }

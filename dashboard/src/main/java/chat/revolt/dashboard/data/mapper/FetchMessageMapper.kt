@@ -17,9 +17,8 @@ import chat.revolt.data.remote.mappers.user.UserDtoToUserMapper
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.models.User
 
-class FetchMessageMapper(private val userMapper: UserDtoToUserMapper) :
-    ServiceMapper<FetchMessagesRequestDto, FetchMessagesRequest, FetchMessagesResponseDto, FetchMessagesResponse> {
-    override fun mapToRequest(from: FetchMessagesRequest): FetchMessagesRequestDto {
+class FetchMessageMapper(private val userMapper: UserDtoToUserMapper) {
+    fun mapToRequest(from: FetchMessagesRequest): FetchMessagesRequestDto {
         return FetchMessagesRequestDto(
             limit = from.limit,
             before = from.before,
@@ -29,18 +28,21 @@ class FetchMessageMapper(private val userMapper: UserDtoToUserMapper) :
         )
     }
 
-    override fun mapToResponse(from: FetchMessagesResponseDto): FetchMessagesResponse {
+    fun mapToResponse(
+        from: FetchMessagesResponseDto,
+        selfUser: User
+    ): FetchMessagesResponse {
         return FetchMessagesResponse(
-            messages = from.messages.map { it.map(from.users) },
+            messages = from.messages.map { it.map(from.users, selfUser) },
             users = from.users.map { userMapper.map(it) }
         )
     }
 
-    private fun MessageDto.map(users: List<UserDto>): Message {
+    private fun MessageDto.map(users: List<UserDto>, selfUser: User): Message {
         return Message(
             id = this.id,
             channel = this.channel,
-            author = this.author.map(users),
+            author = this.author.map(users, selfUser),
             content = this.content,
             attachments = this.attachments?.map { it.map() },
             edited = this.edited?.date,
@@ -69,7 +71,7 @@ class FetchMessageMapper(private val userMapper: UserDtoToUserMapper) :
         )
     }
 
-    private fun String.map(users: List<UserDto>): User {
-        return userMapper.map(users.first { it.id == this })
+    private fun String.map(users: List<UserDto>, selfUser: User): User {
+        return users.firstOrNull { it.id == this }?.let { userMapper.map(it) } ?: selfUser
     }
 }

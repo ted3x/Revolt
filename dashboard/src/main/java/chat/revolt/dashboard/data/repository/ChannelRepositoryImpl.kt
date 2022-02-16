@@ -25,15 +25,19 @@ class ChannelRepositoryImpl(
     private val messageDao: MessageDao,
     private val dataSource: ChannelDataSource,
     private val mapper: FetchMessageMapper,
-    private val messageMapper: MessageDBMapper
+    private val messageMapper: MessageDBMapper,
+    private val userDBMapper: UserDBMapper
 ) : ChannelRepository {
 
     override fun getMessages(channelId: String): Flow<List<Message>> {
         return messageDao.getMessages()
-            .map { it.map {
-                val user = userDao.getUser(it.author) ?: throw IllegalStateException("User not found")
-                messageMapper.mapToDomain(user, it)
-            } }
+            .map {
+                it.map {
+                    val user =
+                        userDao.getUser(it.author) ?: throw IllegalStateException("User not found")
+                    messageMapper.mapToDomain(user, it)
+                }
+            }
     }
 
     override suspend fun fetchMessages(
@@ -44,7 +48,9 @@ class ChannelRepositoryImpl(
             dataSource.fetchMessages(
                 channelId,
                 mapper.mapToRequest(request)
-            )
+            ),
+            userDao.getCurrentUser()?.let { userDBMapper.mapToDomain(it) }
+                ?: throw IllegalStateException("User not found")
         )
     }
 }

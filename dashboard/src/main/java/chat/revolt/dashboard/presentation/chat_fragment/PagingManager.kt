@@ -6,18 +6,19 @@
 
 package chat.revolt.dashboard.presentation.chat_fragment
 
+import androidx.room.withTransaction
 import chat.revolt.dashboard.domain.models.FetchMessagesRequest
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.data.local.dao.MessageDao
 import chat.revolt.data.local.dao.UserDao
+import chat.revolt.data.local.database.RevoltDatabase
 import chat.revolt.data.local.mappers.MessageDBMapper
 import chat.revolt.data.local.mappers.UserDBMapper
 
 class PagingManager(
-    private val messageDao: MessageDao,
+    private val database: RevoltDatabase,
     private val channelRepository: ChannelRepository,
     private val mapper: MessageDBMapper,
-    private val userDao: UserDao,
     private val userDBMapper: UserDBMapper
 ) {
     suspend fun load(channelId: String, lastId: String? = null): PagingData {
@@ -27,9 +28,11 @@ class PagingManager(
         )
         val newMessages = response.messages
         if (newMessages.isNotEmpty()) {
-            if (lastId == null) messageDao.clear()
-            userDao.addUsers(response.users.map { userDBMapper.mapToEntity(it) })
-            messageDao.addMessages(newMessages.map { mapper.mapToEntity(it) })
+            database.withTransaction {
+                if (lastId == null) database.messageDao().clear()
+                database.userDao().addUsers(response.users.map { userDBMapper.mapToEntity(it) })
+                database.messageDao().addMessages(newMessages.map { mapper.mapToEntity(it) })
+            }
         }
         return PagingData(
             lastId = if (newMessages.isEmpty()) null else newMessages.last().id,

@@ -19,6 +19,7 @@ import chat.revolt.dashboard.databinding.TextAdapterItemBinding
 import chat.revolt.dashboard.presentation.chat_fragment.di.chatModule
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
 import chat.revolt.domain.models.Message
+import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,10 +53,9 @@ class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragme
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                if(initial) {
-                    binding.chatRecyclerView.scrollToPosition(itemCount - 1)
+                if(!viewModel.isLoading || initial)
+                    binding.chatRecyclerView.scrollToPosition(adapter.itemCount - 1)
                     initial = false
-                }
                 viewModel.isLoading = false
             }
         })
@@ -89,6 +89,7 @@ class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragme
             bind {
                 binding.authorName.text = item.author.username
                 binding.text.text = item.content
+                Glide.with(context).load(item.author.avatarUrl).into(binding.authorImage)
             }
         }
 }

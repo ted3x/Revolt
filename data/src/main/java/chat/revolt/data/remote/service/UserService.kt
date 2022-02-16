@@ -14,5 +14,5 @@ import retrofit2.http.Path
 interface UserService {
 
     @GET("users/{userId}")
-    suspend fun getUser(@Path("userId") userId: String): Call<UserDto>
+    fun getUser(@Path("userId") userId: String): Call<UserDto>
 }
