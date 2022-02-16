@@ -34,6 +34,6 @@ class UserDtoToUserMapper(
     private fun UserDto.AvatarDto?.getAvatarUrl() = AVATAR_BASE_URL + this?.id
 
     companion object {
-        private const val AVATAR_BASE_URL = "autumn.revolt.chat/avatars/"
+        private const val AVATAR_BASE_URL = "https://autumn.revolt.chat/avatars/"
     }
 }
