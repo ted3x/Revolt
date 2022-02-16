@@ -26,6 +26,7 @@ import chat.revolt.core_navigation.router.RVRouter
 import chat.revolt.dashboard.navigator.DashboardNavigator
 import chat.revolt.dashboard.navigator.DashboardNavigatorImpl
 import chat.revolt.data.local.database.databaseModule
+import chat.revolt.data.remote.di.userModule
 import chat.revolt.data.repository.AccountRepositoryImpl
 import chat.revolt.domain.repository.AccountRepository
 import chat.revolt.socket.di.revoltSocketModule
@@ -105,7 +106,8 @@ val appModules =
         networkModule,
         loadingManagerModule,
         revoltConfigModule,
-        revoltSocketModule
+        revoltSocketModule,
+        userModule
     )
 
 const val BASE_URL = "https://api.revolt.chat/"

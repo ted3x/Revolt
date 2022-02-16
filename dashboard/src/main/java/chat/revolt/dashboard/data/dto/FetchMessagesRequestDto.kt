@@ -17,5 +17,5 @@ data class FetchMessagesRequestDto(
     val sort: String,
     val nearby: String? = null,
     @Json(name = "include_users")
-    val includeUsers: Boolean = false
+    val includeUsers: Boolean
 )

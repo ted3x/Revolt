@@ -12,10 +12,13 @@ import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
 import chat.revolt.dashboard.data.dto.MessageDto
 import chat.revolt.dashboard.domain.models.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.FetchMessagesResponse
+import chat.revolt.data.remote.dto.user.UserDto
+import chat.revolt.data.remote.mappers.user.UserDtoToUserMapper
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.models.User
 
-class FetchMessageMapper :
-    ServiceMapper<FetchMessagesRequestDto, FetchMessagesRequest, List<MessageDto>, List<Message>> {
+class FetchMessageMapper(private val userMapper: UserDtoToUserMapper) :
+    ServiceMapper<FetchMessagesRequestDto, FetchMessagesRequest, FetchMessagesResponseDto, FetchMessagesResponse> {
     override fun mapToRequest(from: FetchMessagesRequest): FetchMessagesRequestDto {
         return FetchMessagesRequestDto(
             limit = from.limit,
@@ -26,15 +29,18 @@ class FetchMessageMapper :
         )
     }
 
-    override fun mapToResponse(from: List<MessageDto>): List<Message> {
-        return from.map { it.map() }
+    override fun mapToResponse(from: FetchMessagesResponseDto): FetchMessagesResponse {
+        return FetchMessagesResponse(
+            messages = from.messages.map { it.map(from.users) },
+            users = from.users.map { userMapper.map(it) }
+        )
     }
 
-    private fun MessageDto.map(): Message {
+    private fun MessageDto.map(users: List<UserDto>): Message {
         return Message(
             id = this.id,
             channel = this.channel,
-            author = this.author,
+            author = this.author.map(users),
             content = this.content,
             attachments = this.attachments?.map { it.map() },
             edited = this.edited?.date,
@@ -61,5 +67,9 @@ class FetchMessageMapper :
             width = this.width,
             height = this.height
         )
+    }
+
+    private fun String.map(users: List<UserDto>): User {
+        return userMapper.map(users.first { it.id == this })
     }
 }

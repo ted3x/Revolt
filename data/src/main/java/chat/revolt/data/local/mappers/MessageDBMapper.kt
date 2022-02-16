@@ -9,14 +9,15 @@ package chat.revolt.data.local.mappers
 import chat.revolt.core.UlidTimeDecoder
 import chat.revolt.core.mapper.EntityMapper
 import chat.revolt.data.local.entity.message.MessageEntity
+import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.Message
 
-class MessageDBMapper: EntityMapper<MessageEntity, Message> {
-    override fun mapToDomain(from: MessageEntity): Message {
+class MessageDBMapper(private val userDBMapper: UserDBMapper) {
+    fun mapToDomain(userEntity: UserEntity, from: MessageEntity): Message {
         return Message(
             id = from.id,
             channel = from.channel,
-            author = from.author,
+            author = userDBMapper.mapToDomain(userEntity),
             content = from.content,
             attachments = emptyList(),
             edited = from.edited,
@@ -26,11 +27,11 @@ class MessageDBMapper: EntityMapper<MessageEntity, Message> {
         )
     }
 
-    override fun mapToEntity(from: Message): MessageEntity {
+    fun mapToEntity(from: Message): MessageEntity {
         return MessageEntity(
             id = from.id,
             channel = from.channel,
-            author = from.author,
+            author = from.author.id,
             content = from.content,
             createdAt = UlidTimeDecoder.getTimestamp(from.id),
             edited = from.edited,

@@ -9,7 +9,7 @@ package chat.revolt.domain.models
 data class Message(
     val id: String,
     val channel: String,
-    val author: String,
+    val author: User,
     val content: String,
     val attachments: List<Attachment>?,
     val edited: String?,

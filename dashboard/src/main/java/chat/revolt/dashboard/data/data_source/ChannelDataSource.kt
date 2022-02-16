@@ -12,5 +12,5 @@ import chat.revolt.dashboard.data.dto.MessageDto
 
 interface ChannelDataSource {
 
-    suspend fun fetchMessages(channelId: String, requestDto: FetchMessagesRequestDto): List<MessageDto>
+    suspend fun fetchMessages(channelId: String, requestDto: FetchMessagesRequestDto): FetchMessagesResponseDto
 }

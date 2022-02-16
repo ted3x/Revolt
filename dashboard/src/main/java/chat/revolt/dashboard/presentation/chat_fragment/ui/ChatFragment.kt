@@ -9,7 +9,6 @@ package chat.revolt.dashboard.presentation.chat_fragment.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,7 +87,7 @@ class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragme
             { layoutInflater, root -> TextAdapterItemBinding.inflate(layoutInflater, root, false) }
         ) {
             bind {
-                binding.authorName.text = item.id
+                binding.authorName.text = item.author.username
                 binding.text.text = item.content
             }
         }

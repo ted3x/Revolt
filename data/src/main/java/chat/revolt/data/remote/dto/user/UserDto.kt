@@ -7,7 +7,9 @@
 package chat.revolt.data.remote.dto.user
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class UserDto(
     @Json(name = "_id")
     val id: String,
@@ -21,6 +23,8 @@ data class UserDto(
     val flags: Int?,
     val bot: BotDto?
 ) {
+
+    @JsonClass(generateAdapter = true)
     data class AvatarDto(
         @Json(name = "_id")
         val id: String?,
@@ -31,6 +35,7 @@ data class UserDto(
         @Json(name = "content_type")
         val contentType: String?
     ) {
+        @JsonClass(generateAdapter = true)
         data class MetadataDto(
             val value: String?,
             val width: Int?,
@@ -38,17 +43,20 @@ data class UserDto(
         )
     }
 
+    @JsonClass(generateAdapter = true)
     data class RelationshipDto(
         val status: String,
         @Json(name = "_id")
         val id: String
     )
 
+    @JsonClass(generateAdapter = true)
     data class StatusDto(
         val text: String?,
         val presence: String?
     )
 
+    @JsonClass(generateAdapter = true)
     data class BotDto(
         val owner: String
     )

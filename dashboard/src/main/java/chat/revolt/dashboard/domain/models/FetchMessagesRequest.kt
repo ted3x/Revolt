@@ -12,5 +12,5 @@ data class FetchMessagesRequest(
     val before: String? = null,
     val after: String? = null,
     val sort: String = "Latest",
-    val includeUsers: Boolean = false
+    val includeUsers: Boolean = true
 )

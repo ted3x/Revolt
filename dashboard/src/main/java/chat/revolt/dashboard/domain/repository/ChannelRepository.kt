@@ -7,11 +7,12 @@
 package chat.revolt.dashboard.domain.repository
 
 import chat.revolt.dashboard.domain.models.FetchMessagesRequest
+import chat.revolt.dashboard.domain.models.FetchMessagesResponse
 import chat.revolt.domain.models.Message
 import kotlinx.coroutines.flow.Flow
 
 interface ChannelRepository {
 
     fun getMessages(channelId: String): Flow<List<Message>>
-    suspend fun fetchMessages(channelId: String, request: FetchMessagesRequest): List<Message>
+    suspend fun fetchMessages(channelId: String, request: FetchMessagesRequest): FetchMessagesResponse
 }

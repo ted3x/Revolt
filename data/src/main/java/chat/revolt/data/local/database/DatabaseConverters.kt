@@ -29,7 +29,7 @@ class DatabaseConverters {
     }
 
     @TypeConverter
-    fun relationshipsToString(members: List<UserEntity.Relationship>): String {
+    fun relationshipsToString(members: List<UserEntity.Relationship>?): String {
         return relationshipAdapter.toJson(members)
     }
 
@@ -50,7 +50,7 @@ class DatabaseConverters {
     }
 
     @TypeConverter
-    fun botToString(bot: UserEntity.Bot): String {
+    fun botToString(bot: UserEntity.Bot?): String {
         return botAdapter.toJson(bot)
     }
 

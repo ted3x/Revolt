@@ -23,5 +23,6 @@ interface ChannelService {
         @Query("before") before: String?,
         @Query("limit") limit: Int,
         @Query(value = "sort") sort: String,
-    ): Call<List<MessageDto>>
+        @Query(value = "include_users") includeUsers: Boolean
+    ): Call<FetchMessagesResponseDto>
 }

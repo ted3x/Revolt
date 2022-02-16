@@ -9,18 +9,20 @@ package chat.revolt.dashboard.data.data_source
 import chat.revolt.core.extensions.awaitResult
 import chat.revolt.dashboard.data.ChannelService
 import chat.revolt.dashboard.data.dto.FetchMessagesRequestDto
+import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
 import chat.revolt.dashboard.data.dto.MessageDto
 
 class ChannelDataSourceImpl(private val service: ChannelService) : ChannelDataSource {
     override suspend fun fetchMessages(
         channelId: String,
         requestDto: FetchMessagesRequestDto
-    ): List<MessageDto> {
+    ): FetchMessagesResponseDto {
         return service.fetchMessages(
             channelId = channelId,
             before = requestDto.before,
             limit = requestDto.limit,
-            sort = requestDto.sort
+            sort = requestDto.sort,
+            includeUsers = requestDto.includeUsers
         ).awaitResult()
     }
 }

@@ -7,7 +7,9 @@
 package chat.revolt.dashboard.domain.models
 
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.models.User
 
 data class FetchMessagesResponse(
-    val messages: List<Message>
+    val messages: List<Message>,
+    val users: List<User>
 )
