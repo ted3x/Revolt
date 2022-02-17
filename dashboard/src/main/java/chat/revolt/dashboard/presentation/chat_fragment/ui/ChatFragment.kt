@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import chat.revolt.core.PagedListDelegationAdapter
+import chat.revolt.core.UlidTimeDecoder
+import chat.revolt.core.extensions.toDate
 import chat.revolt.core.fragment.BaseFragment
 import chat.revolt.dashboard.databinding.ChatFragmentBinding
 import chat.revolt.dashboard.databinding.TextAdapterItemBinding
@@ -25,6 +27,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragmentBinding::inflate) {
 
@@ -89,6 +93,7 @@ class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragme
             bind {
                 binding.authorName.text = item.author.username
                 binding.text.text = item.content
+                binding.date.text = UlidTimeDecoder.getTimestamp(item.id).toDate(requireContext())
                 Glide.with(context).load(item.author.avatarUrl).into(binding.authorImage)
             }
         }

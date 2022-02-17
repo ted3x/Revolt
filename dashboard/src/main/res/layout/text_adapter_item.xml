@@ -9,13 +9,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/accent"
     android:padding="@dimen/dimen_p_10">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/authorImage"
-        android:layout_width="@dimen/dimen_p_50"
-        android:layout_height="@dimen/dimen_p_50"
+        android:layout_width="@dimen/dimen_p_40"
+        android:layout_height="@dimen/dimen_p_40"
+        android:layout_marginEnd="@dimen/dimen_p_10"
+        app:layout_constraintEnd_toStartOf="@id/authorName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,16 +24,21 @@
         android:id="@+id/authorName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_p_5"
+        android:layout_marginBottom="@dimen/dimen_p_5"
+        android:layout_marginEnd="@dimen/dimen_p_5"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toStartOf="@id/date"
         app:layout_constraintStart_toEndOf="@id/authorImage"
         app:layout_constraintTop_toTopOf="@id/authorImage"
+        app:layout_constraintTop_toBottomOf="@id/text"
         tools:text="Author name" />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/tertiary_foreground"
+        android:textSize="@dimen/dimen_sp_11"
         app:layout_constraintBottom_toBottomOf="@id/authorName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/authorName"
@@ -42,10 +48,11 @@
     <TextView
         android:id="@+id/text"
         android:layout_width="0dp"
-        tools:text="Hello world"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/authorName"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/authorName"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/authorName"
+        tools:text="Hello world\n\n\nsad" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
