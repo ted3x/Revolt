@@ -6,7 +6,7 @@
 
 package chat.revolt.socket.server
 
-import chat.revolt.Event
+import chat.revolt.socket.Event
 import chat.revolt.socket.api.RevoltSocket
 import chat.revolt.socket.event_resolver.EventResolver
 import com.tinder.scarlet.Message

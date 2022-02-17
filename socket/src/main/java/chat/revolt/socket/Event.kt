@@ -4,6 +4,6 @@
  * Last modified 2/13/22, 6:35 PM
  */
 
-package chat.revolt
+package chat.revolt.socket
 
 interface Event

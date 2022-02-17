@@ -6,6 +6,6 @@
 
 package chat.revolt.socket.server
 
-import chat.revolt.Event
+import chat.revolt.socket.Event
 
 interface ServerEvent: Event

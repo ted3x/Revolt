@@ -6,8 +6,7 @@
 
 package chat.revolt.socket.event_resolver
 
-import chat.revolt.Event
-import chat.revolt.socket.server.ServerEvent
+import chat.revolt.socket.Event
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
