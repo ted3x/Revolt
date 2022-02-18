@@ -9,16 +9,25 @@ package chat.revolt.app
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import chat.revolt.app.di.appModules
+import chat.revolt.socket.api.RevoltSocketListener
+import chat.revolt.socket.api.ClientSocketManager
+import chat.revolt.socket.client.ClientSocketApi
+import chat.revolt.socket.client.data.AuthenticateRequest
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.lang.ref.WeakReference
 
-class RVApp : Application(), Application.ActivityLifecycleCallbacks {
+class RVApp : Application(), Application.ActivityLifecycleCallbacks, RevoltSocketListener {
 
     var currentActivity: WeakReference<Activity>? = null
         private set
 
+    private val socketManager by inject<ClientSocketManager>()
     override fun onCreate() {
         super.onCreate()
         startKoin {
@@ -26,6 +35,7 @@ class RVApp : Application(), Application.ActivityLifecycleCallbacks {
             modules(appModules)
         }
         registerActivityLifecycleCallbacks(this)
+        GlobalScope.launch { socketManager.initialize(this@RVApp) }
     }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {}
@@ -45,4 +55,26 @@ class RVApp : Application(), Application.ActivityLifecycleCallbacks {
     override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {}
 
     override fun onActivityDestroyed(p0: Activity) {}
+
+    override fun onConnectionOpened() {
+        Log.d("onConnectionOpened", "*******************")
+        val socket by inject<ClientSocketApi>()
+        socket.authenticate(AuthenticateRequest(token = "-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE"))
+    }
+
+    override fun onMessageReceived(message: String) {
+        Log.d("onMessageReceived", message)
+    }
+
+    override fun onConnectionClosing() {
+        Log.d("onConnectionClosing", "*******************")
+    }
+
+    override fun onConnectionClosed() {
+        Log.d("onConnectionClosed", "*******************")
+    }
+
+    override fun onConnectionFailed() {
+        Log.d("onConnectionFailed", "*******************")
+    }
 }

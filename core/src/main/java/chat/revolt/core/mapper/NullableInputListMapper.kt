@@ -11,7 +11,7 @@ interface NullableInputListMapper<I, O>: Mapper<List<I>?, List<O>>
 class NullableInputListMapperImpl<I, O>(
     private val mapper: Mapper<I, O>
 ) : NullableInputListMapper<I, O> {
-    override fun map(from: List<I>?): List<O> {
+    override suspend fun map(from: List<I>?): List<O> {
         return from?.map { mapper.map(it) }.orEmpty()
     }
 }

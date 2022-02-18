@@ -6,11 +6,8 @@
 
 package chat.revolt.dashboard.data
 
-import chat.revolt.dashboard.data.dto.FetchMessagesRequestDto
 import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
-import chat.revolt.dashboard.data.dto.MessageDto
 import retrofit2.Call
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

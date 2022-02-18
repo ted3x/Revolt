@@ -8,7 +8,6 @@ package chat.revolt.dashboard.data.data_source
 
 import chat.revolt.dashboard.data.dto.FetchMessagesRequestDto
 import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
-import chat.revolt.dashboard.data.dto.MessageDto
 
 interface ChannelDataSource {
 

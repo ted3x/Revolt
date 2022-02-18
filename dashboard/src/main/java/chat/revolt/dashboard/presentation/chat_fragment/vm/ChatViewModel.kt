@@ -6,22 +6,24 @@
 
 package chat.revolt.dashboard.presentation.chat_fragment.vm
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.dashboard.presentation.chat_fragment.PagingData
 import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
-import chat.revolt.data.local.dao.MessageDao
-import chat.revolt.data.local.mappers.MessageDBMapper
 import chat.revolt.domain.models.Message
+import chat.revolt.socket.client.ClientSocketApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
     private val pagingManager: PagingManager,
-    private val channelRepository: ChannelRepository
-) : BaseViewModel() {
+    private val channelRepository: ChannelRepository,
+    private val messageEventManager: ClientSocketApi
+    ) : BaseViewModel() {
 
     var pagingData: PagingData? = null
     var isLoading: Boolean = true
@@ -29,6 +31,12 @@ class ChatViewModel(
 
     init {
         load()
+
+        viewModelScope.launch {
+            messageEventManager.onMessage().collect {
+                channelRepository.addMessage(it)
+            }
+        }
     }
 
     fun load() {

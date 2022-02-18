@@ -12,7 +12,7 @@ import chat.revolt.domain.models.User
 
 class RelationshipDtoToRelationshipMapper(private val relationshipStatusMapper: RelationshipStatusMapper) :
     NullableInputListMapper<UserDto.RelationshipDto, User.Relationship> {
-    override fun map(from: List<UserDto.RelationshipDto>?): List<User.Relationship> {
+    override suspend fun map(from: List<UserDto.RelationshipDto>?): List<User.Relationship> {
         return from?.map {
             User.Relationship(
                 userId = it.id,

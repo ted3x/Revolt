@@ -16,6 +16,7 @@ import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
 import chat.revolt.dashboard.presentation.chat_fragment.ui.ChatFragment
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
 import chat.revolt.data.local.mappers.MessageDBMapper
+import chat.revolt.data.remote.mappers.message.MessageMapperDto
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -24,7 +25,8 @@ val chatModule = module {
     scope<ChatFragment> {
         scoped<ChannelService> { get<Retrofit>().create(ChannelService::class.java) }
         scoped<ChannelDataSource> { ChannelDataSourceImpl(service = get()) }
-        scoped { FetchMessageMapper(userMapper = get()) }
+        scoped { MessageMapperDto(userRepository = get()) }
+        scoped { FetchMessageMapper(userMapper = get(), messageMapper = get()) }
         scoped { MessageDBMapper(userDBMapper = get()) }
         scoped {
             PagingManager(
@@ -44,6 +46,12 @@ val chatModule = module {
                 userDBMapper = get()
             )
         }
-        viewModel { ChatViewModel(pagingManager = get(), channelRepository = get()) }
+        viewModel {
+            ChatViewModel(
+                pagingManager = get(),
+                channelRepository = get(),
+                messageEventManager = get()
+            )
+        }
     }
 }

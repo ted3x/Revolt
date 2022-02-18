@@ -16,7 +16,7 @@ class UserDtoToUserMapper(
     private val relationshipStatusMapper: RelationshipStatusMapper,
     private val botMapper: BotDtoToBotMapper
 ) : Mapper<UserDto, User> {
-    override fun map(from: UserDto): User {
+    override suspend fun map(from: UserDto): User {
         return User(
             id = from.id,
             username = from.username,

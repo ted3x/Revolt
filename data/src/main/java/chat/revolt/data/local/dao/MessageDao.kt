@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.Flow
 interface MessageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addMessage(message: MessageEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMessages(messages: List<MessageEntity>)
 
     @Query("SELECT * FROM messages ORDER BY createdAt")

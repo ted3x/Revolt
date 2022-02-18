@@ -27,6 +27,7 @@ dependencies {
     implementation libs.scarlet.scarlet
     implementation libs.scarlet.okhttp
     implementation libs.scarlet.moshi
+    implementation libs.moshi.core
     implementation libs.moshi.adapter
     ksp(libs.moshi.ksp)
     implementation libs.scarlet.lifecycle
@@ -36,4 +37,6 @@ dependencies {
     implementation libs.koin.core
     implementation libs.kotlin.coroutines.core
     implementation project(':core')
+    implementation project(':data')
+    implementation project(':domain')
 }

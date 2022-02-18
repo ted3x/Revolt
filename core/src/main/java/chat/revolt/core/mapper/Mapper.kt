@@ -7,5 +7,5 @@
 package chat.revolt.core.mapper
 
 interface Mapper<F, T> {
-    fun map(from: F): T
+    suspend fun map(from: F): T
 }

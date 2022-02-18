@@ -10,7 +10,7 @@ import chat.revolt.core.mapper.Mapper
 import chat.revolt.domain.models.User
 
 class RelationshipStatusMapper: Mapper<String, User.RelationshipStatus> {
-    override fun map(from: String): User.RelationshipStatus {
+    override suspend fun map(from: String): User.RelationshipStatus {
         return User.RelationshipStatus.valueOf(from)
     }
 }

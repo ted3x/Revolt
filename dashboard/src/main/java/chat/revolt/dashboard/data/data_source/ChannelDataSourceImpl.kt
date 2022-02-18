@@ -10,7 +10,6 @@ import chat.revolt.core.extensions.awaitResult
 import chat.revolt.dashboard.data.ChannelService
 import chat.revolt.dashboard.data.dto.FetchMessagesRequestDto
 import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
-import chat.revolt.dashboard.data.dto.MessageDto
 
 class ChannelDataSourceImpl(private val service: ChannelService) : ChannelDataSource {
     override suspend fun fetchMessages(

@@ -11,7 +11,7 @@ import chat.revolt.core.server_config.RevoltConfig
 import chat.revolt.splash.data.dto.RevoltConfigDto
 
 class RevoltConfigMapper : Mapper<RevoltConfigDto, RevoltConfig> {
-    override fun map(from: RevoltConfigDto): RevoltConfig {
+    override suspend fun map(from: RevoltConfigDto): RevoltConfig {
         return RevoltConfig(
             version = from.version,
             features = from.features.mapToDomain(),

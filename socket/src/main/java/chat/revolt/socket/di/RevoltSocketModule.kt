@@ -6,21 +6,12 @@
 
 package chat.revolt.socket.di
 
-import chat.revolt.socket.adapter.LoggingMessageAdapter
 import chat.revolt.core.server_config.RevoltConfigManager
-import chat.revolt.socket.api.RevoltSocket
-import chat.revolt.socket.api.RevoltSocketImpl
-import chat.revolt.socket.event_resolver.EventResolver
-import chat.revolt.socket.server.allEventsStream
-import chat.revolt.socket.server.channel.ChannelEvent
-import chat.revolt.socket.server.channel.ChannelEventManager
-import chat.revolt.socket.server.channel.ChannelEventManagerImpl
-import chat.revolt.socket.server.channel.ChannelEventResolver
-import chat.revolt.socket.server.channel.type.ChannelEventType
-import com.squareup.moshi.Moshi
+import chat.revolt.socket.api.ClientSocketManager
 import com.tinder.scarlet.Scarlet
-import com.tinder.scarlet.messageadapter.moshi.MoshiMessageAdapter
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
+import chat.revolt.socket.adapter.MoshiMessageAdapter
+import chat.revolt.socket.client.ClientSocketApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.StringQualifier
@@ -37,23 +28,10 @@ val revoltSocketModule = module {
     single {
         Scarlet.Builder()
             .webSocketFactory(factory = get())
-            .addMessageAdapterFactory(
-                LoggingMessageAdapter.Factory(
-                    MoshiMessageAdapter.Factory()
-                )
-            )
+            .addMessageAdapterFactory(MoshiMessageAdapter.Factory())
             .addStreamAdapterFactory(chat.revolt.socket.adapter.CoroutinesStreamAdapterFactory())
             .build()
     }
-    single { get<Scarlet>().create(RevoltSocket::class.java) }
-    single { RevoltSocketImpl(instance = get()) }
-
-    single { Moshi.Builder().build() }
-    single<EventResolver<ChannelEvent, ChannelEventType>> { ChannelEventResolver(moshi = get()) }
-    single {
-        get<RevoltSocket>().allEventsStream<ChannelEvent, ChannelEventType>(
-            eventResolver = get()
-        )
-    }
-    single<ChannelEventManager> { ChannelEventManagerImpl(channelStreams = get()) }
+    single { get<Scarlet>().create(ClientSocketApi::class.java) }
+    single { ClientSocketManager(socket = get()) }
 }

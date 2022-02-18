@@ -14,5 +14,6 @@ import kotlinx.coroutines.flow.Flow
 interface ChannelRepository {
 
     fun getMessages(channelId: String): Flow<List<Message>>
+    suspend fun addMessage(message: Message)
     suspend fun fetchMessages(channelId: String, request: FetchMessagesRequest): FetchMessagesResponse
 }

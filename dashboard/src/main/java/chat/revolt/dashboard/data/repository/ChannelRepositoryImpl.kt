@@ -40,6 +40,10 @@ class ChannelRepositoryImpl(
             }
     }
 
+    override suspend fun addMessage(message: Message) {
+        messageDao.addMessage(messageMapper.mapToEntity(message))
+    }
+
     override suspend fun fetchMessages(
         channelId: String,
         request: FetchMessagesRequest

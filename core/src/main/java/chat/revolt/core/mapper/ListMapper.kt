@@ -11,7 +11,7 @@ interface ListMapper<I, O>: Mapper<List<I>, List<O>>
 class ListMapperImpl<I, O>(
     private val mapper: Mapper<I, O>
 ) : ListMapper<I, O> {
-    override fun map(from: List<I>): List<O> {
+    override suspend fun map(from: List<I>): List<O> {
         return from.map { mapper.map(it) }
     }
 }

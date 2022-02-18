@@ -52,6 +52,10 @@ dependencies {
     implementation project(':styles')
     implementation project(':splash')
     implementation project(':socket')
+    implementation libs.scarlet.scarlet
+    implementation libs.scarlet.lifecycle
+    implementation libs.scarlet.okhttp
+    implementation libs.scarlet.coroutines
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
 }
