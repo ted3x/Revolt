@@ -14,6 +14,8 @@ import chat.revolt.socket.adapter.MoshiMessageAdapter
 import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.server.ServerDataSource
 import chat.revolt.socket.server.ServerDataSourceImpl
+import chat.revolt.socket.server.message.ChannelStartTypingEventMapper
+import chat.revolt.socket.server.message.ChannelStopTypingEventMapper
 import chat.revolt.socket.server.message.MessageEventMapper
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -38,5 +40,14 @@ val revoltSocketModule = module {
     single { get<Scarlet>().create(SocketAPI::class.java) }
     single { ClientSocketManager(socket = get()) }
     single { MessageEventMapper(userRepository = get()) }
-    single<ServerDataSource> { ServerDataSourceImpl(socket = get(), messageEventMapper = get()) }
+    single { ChannelStartTypingEventMapper(userRepository = get()) }
+    single { ChannelStopTypingEventMapper(userRepository = get()) }
+    single<ServerDataSource> {
+        ServerDataSourceImpl(
+            socket = get(),
+            messageEventMapper = get(),
+            channelStartTypingMapper = get(),
+            channelStopTypingMapper = get()
+        )
+    }
 }

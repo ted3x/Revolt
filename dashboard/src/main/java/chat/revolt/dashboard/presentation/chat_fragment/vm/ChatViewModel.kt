@@ -6,6 +6,7 @@
 
 package chat.revolt.dashboard.presentation.chat_fragment.vm
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.ChannelRepository
@@ -26,13 +27,28 @@ class ChatViewModel(
     var pagingData: PagingData? = null
     var isLoading: Boolean = true
     var flow: Flow<List<Message>> = channelRepository.getMessages(channelId = "")
+    val typers: MutableLiveData<String?> = MutableLiveData()
+    val typersList: MutableList<String> = mutableListOf()
 
     init {
         load()
 
+        val channelId = "01FVDG79NRQCS9MRJSVTDYHYPV"
         viewModelScope.launch {
-            dataSource.onMessage(channelId = "01FVDG79NRQCS9MRJSVTDYHYPV").collect {
+            dataSource.onMessage(channelId = channelId).collect {
                 channelRepository.addMessage(it)
+            }
+        }
+        viewModelScope.launch {
+            dataSource.onChannelStartTyping(channelId).collect {
+                typersList.add(it.user.username)
+                typers.postValue(getTypersMessage(typersList))
+            }
+        }
+        viewModelScope.launch {
+            dataSource.onChannelStopTyping(channelId).collect {
+                typersList.remove(it.user.username)
+                typers.postValue(getTypersMessage(typersList))
             }
         }
     }
@@ -43,6 +59,17 @@ class ChatViewModel(
         viewModelScope.launch {
             pagingData =
                 pagingManager.load(channelId = "01FVSDSHJ6QSH0DZJYEBTZ2FES", pagingData?.lastId)
+        }
+    }
+
+    fun getTypersMessage(typersList: MutableList<String>): String? {
+        val typers = typersList.size
+        return when {
+            typers == 1 -> "${typersList.first()} is typing..."
+            typers == 2 -> "${typersList.first()} and ${typersList.get(1)} are typing..."
+            typers == 3 -> "${typersList.first()}, ${typersList.get(1)} and ${typersList.get(2)} are typing..."
+            typers >= 4 -> "${typersList.first()}, ${typersList.get(1)} and ${typers - 2} others are typing..."
+            else -> null
         }
     }
 }

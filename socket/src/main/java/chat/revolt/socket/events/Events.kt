@@ -14,5 +14,40 @@ open class Events{
 }
 
 enum class Event {
-    Message
+    Authenticate,
+    BeginTyping,
+    EndTyping,
+    Ping,
+
+    Error,
+    Authenticated,
+    Pong,
+    Ready,
+
+    //Message
+    Message,
+    MessageUpdate,
+    MessageDelete,
+
+    //Channel
+    ChannelCreate,
+    ChannelUpdate,
+    ChannelDelete,
+    ChannelGroupJoin,
+    ChannelGroupLeave,
+    ChannelStartTyping,
+    ChannelStopTyping,
+    ChannelAck,
+
+    //Server
+    ServerUpdate,
+    ServerDelete,
+    ServerMemberUpdate,
+    ServerMemberJoin,
+    ServerMemberLeave,
+    ServerRoleUpdate,
+    ServerRoleDelete,
+
+    //User
+    UserUpdate
 }

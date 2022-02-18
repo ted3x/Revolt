@@ -30,12 +30,14 @@ import org.koin.core.module.Module
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragmentBinding::inflate) {
+class ChatFragment :
+    BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragmentBinding::inflate) {
 
     override val viewModel: ChatViewModel by viewModel()
     override val module: List<Module>
         get() = listOf(chatModule)
-    object Comparator: DiffUtil.ItemCallback<Message>() {
+
+    object Comparator : DiffUtil.ItemCallback<Message>() {
         override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
             return oldItem.id == newItem.id
         }
@@ -57,15 +59,15 @@ class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragme
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                if(!viewModel.isLoading || initial)
+                if (!viewModel.isLoading || initial)
                     binding.chatRecyclerView.scrollToPosition(adapter.itemCount - 1)
-                    initial = false
+                initial = false
                 viewModel.isLoading = false
             }
         })
         val lm = LinearLayoutManager(context)
 
-        binding.chatRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        binding.chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val currentFirstVisible: Int = lm.findFirstVisibleItemPosition()
@@ -82,6 +84,10 @@ class ChatFragment : BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragme
                     adapter.submitList(it)
                 }
             }
+        }
+        viewModel.typers.observe {
+            binding.typers.text = it
+            binding.typers.visibility = if (it != null) View.VISIBLE else View.GONE
         }
     }
 

@@ -5,6 +5,8 @@
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
@@ -12,6 +14,43 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/typers"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/typers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:padding="@dimen/dimen_p_3"
+        android:visibility="gone"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/chatRecyclerView"
+        app:layout_constraintBottom_toTopOf="@id/plus"
+        tools:text="User1 and user2 typing..." />
+
+    <Button
+        android:id="@+id/plus"
+        android:layout_width="@dimen/dimen_p_40"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_p_5"
+        android:text="+"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/typers" />
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_p_60"
+        android:hint="Message general"
+        android:padding="@dimen/dimen_p_5"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textSize="@dimen/dimen_sp_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/plus"
+        app:layout_constraintTop_toBottomOf="@id/typers" />
 </androidx.constraintlayout.widget.ConstraintLayout>
