@@ -13,7 +13,7 @@ import android.util.Log
 import chat.revolt.app.di.appModules
 import chat.revolt.socket.api.RevoltSocketListener
 import chat.revolt.socket.api.ClientSocketManager
-import chat.revolt.socket.client.ClientSocketApi
+import chat.revolt.socket.client.SocketAPI
 import chat.revolt.socket.client.data.AuthenticateRequest
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -58,7 +58,7 @@ class RVApp : Application(), Application.ActivityLifecycleCallbacks, RevoltSocke
 
     override fun onConnectionOpened() {
         Log.d("onConnectionOpened", "*******************")
-        val socket by inject<ClientSocketApi>()
+        val socket by inject<SocketAPI>()
         socket.authenticate(AuthenticateRequest(token = "-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE"))
     }
 

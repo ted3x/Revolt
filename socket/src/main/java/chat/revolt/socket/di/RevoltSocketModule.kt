@@ -11,7 +11,7 @@ import chat.revolt.socket.api.ClientSocketManager
 import com.tinder.scarlet.Scarlet
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
 import chat.revolt.socket.adapter.MoshiMessageAdapter
-import chat.revolt.socket.client.ClientSocketApi
+import chat.revolt.socket.client.SocketAPI
 import chat.revolt.socket.server.ServerDataSource
 import chat.revolt.socket.server.ServerDataSourceImpl
 import chat.revolt.socket.server.message.MessageEventMapper
@@ -35,7 +35,7 @@ val revoltSocketModule = module {
             .addStreamAdapterFactory(chat.revolt.socket.adapter.CoroutinesStreamAdapterFactory())
             .build()
     }
-    single { get<Scarlet>().create(ClientSocketApi::class.java) }
+    single { get<Scarlet>().create(SocketAPI::class.java) }
     single { ClientSocketManager(socket = get()) }
     single { MessageEventMapper(userRepository = get()) }
     single<ServerDataSource> { ServerDataSourceImpl(socket = get(), messageEventMapper = get()) }

@@ -7,7 +7,7 @@
 package chat.revolt.socket.server
 
 import chat.revolt.domain.models.Message
-import chat.revolt.socket.client.ClientSocketApi
+import chat.revolt.socket.client.SocketAPI
 import chat.revolt.socket.server.message.MessageEventMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -18,7 +18,7 @@ interface ServerDataSource {
 }
 
 class ServerDataSourceImpl(
-    private val socket: ClientSocketApi,
+    private val socket: SocketAPI,
     private val messageEventMapper: MessageEventMapper
 ) : ServerDataSource {
     override suspend fun onMessage(channelId: String): Flow<Message> {

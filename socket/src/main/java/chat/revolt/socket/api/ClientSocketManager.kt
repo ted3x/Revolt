@@ -6,11 +6,11 @@
 
 package chat.revolt.socket.api
 
-import chat.revolt.socket.client.ClientSocketApi
+import chat.revolt.socket.client.SocketAPI
 import com.tinder.scarlet.WebSocket
 import kotlinx.coroutines.flow.collect
 
-class ClientSocketManager(private val socket: ClientSocketApi) {
+class ClientSocketManager(private val socket: SocketAPI) {
 
     suspend fun initialize(listener: RevoltSocketListener) {
         socket.observerWebSocketEvent().collect {

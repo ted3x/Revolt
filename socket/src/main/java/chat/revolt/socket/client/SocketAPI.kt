@@ -13,7 +13,7 @@ import com.tinder.scarlet.ws.Receive
 import com.tinder.scarlet.ws.Send
 import kotlinx.coroutines.flow.Flow
 
-interface ClientSocketApi {
+interface SocketAPI {
 
     @Receive
     fun observerWebSocketEvent(): Flow<WebSocket.Event>

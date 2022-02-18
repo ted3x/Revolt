@@ -18,12 +18,8 @@ import chat.revolt.auth.states.EmailStates
 import chat.revolt.auth.states.PasswordStates
 import chat.revolt.core.extensions.onChange
 import chat.revolt.core.fragment.BaseFragment
-import chat.revolt.socket.client.ClientSocketApi
-import chat.revolt.socket.client.data.AuthenticateRequest
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
 import java.lang.ref.WeakReference
