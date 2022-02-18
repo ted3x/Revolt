@@ -7,7 +7,7 @@
 package chat.revolt.socket.server
 
 import chat.revolt.domain.models.Message
-import chat.revolt.socket.client.SocketAPI
+import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.server.message.MessageEventMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter

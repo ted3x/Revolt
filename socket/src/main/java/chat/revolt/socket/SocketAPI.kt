@@ -4,7 +4,7 @@
  * Last modified 2/18/22, 1:25 AM
  */
 
-package chat.revolt.socket.client
+package chat.revolt.socket
 
 import chat.revolt.socket.client.data.AuthenticateRequest
 import chat.revolt.socket.server.message.MessageEvent

@@ -13,7 +13,7 @@ import android.util.Log
 import chat.revolt.app.di.appModules
 import chat.revolt.socket.api.RevoltSocketListener
 import chat.revolt.socket.api.ClientSocketManager
-import chat.revolt.socket.client.SocketAPI
+import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.client.data.AuthenticateRequest
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -6,7 +6,7 @@
 
 package chat.revolt.socket.api
 
-import chat.revolt.socket.client.SocketAPI
+import chat.revolt.socket.SocketAPI
 import com.tinder.scarlet.WebSocket
 import kotlinx.coroutines.flow.collect
 

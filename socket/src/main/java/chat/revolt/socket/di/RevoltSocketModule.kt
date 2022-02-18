@@ -11,7 +11,7 @@ import chat.revolt.socket.api.ClientSocketManager
 import com.tinder.scarlet.Scarlet
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
 import chat.revolt.socket.adapter.MoshiMessageAdapter
-import chat.revolt.socket.client.SocketAPI
+import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.server.ServerDataSource
 import chat.revolt.socket.server.ServerDataSourceImpl
 import chat.revolt.socket.server.message.MessageEventMapper
