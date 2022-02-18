@@ -12,6 +12,9 @@ import com.tinder.scarlet.Scarlet
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
 import chat.revolt.socket.adapter.MoshiMessageAdapter
 import chat.revolt.socket.client.ClientSocketApi
+import chat.revolt.socket.server.ServerDataSource
+import chat.revolt.socket.server.ServerDataSourceImpl
+import chat.revolt.socket.server.message.MessageEventMapper
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.StringQualifier
@@ -34,4 +37,6 @@ val revoltSocketModule = module {
     }
     single { get<Scarlet>().create(ClientSocketApi::class.java) }
     single { ClientSocketManager(socket = get()) }
+    single { MessageEventMapper(userRepository = get()) }
+    single<ServerDataSource> { ServerDataSourceImpl(socket = get(), messageEventMapper = get()) }
 }

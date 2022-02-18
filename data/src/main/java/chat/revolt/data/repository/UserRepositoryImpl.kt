@@ -12,6 +12,7 @@ import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.data.remote.mappers.user.UserDtoToUserMapper
 import chat.revolt.domain.models.User
 import chat.revolt.domain.repository.UserRepository
+import java.lang.IllegalStateException
 
 class UserRepositoryImpl(
     private val userDao: UserDao,
@@ -19,13 +20,13 @@ class UserRepositoryImpl(
     private val userEntityMapper: UserDBMapper,
     private val userDtoMapper: UserDtoToUserMapper
 ) : UserRepository {
-    override suspend fun getUser(userId: String): User? {
+    override suspend fun getUser(userId: String): User {
         return userDataSource.getUser(userId)?.let { userDto ->
             userDtoMapper.map(userDto).also {
                 val userEntity = userEntityMapper.mapToEntity(it)
                 userDao.addUser(userEntity)
             }
-        }
+        } ?: throw IllegalStateException("User with $userId not found")
     }
 
     override suspend fun addUser(user: User) {

@@ -11,9 +11,13 @@ import chat.revolt.core.mapper.EntityMapper
 import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.repository.UserRepository
 
-class MessageDBMapper(private val userDBMapper: UserDBMapper) {
-    fun mapToDomain(userEntity: UserEntity, from: MessageEntity): Message {
+class MessageDBMapper(
+    private val userDBMapper: UserDBMapper,
+    private val userRepository: UserRepository
+) {
+    suspend fun mapToDomain(userEntity: UserEntity, from: MessageEntity): Message {
         return Message(
             id = from.id,
             channel = from.channel,
@@ -21,7 +25,7 @@ class MessageDBMapper(private val userDBMapper: UserDBMapper) {
             content = from.content,
             attachments = emptyList(),
             edited = from.edited,
-            mentions = from.mentions,
+            mentions = from.mentions?.map { userRepository.getUser(it) },
             replies = from.replies,
             masquerade = null
         )
@@ -35,7 +39,7 @@ class MessageDBMapper(private val userDBMapper: UserDBMapper) {
             content = from.content,
             createdAt = UlidTimeDecoder.getTimestamp(from.id),
             edited = from.edited,
-            mentions = from.mentions,
+            mentions = from.mentions?.map { it.id },
             replies = from.replies,
         )
     }

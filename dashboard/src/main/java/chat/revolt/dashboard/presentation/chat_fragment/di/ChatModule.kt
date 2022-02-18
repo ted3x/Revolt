@@ -27,7 +27,7 @@ val chatModule = module {
         scoped<ChannelDataSource> { ChannelDataSourceImpl(service = get()) }
         scoped { MessageMapperDto(userRepository = get()) }
         scoped { FetchMessageMapper(userMapper = get(), messageMapper = get()) }
-        scoped { MessageDBMapper(userDBMapper = get()) }
+        scoped { MessageDBMapper(userDBMapper = get(), userRepository = get()) }
         scoped {
             PagingManager(
                 database = get(),
@@ -50,7 +50,7 @@ val chatModule = module {
             ChatViewModel(
                 pagingManager = get(),
                 channelRepository = get(),
-                messageEventManager = get()
+                dataSource = get()
             )
         }
     }

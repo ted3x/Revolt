@@ -13,7 +13,7 @@ data class Message(
     val content: String,
     val attachments: List<Attachment>?,
     val edited: String?,
-    val mentions: List<String>?,
+    val mentions: List<User>?,
     val replies: List<String>?,
     val masquerade: Masquerade?
 ) {

@@ -6,15 +6,13 @@
 
 package chat.revolt.dashboard.presentation.chat_fragment.vm
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.dashboard.presentation.chat_fragment.PagingData
 import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
 import chat.revolt.domain.models.Message
-import chat.revolt.socket.client.ClientSocketApi
-import kotlinx.coroutines.delay
+import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -22,8 +20,8 @@ import kotlinx.coroutines.launch
 class ChatViewModel(
     private val pagingManager: PagingManager,
     private val channelRepository: ChannelRepository,
-    private val messageEventManager: ClientSocketApi
-    ) : BaseViewModel() {
+    private val dataSource: ServerDataSource
+) : BaseViewModel() {
 
     var pagingData: PagingData? = null
     var isLoading: Boolean = true
@@ -33,7 +31,7 @@ class ChatViewModel(
         load()
 
         viewModelScope.launch {
-            messageEventManager.onMessage().collect {
+            dataSource.onMessage(channelId = "01FVDG79NRQCS9MRJSVTDYHYPV").collect {
                 channelRepository.addMessage(it)
             }
         }
@@ -43,8 +41,8 @@ class ChatViewModel(
         if (pagingData?.isPaginationEndReached == true) return
         isLoading = true
         viewModelScope.launch {
-            delay(3500)
-            pagingData = pagingManager.load(channelId = "01FVSDSHJ6QSH0DZJYEBTZ2FES", pagingData?.lastId)
+            pagingData =
+                pagingManager.load(channelId = "01FVSDSHJ6QSH0DZJYEBTZ2FES", pagingData?.lastId)
         }
     }
 }
