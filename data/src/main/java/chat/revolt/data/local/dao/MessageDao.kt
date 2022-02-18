@@ -22,9 +22,9 @@ interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMessages(messages: List<MessageEntity>)
 
-    @Query("SELECT * FROM messages ORDER BY createdAt")
-    fun getMessages(): Flow<List<MessageEntity>>
+    @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt")
+    fun getMessages(channelId: String): Flow<List<MessageEntity>>
 
-    @Query("DELETE FROM messages")
-    suspend fun clear()
+    @Query("DELETE FROM messages WHERE channel LIKE :channelId")
+    suspend fun clear(channelId: String)
 }

@@ -32,9 +32,10 @@ class FetchMessageMapper(private val userMapper: UserDtoToUserMapper, private va
         from: FetchMessagesResponseDto,
         selfUser: User
     ): FetchMessagesResponse {
+        val users = from.users.toSet().map { userMapper.map(it) }
         return FetchMessagesResponse(
-            messages = from.messages.map { messageMapper.map(it) },
-            users = from.users.map { userMapper.map(it) }
+            messages = from.messages.map { messageMapper.map(it, users) },
+            users = users
         )
     }
 }

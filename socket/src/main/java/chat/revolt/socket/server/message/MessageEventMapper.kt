@@ -20,7 +20,7 @@ class MessageEventMapper(private val userRepository: UserRepository): Mapper<Mes
             content = from.content,
             attachments = from.attachments?.map { it.map() },
             edited = null,
-            mentions = from.mentions?.map { userRepository.getUser(userId = it) },
+            mentions = from.mentions?.let { userRepository.getUsers(it) },
             replies = null,
             masquerade = Message.Masquerade(from.masquerade?.name, from.masquerade?.avatar)
         )

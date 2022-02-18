@@ -12,18 +12,18 @@ import chat.revolt.domain.models.User
 import chat.revolt.domain.repository.UserRepository
 
 class MessageMapperDto(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
 
-    suspend fun map(from: MessageDto): Message {
+    suspend fun map(from: MessageDto, users: List<User>): Message {
         return Message(
             id = from.id,
             channel = from.channel,
-            author = userRepository.getUser(from.author),
+            author = users.firstOrNull { it.id == from.author } ?: userRepository.getCurrentUser(),
             content = from.content,
             attachments = from.attachments?.map { it.map() },
             edited = from.edited?.date,
-            mentions = from.mentions?.map { userRepository.getUser(it) },
+            mentions = from.mentions?.let{ userRepository.getUsers(it) },
             replies = from.replies,
             masquerade = Message.Masquerade(from.masquerade?.name, from.masquerade?.avatar)
         )

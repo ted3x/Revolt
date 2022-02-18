@@ -23,6 +23,10 @@ import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
 import chat.revolt.domain.models.Message
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,6 +37,7 @@ import java.util.*
 class ChatFragment :
     BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragmentBinding::inflate) {
 
+    private lateinit var messageCollectorJob: Job
     override val viewModel: ChatViewModel by viewModel()
     override val module: List<Module>
         get() = listOf(chatModule)
@@ -79,18 +84,34 @@ class ChatFragment :
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
         lifecycleScope.launchWhenResumed {
-            launch {
-                viewModel.flow.collectLatest {
-                    adapter.submitList(it)
-                }
-            }
+            viewModel.changeChannel("01FVDG79NRQCS9MRJSVTDYHYPV")
         }
         viewModel.typers.observe {
             binding.typers.text = it
             binding.typers.visibility = if (it != null) View.VISIBLE else View.GONE
         }
+        binding.plus.setOnClickListener {
+            viewModel.changeChannel(channelId = if (viewModel.currentChannel.value == "01FVDG79NRQCS9MRJSVTDYHYPV") "01FVSDRN16DHQ8FANQS3TKS1WF" else "01FVDG79NRQCS9MRJSVTDYHYPV")
+        }
+        viewModel.currentChannel.observe {
+            viewModel.load()
+            if (this@ChatFragment::messageCollectorJob.isInitialized) {
+                messageCollectorJob.cancel()
+            }
+            startMessageCollector(lifecycleScope, adapter)
+        }
     }
 
+    private fun startMessageCollector(
+        coroutineScope: CoroutineScope,
+        adapter: PagedListDelegationAdapter<Message>
+    ) {
+        messageCollectorJob = coroutineScope.launch {
+            viewModel.flow.cancellable().collect {
+                adapter.submitList(it)
+            }
+        }
+    }
 
     fun textAdapterItem(itemClickedListener: (Message) -> Unit) =
         adapterDelegateViewBinding<Message, Message, TextAdapterItemBinding>(

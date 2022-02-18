@@ -25,7 +25,7 @@ class MessageDBMapper(
             content = from.content,
             attachments = emptyList(),
             edited = from.edited,
-            mentions = from.mentions?.map { userRepository.getUser(it) },
+            mentions = from.mentions?.let { userRepository.getUsers(it) },
             replies = from.replies,
             masquerade = null
         )

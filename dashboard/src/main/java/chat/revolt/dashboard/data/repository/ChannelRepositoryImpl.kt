@@ -30,7 +30,7 @@ class ChannelRepositoryImpl(
 ) : ChannelRepository {
 
     override fun getMessages(channelId: String): Flow<List<Message>> {
-        return messageDao.getMessages()
+        return messageDao.getMessages(channelId)
             .map {
                 it.map {
                     val user =

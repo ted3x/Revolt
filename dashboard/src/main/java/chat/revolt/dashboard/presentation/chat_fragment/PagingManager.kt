@@ -29,7 +29,7 @@ class PagingManager(
         val newMessages = response.messages
         if (newMessages.isNotEmpty()) {
             database.withTransaction {
-                if (lastId == null) database.messageDao().clear()
+                if (lastId == null) database.messageDao().clear(channelId)
                 database.userDao().addUsers(response.users.map { userDBMapper.mapToEntity(it) })
                 database.messageDao().addMessages(newMessages.map { mapper.mapToEntity(it) })
             }

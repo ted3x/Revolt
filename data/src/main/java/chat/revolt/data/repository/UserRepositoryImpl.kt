@@ -29,6 +29,14 @@ class UserRepositoryImpl(
         } ?: throw IllegalStateException("User with $userId not found")
     }
 
+    override suspend fun getCurrentUser(): User {
+        return userDao.getCurrentUser()?.let { userEntityMapper.mapToDomain(it) } ?: throw IllegalStateException("Current user can't be null")
+    }
+
+    override suspend fun getUsers(userIds: List<String>): List<User> {
+       return userIds.toSet().map { getUser(it) }
+    }
+
     override suspend fun addUser(user: User) {
         val userEntity = userEntityMapper.mapToEntity(user)
         userDao.addUser(userEntity)

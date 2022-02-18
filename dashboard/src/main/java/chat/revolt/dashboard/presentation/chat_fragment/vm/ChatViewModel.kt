@@ -14,7 +14,9 @@ import chat.revolt.dashboard.presentation.chat_fragment.PagingData
 import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
 import chat.revolt.domain.models.Message
 import chat.revolt.socket.server.ServerDataSource
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -26,31 +28,49 @@ class ChatViewModel(
 
     var pagingData: PagingData? = null
     var isLoading: Boolean = true
-    var flow: Flow<List<Message>> = channelRepository.getMessages(channelId = "")
     val typers: MutableLiveData<String?> = MutableLiveData()
     val typersList: MutableList<String> = mutableListOf()
+    private lateinit var messageListener: Job
+    private lateinit var channelStartTypingListener: Job
+    private lateinit var channelStopTypingListener: Job
+    val currentChannel = MutableLiveData<String>()
+    val flow: Flow<List<Message>> get() = channelRepository.getMessages(channelId = currentChannel.value!!)
 
-    init {
-        load()
+    fun changeChannel(channelId: String) {
+        currentChannel.value = channelId
+        pagingData = null
+        isLoading = true
+        stopEventListeners()
+        startEventListeners()
+    }
 
-        val channelId = "01FVDG79NRQCS9MRJSVTDYHYPV"
-        viewModelScope.launch {
-            dataSource.onMessage(channelId = channelId).collect {
+    private fun startEventListeners() {
+        messageListener = viewModelScope.launch {
+            dataSource.onMessage(channelId = currentChannel.value!!).cancellable().collect {
                 channelRepository.addMessage(it)
             }
         }
-        viewModelScope.launch {
-            dataSource.onChannelStartTyping(channelId).collect {
+        channelStartTypingListener = viewModelScope.launch {
+            dataSource.onChannelStartTyping(currentChannel.value!!).cancellable().collect {
                 typersList.add(it.user.username)
                 typers.postValue(getTypersMessage(typersList))
             }
         }
-        viewModelScope.launch {
-            dataSource.onChannelStopTyping(channelId).collect {
+        channelStopTypingListener = viewModelScope.launch {
+            dataSource.onChannelStopTyping(currentChannel.value!!).cancellable().collect {
                 typersList.remove(it.user.username)
                 typers.postValue(getTypersMessage(typersList))
             }
         }
+    }
+
+    private fun stopEventListeners() {
+        if (this::messageListener.isInitialized)
+            messageListener.cancel()
+        if (this::messageListener.isInitialized)
+            messageListener.cancel()
+        if (this::channelStopTypingListener.isInitialized)
+            channelStopTypingListener.cancel()
     }
 
     fun load() {
@@ -58,7 +78,7 @@ class ChatViewModel(
         isLoading = true
         viewModelScope.launch {
             pagingData =
-                pagingManager.load(channelId = "01FVSDSHJ6QSH0DZJYEBTZ2FES", pagingData?.lastId)
+                pagingManager.load(channelId = currentChannel.value!!, pagingData?.lastId)
         }
     }
 

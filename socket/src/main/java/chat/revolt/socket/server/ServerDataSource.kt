@@ -26,17 +26,18 @@ class ServerDataSourceImpl(
     private val channelStopTypingMapper: ChannelStopTypingEventMapper
 ) : ServerDataSource {
     override suspend fun onMessage(channelId: String): Flow<Message> {
-        return socket.onMessage().map { messageEventMapper.map(it) }
-            .filter { it.channel == channelId }
+        return socket.onMessage().filter { it.channel == channelId }.map { messageEventMapper.map(it) }
     }
 
     override suspend fun onChannelStartTyping(channelId: String): Flow<ChannelStartTyping> {
-        return socket.onChannelStartTyping().map { channelStartTypingMapper.map(it) }
-            .filter { it.channelId == channelId }
+        return socket.onChannelStartTyping().filter { it.channelId == channelId }
+            .map { channelStartTypingMapper.map(it) }
+
     }
 
     override suspend fun onChannelStopTyping(channelId: String): Flow<ChannelStopTyping> {
-        return socket.onChannelStopTyping().map { channelStopTypingMapper.map(it) }
-            .filter { it.channelId == channelId }
+        return socket.onChannelStopTyping().filter { it.channelId == channelId }
+            .map { channelStopTypingMapper.map(it) }
+
     }
 }
