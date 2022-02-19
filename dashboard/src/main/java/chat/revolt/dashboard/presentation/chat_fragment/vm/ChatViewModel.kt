@@ -39,7 +39,6 @@ class ChatViewModel(
     fun changeChannel(channelId: String) {
         currentChannel.value = channelId
         pagingData = null
-        isLoading = true
         stopEventListeners()
         startEventListeners()
     }

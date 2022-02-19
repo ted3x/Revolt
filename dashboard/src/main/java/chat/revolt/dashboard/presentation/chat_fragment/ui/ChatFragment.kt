@@ -119,7 +119,7 @@ class ChatFragment :
         ) {
             bind {
                 binding.authorName.text = item.author.username
-                binding.text.text = item.content
+                binding.text.text = item.content.toString()
                 binding.date.text = UlidTimeDecoder.getTimestamp(item.id).toDate(requireContext())
                 Glide.with(context).load(item.author.avatarUrl).into(binding.authorImage)
             }

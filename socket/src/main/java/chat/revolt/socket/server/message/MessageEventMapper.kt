@@ -17,7 +17,7 @@ class MessageEventMapper(private val userRepository: UserRepository): Mapper<Mes
             id = from.id,
             channel = from.channel,
             author = userRepository.getUser(from.author),
-            content = from.content,
+            content = Message.Content.Text(""),
             attachments = from.attachments?.map { it.map() },
             edited = null,
             mentions = from.mentions?.let { userRepository.getUsers(it) },

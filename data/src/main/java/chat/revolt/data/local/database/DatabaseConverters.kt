@@ -7,13 +7,14 @@
 package chat.revolt.data.local.database
 
 import androidx.room.TypeConverter
+import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.entity.user.UserEntity
-import com.squareup.moshi.Moshi
+import chat.revolt.domain.models.ContentType
 import com.squareup.moshi.Types
 import java.lang.IllegalStateException
+import java.lang.NullPointerException
 
 class DatabaseConverters {
-    private val moshi = Moshi.Builder().build()
 
     private val relationshipType =
         Types.newParameterizedType(List::class.java, UserEntity.Relationship::class.java)
@@ -64,5 +65,44 @@ class DatabaseConverters {
     fun listToString(list: List<String>?): String {
         val type = Types.newParameterizedType(List::class.java, String::class.java)
         return moshi.adapter<List<String>>(type).toJson(list)
+    }
+
+    @TypeConverter
+    fun contentToString(content: MessageEntity.ContentEntity): String {
+        return when (content) {
+            is MessageEntity.ContentEntity.ChannelDescriptionChanged -> channelDescriptionChangedToString(
+                content
+            )
+            is MessageEntity.ContentEntity.ChannelIconChanged -> channelIconChangedToString(content)
+            is MessageEntity.ContentEntity.ChannelRenamed -> channelRenamedToString(content)
+            is MessageEntity.ContentEntity.Message -> messageToString(content)
+            is MessageEntity.ContentEntity.Text -> textToString(content)
+            is MessageEntity.ContentEntity.UserAdded -> userAddedToString(content)
+            is MessageEntity.ContentEntity.UserBanned -> userBannedToString(content)
+            is MessageEntity.ContentEntity.UserJoined -> userJoinedToString(content)
+            is MessageEntity.ContentEntity.UserKicked -> userKickedToString(content)
+            is MessageEntity.ContentEntity.UserLeft -> userLeftToString(content)
+            is MessageEntity.ContentEntity.UserRemove -> userRemovedToString(content)
+        }
+    }
+
+    @TypeConverter
+    fun stringToContent(string: String): MessageEntity.ContentEntity {
+        val mapValues = mapAdapter.fromJson(string)
+        val type = mapValues?.get("type") as? String ?: throw NullPointerException("type can't be null")
+        return when (ContentType.valueOf(type)) {
+            ContentType.Text -> stringToText(string)
+            ContentType.UserAdded -> stringToUserAdded(string)
+            ContentType.UserRemove -> stringToUserRemoved(string)
+            ContentType.UserJoined -> stringToUserJoined(string)
+            ContentType.UserLeft -> stringToUserLeft(string)
+            ContentType.UserKicked -> stringToUserKicked(string)
+            ContentType.UserBanned -> stringToUserBanned(string)
+            ContentType.ChannelRenamed -> stringToChanelRenamed(string)
+            ContentType.ChannelDescriptionChanged -> stringToChannelDescriptionChanged(string)
+            ContentType.ChannelIconChanged -> stringToChannelIconChanged(string)
+            ContentType.Message -> stringToMessage(string)
+            else -> throw IllegalStateException("wrong $type passed")
+        }
     }
 }

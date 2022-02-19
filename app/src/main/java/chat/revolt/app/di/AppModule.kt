@@ -27,6 +27,7 @@ import chat.revolt.dashboard.navigator.DashboardNavigator
 import chat.revolt.dashboard.navigator.DashboardNavigatorImpl
 import chat.revolt.data.local.database.databaseModule
 import chat.revolt.data.remote.di.userModule
+import chat.revolt.data.remote.dto.message.MessageContentAdapter
 import chat.revolt.data.repository.AccountRepositoryImpl
 import chat.revolt.domain.repository.AccountRepository
 import chat.revolt.socket.di.revoltSocketModule
@@ -36,6 +37,7 @@ import com.github.terrakok.cicerone.BaseRouter
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import com.squareup.moshi.Moshi
 import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -73,7 +75,8 @@ val resourceProviderModule = module {
 
 val networkModule = module {
     single<NetworkErrorHandler> { NetworkErrorHandlerImpl(context = androidContext()) }
-    single { MoshiConverterFactory.create() }
+    single { Moshi.Builder().add(MessageContentAdapter()).build() }
+    single { MoshiConverterFactory.create(get()) }
     single<AccountRepository> { AccountRepositoryImpl(accountDao = get()) }
     single { RevoltInterceptor(accountRepository = get()) }
     single { HttpLoggingInterceptor().also { it.level = HttpLoggingInterceptor.Level.BODY } }
