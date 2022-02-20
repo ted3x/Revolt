@@ -49,10 +49,26 @@ class MessageDBMapper(
                 addedUser = userDBMapper.mapToDomain(this.addedUser),
                 addedBy = userDBMapper.mapToDomain(this.addedBy)
             )
-            is MessageEntity.ContentEntity.UserBanned -> Message.Content.UserBanned(user = userDBMapper.mapToDomain(this.user))
-            is MessageEntity.ContentEntity.UserJoined -> Message.Content.UserJoined(user = userDBMapper.mapToDomain(this.user))
-            is MessageEntity.ContentEntity.UserKicked -> Message.Content.UserKicked(user = userDBMapper.mapToDomain(this.user))
-            is MessageEntity.ContentEntity.UserLeft -> Message.Content.UserLeft(user = userDBMapper.mapToDomain(this.user))
+            is MessageEntity.ContentEntity.UserBanned -> Message.Content.UserBanned(
+                user = userDBMapper.mapToDomain(
+                    this.user
+                )
+            )
+            is MessageEntity.ContentEntity.UserJoined -> Message.Content.UserJoined(
+                user = userDBMapper.mapToDomain(
+                    this.user
+                )
+            )
+            is MessageEntity.ContentEntity.UserKicked -> Message.Content.UserKicked(
+                user = userDBMapper.mapToDomain(
+                    this.user
+                )
+            )
+            is MessageEntity.ContentEntity.UserLeft -> Message.Content.UserLeft(
+                user = userDBMapper.mapToDomain(
+                    this.user
+                )
+            )
             is MessageEntity.ContentEntity.UserRemove -> Message.Content.UserRemove(
                 removedUser = userDBMapper.mapToDomain(this.removedUser),
                 removedBy = userDBMapper.mapToDomain(this.removedBy)
@@ -70,6 +86,7 @@ class MessageDBMapper(
             edited = from.edited,
             mentions = from.mentions?.map { it.id },
             replies = from.replies,
+            synchronizedAt = System.currentTimeMillis()
         )
     }
 
@@ -91,10 +108,26 @@ class MessageDBMapper(
                 addedUser = userDBMapper.mapToEntity(this.addedUser),
                 addedBy = userDBMapper.mapToEntity(this.addedBy)
             )
-            is Message.Content.UserBanned -> MessageEntity.ContentEntity.UserBanned(user = userDBMapper.mapToEntity(this.user))
-            is Message.Content.UserJoined -> MessageEntity.ContentEntity.UserJoined(user = userDBMapper.mapToEntity(this.user))
-            is Message.Content.UserKicked -> MessageEntity.ContentEntity.UserKicked(user = userDBMapper.mapToEntity(this.user))
-            is Message.Content.UserLeft -> MessageEntity.ContentEntity.UserLeft(user = userDBMapper.mapToEntity(this.user))
+            is Message.Content.UserBanned -> MessageEntity.ContentEntity.UserBanned(
+                user = userDBMapper.mapToEntity(
+                    this.user
+                )
+            )
+            is Message.Content.UserJoined -> MessageEntity.ContentEntity.UserJoined(
+                user = userDBMapper.mapToEntity(
+                    this.user
+                )
+            )
+            is Message.Content.UserKicked -> MessageEntity.ContentEntity.UserKicked(
+                user = userDBMapper.mapToEntity(
+                    this.user
+                )
+            )
+            is Message.Content.UserLeft -> MessageEntity.ContentEntity.UserLeft(
+                user = userDBMapper.mapToEntity(
+                    this.user
+                )
+            )
             is Message.Content.UserRemove -> MessageEntity.ContentEntity.UserRemove(
                 removedUser = userDBMapper.mapToEntity(this.removedUser),
                 removedBy = userDBMapper.mapToEntity(this.removedBy)
