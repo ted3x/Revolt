@@ -29,7 +29,7 @@ class ChatViewModel(
     var pagingData: PagingData? = null
     var isLoading: Boolean = true
     val typers: MutableLiveData<String?> = MutableLiveData()
-    val typersList: MutableList<String> = mutableListOf()
+    private val typersList: MutableList<String> = mutableListOf()
     private lateinit var messageListener: Job
     private lateinit var channelStartTypingListener: Job
     private lateinit var channelStopTypingListener: Job
@@ -40,6 +40,8 @@ class ChatViewModel(
         currentChannel.value = channelId
         pagingData = null
         stopEventListeners()
+        typersList.clear()
+        typers.value = null
         startEventListeners()
     }
 
@@ -70,8 +72,8 @@ class ChatViewModel(
     private fun stopEventListeners() {
         if (this::messageListener.isInitialized)
             messageListener.cancel()
-        if (this::messageListener.isInitialized)
-            messageListener.cancel()
+        if (this::channelStartTypingListener.isInitialized)
+            channelStartTypingListener.cancel()
         if (this::channelStopTypingListener.isInitialized)
             channelStopTypingListener.cancel()
     }
