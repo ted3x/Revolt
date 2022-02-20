@@ -18,6 +18,7 @@ data class Message(
     val masquerade: Masquerade?
 ) {
 
+    val authorName = masquerade?.name ?: author.username
     sealed class Content(val type: ContentType) {
 
         data class Message(val content: String) : Content(ContentType.Message)
@@ -25,45 +26,45 @@ data class Message(
         data class Text(val content: String) : Content(ContentType.Text)
 
         data class UserAdded(
-            val addedUserId: String,
-            val addedBy: String
+            val addedUser: User,
+            val addedBy: User
         ) :
             Content(ContentType.UserAdded)
 
         data class UserRemove(
-            val removedUserId: String,
-            val removedBy: String
+            val removedUser: User,
+            val removedBy: User
         ) :
             Content(ContentType.UserRemove)
 
         data class UserJoined(
-            val userId: String
+            val user: User
         ) : Content(ContentType.UserJoined)
 
         data class UserLeft(
-            val userId: String
+            val user: User
         ) : Content(ContentType.UserLeft)
 
         data class UserKicked(
-            val userId: String
+            val user: User
         ) : Content(ContentType.UserKicked)
 
         data class UserBanned(
-            val userId: String
+            val user: User
         ) : Content(ContentType.UserBanned)
 
         data class ChannelRenamed(
             val name: String,
-            val renamedBy: String
+            val renamedBy: User
         ) :
             Content(ContentType.ChannelRenamed)
 
         data class ChannelDescriptionChanged(
-            val changedBy: String) :
+            val changedBy: User) :
             Content(ContentType.ChannelDescriptionChanged)
 
         data class ChannelIconChanged(
-            val changedBy: String) :
+            val changedBy: User) :
             Content(ContentType.ChannelIconChanged)
     }
 

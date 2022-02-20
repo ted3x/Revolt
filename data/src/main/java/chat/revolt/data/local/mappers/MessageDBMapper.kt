@@ -15,7 +15,7 @@ import chat.revolt.domain.repository.UserRepository
 
 class MessageDBMapper(
     private val userDBMapper: UserDBMapper,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     suspend fun mapToDomain(userEntity: UserEntity, from: MessageEntity): Message {
         return Message(
@@ -34,28 +34,28 @@ class MessageDBMapper(
     private fun MessageEntity.ContentEntity.map(): Message.Content {
         return when (this) {
             is MessageEntity.ContentEntity.ChannelDescriptionChanged -> Message.Content.ChannelDescriptionChanged(
-                changedBy = this.changedBy
+                changedBy = userDBMapper.mapToDomain(this.changedBy)
             )
             is MessageEntity.ContentEntity.ChannelIconChanged -> Message.Content.ChannelIconChanged(
-                changedBy = this.changedBy
+                changedBy = userDBMapper.mapToDomain(this.changedBy)
             )
             is MessageEntity.ContentEntity.ChannelRenamed -> Message.Content.ChannelRenamed(
                 name = this.name,
-                renamedBy = this.renamedBy
+                renamedBy = userDBMapper.mapToDomain(this.renamedBy)
             )
             is MessageEntity.ContentEntity.Message -> Message.Content.Message(content = this.content)
             is MessageEntity.ContentEntity.Text -> Message.Content.Text(content = this.content)
             is MessageEntity.ContentEntity.UserAdded -> Message.Content.UserAdded(
-                addedUserId = this.addedUserId,
-                addedBy = this.addedBy
+                addedUser = userDBMapper.mapToDomain(this.addedUser),
+                addedBy = userDBMapper.mapToDomain(this.addedBy)
             )
-            is MessageEntity.ContentEntity.UserBanned -> Message.Content.UserBanned(userId = this.userId)
-            is MessageEntity.ContentEntity.UserJoined -> Message.Content.UserJoined(userId = this.userId)
-            is MessageEntity.ContentEntity.UserKicked -> Message.Content.UserKicked(userId = this.userId)
-            is MessageEntity.ContentEntity.UserLeft -> Message.Content.UserLeft(userId = this.userId)
+            is MessageEntity.ContentEntity.UserBanned -> Message.Content.UserBanned(user = userDBMapper.mapToDomain(this.user))
+            is MessageEntity.ContentEntity.UserJoined -> Message.Content.UserJoined(user = userDBMapper.mapToDomain(this.user))
+            is MessageEntity.ContentEntity.UserKicked -> Message.Content.UserKicked(user = userDBMapper.mapToDomain(this.user))
+            is MessageEntity.ContentEntity.UserLeft -> Message.Content.UserLeft(user = userDBMapper.mapToDomain(this.user))
             is MessageEntity.ContentEntity.UserRemove -> Message.Content.UserRemove(
-                removedUserId = this.removedUserId,
-                removedBy = this.removedBy
+                removedUser = userDBMapper.mapToDomain(this.removedUser),
+                removedBy = userDBMapper.mapToDomain(this.removedBy)
             )
         }
     }
@@ -76,28 +76,28 @@ class MessageDBMapper(
     private fun Message.Content.map(): MessageEntity.ContentEntity {
         return when (this) {
             is Message.Content.ChannelDescriptionChanged -> MessageEntity.ContentEntity.ChannelDescriptionChanged(
-                changedBy = this.changedBy
+                changedBy = userDBMapper.mapToEntity(this.changedBy)
             )
             is Message.Content.ChannelIconChanged -> MessageEntity.ContentEntity.ChannelIconChanged(
-                changedBy = this.changedBy
+                changedBy = userDBMapper.mapToEntity(this.changedBy)
             )
             is Message.Content.ChannelRenamed -> MessageEntity.ContentEntity.ChannelRenamed(
                 name = this.name,
-                renamedBy = this.renamedBy
+                renamedBy = userDBMapper.mapToEntity(this.renamedBy)
             )
             is Message.Content.Message -> MessageEntity.ContentEntity.Message(content = this.content)
             is Message.Content.Text -> MessageEntity.ContentEntity.Text(content = this.content)
             is Message.Content.UserAdded -> MessageEntity.ContentEntity.UserAdded(
-                addedUserId = this.addedUserId,
-                addedBy = this.addedBy
+                addedUser = userDBMapper.mapToEntity(this.addedUser),
+                addedBy = userDBMapper.mapToEntity(this.addedBy)
             )
-            is Message.Content.UserBanned -> MessageEntity.ContentEntity.UserBanned(userId = this.userId)
-            is Message.Content.UserJoined -> MessageEntity.ContentEntity.UserJoined(userId = this.userId)
-            is Message.Content.UserKicked -> MessageEntity.ContentEntity.UserKicked(userId = this.userId)
-            is Message.Content.UserLeft -> MessageEntity.ContentEntity.UserLeft(userId = this.userId)
+            is Message.Content.UserBanned -> MessageEntity.ContentEntity.UserBanned(user = userDBMapper.mapToEntity(this.user))
+            is Message.Content.UserJoined -> MessageEntity.ContentEntity.UserJoined(user = userDBMapper.mapToEntity(this.user))
+            is Message.Content.UserKicked -> MessageEntity.ContentEntity.UserKicked(user = userDBMapper.mapToEntity(this.user))
+            is Message.Content.UserLeft -> MessageEntity.ContentEntity.UserLeft(user = userDBMapper.mapToEntity(this.user))
             is Message.Content.UserRemove -> MessageEntity.ContentEntity.UserRemove(
-                removedUserId = this.removedUserId,
-                removedBy = this.removedBy
+                removedUser = userDBMapper.mapToEntity(this.removedUser),
+                removedBy = userDBMapper.mapToEntity(this.removedBy)
             )
         }
     }

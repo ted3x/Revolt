@@ -8,6 +8,7 @@ package chat.revolt.data.local.entity.message
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.ContentType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -35,54 +36,54 @@ data class MessageEntity(
 
         @JsonClass(generateAdapter = true)
         data class UserAdded(
-            val addedUserId: String,
-            val addedBy: String
+            val addedUser: UserEntity,
+            val addedBy: UserEntity
         ) :
             ContentEntity(ContentType.UserAdded)
 
         @JsonClass(generateAdapter = true)
         data class UserRemove(
-            val removedUserId: String,
-            val removedBy: String
+            val removedUser: UserEntity,
+            val removedBy: UserEntity
         ) :
             ContentEntity(ContentType.UserRemove)
 
         @JsonClass(generateAdapter = true)
         data class UserJoined(
-            val userId: String
+            val user: UserEntity
         ) : ContentEntity(ContentType.UserJoined)
 
         @JsonClass(generateAdapter = true)
         data class UserLeft(
-            val userId: String
+            val user: UserEntity
         ) : ContentEntity(ContentType.UserLeft)
 
         @JsonClass(generateAdapter = true)
         data class UserKicked(
-            val userId: String
+            val user: UserEntity
         ) : ContentEntity(ContentType.UserKicked)
 
         @JsonClass(generateAdapter = true)
         data class UserBanned(
-            val userId: String
+            val user: UserEntity
         ) : ContentEntity(ContentType.UserBanned)
 
         @JsonClass(generateAdapter = true)
         data class ChannelRenamed(
             val name: String,
-            val renamedBy: String
+            val renamedBy: UserEntity
         ) :
             ContentEntity(ContentType.ChannelRenamed)
 
         @JsonClass(generateAdapter = true)
         data class ChannelDescriptionChanged(
-            val changedBy: String
+            val changedBy: UserEntity
         ) :
             ContentEntity(ContentType.ChannelDescriptionChanged)
 
         @JsonClass(generateAdapter = true)
         data class ChannelIconChanged(
-            val changedBy: String
+            val changedBy: UserEntity
         ) :
             ContentEntity(ContentType.ChannelIconChanged)
     }

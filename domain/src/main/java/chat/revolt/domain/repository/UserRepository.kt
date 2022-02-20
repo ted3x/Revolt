@@ -12,6 +12,7 @@ interface UserRepository {
 
     suspend fun getUser(userId: String): User
     suspend fun getCurrentUser(): User
+    suspend fun getMessageAuthor(authorId: String, users: List<User>): User
     suspend fun getUsers(userIds: List<String>): List<User>
     suspend fun addUser(user: User)
 }

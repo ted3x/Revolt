@@ -19,8 +19,8 @@ class MessageMapperDto(
         return Message(
             id = from.id,
             channel = from.channel,
-            author = users.firstOrNull { it.id == from.author } ?: userRepository.getCurrentUser(),
-            content = from.content.map(),
+            author = userRepository.getMessageAuthor(from.author, users),
+            content = from.content.map(users),
             attachments = from.attachments?.map { it.map() },
             edited = from.edited?.date,
             mentions = from.mentions?.let { userRepository.getUsers(it) },
@@ -29,31 +29,51 @@ class MessageMapperDto(
         )
     }
 
-    private fun MessageDto.ContentDto.map(): Message.Content {
+    private suspend fun MessageDto.ContentDto.map(users: List<User>): Message.Content {
         return when (this) {
             is MessageDto.ContentDto.ChannelDescriptionChanged -> Message.Content.ChannelDescriptionChanged(
-                changedBy = this.changedBy
+                changedBy = userRepository.getMessageAuthor(this.changedBy, users)
             )
             is MessageDto.ContentDto.ChannelIconChanged -> Message.Content.ChannelIconChanged(
-                changedBy = this.changedBy
+                changedBy = userRepository.getMessageAuthor(this.changedBy, users)
             )
             is MessageDto.ContentDto.ChannelRenamed -> Message.Content.ChannelRenamed(
                 name = this.name,
-                renamedBy = this.renamedBy
+                renamedBy = userRepository.getMessageAuthor(this.renamedBy, users)
             )
             is MessageDto.ContentDto.Message -> Message.Content.Message(content = this.content)
             is MessageDto.ContentDto.Text -> Message.Content.Text(content = this.content)
             is MessageDto.ContentDto.UserAdded -> Message.Content.UserAdded(
-                addedUserId = this.addedUserId,
-                addedBy = this.addedBy
+                addedUser = userRepository.getMessageAuthor(this.addedUserId, users),
+                addedBy = userRepository.getMessageAuthor(this.addedBy, users)
             )
-            is MessageDto.ContentDto.UserBanned -> Message.Content.UserBanned(userId = this.userId)
-            is MessageDto.ContentDto.UserJoined -> Message.Content.UserJoined(userId = this.userId)
-            is MessageDto.ContentDto.UserKicked -> Message.Content.UserKicked(userId = this.userId)
-            is MessageDto.ContentDto.UserLeft -> Message.Content.UserLeft(userId = this.userId)
+            is MessageDto.ContentDto.UserBanned -> Message.Content.UserBanned(
+                user = userRepository.getMessageAuthor(
+                    this.userId,
+                    users
+                )
+            )
+            is MessageDto.ContentDto.UserJoined -> Message.Content.UserJoined(
+                user = userRepository.getMessageAuthor(
+                    this.userId,
+                    users
+                )
+            )
+            is MessageDto.ContentDto.UserKicked -> Message.Content.UserKicked(
+                user = userRepository.getMessageAuthor(
+                    this.userId,
+                    users
+                )
+            )
+            is MessageDto.ContentDto.UserLeft -> Message.Content.UserLeft(
+                user = userRepository.getMessageAuthor(
+                    this.userId,
+                    users
+                )
+            )
             is MessageDto.ContentDto.UserRemove -> Message.Content.UserRemove(
-                removedBy = this.removedBy,
-                removedUserId = this.removedUserId
+                removedBy = userRepository.getMessageAuthor(this.removedUserId, users),
+                removedUser = userRepository.getMessageAuthor(this.removedUserId, users)
             )
         }
     }

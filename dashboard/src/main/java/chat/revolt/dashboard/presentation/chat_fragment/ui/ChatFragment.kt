@@ -59,6 +59,9 @@ class ChatFragment :
             textAdapterItem {
 
             },
+            systemMessageAdapterItem {
+
+            }
         )
         var initial = true
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -114,12 +117,42 @@ class ChatFragment :
     }
 
     fun textAdapterItem(itemClickedListener: (Message) -> Unit) =
-        adapterDelegateViewBinding<Message, Message, TextAdapterItemBinding>(
-            { layoutInflater, root -> TextAdapterItemBinding.inflate(layoutInflater, root, false) }
+        adapterDelegateViewBinding(on = { item: Message, _: List<Message>, _: Int ->
+            item.content is Message.Content.Text || item.content is Message.Content.Message
+        },
+            viewBinding = { layoutInflater, root ->
+                TextAdapterItemBinding.inflate(
+                    layoutInflater,
+                    root,
+                    false
+                )
+            }
         ) {
             bind {
-                binding.authorName.text = item.author.username
-                binding.text.text = item.content.toString()
+                binding.authorName.text = item.authorName
+                binding.text.text = (item.content as? Message.Content.Message)?.content
+                    ?: (item.content as? Message.Content.Text)?.content
+                binding.date.text = UlidTimeDecoder.getTimestamp(item.id).toDate(requireContext())
+                Glide.with(context).load(item.author.avatarUrl).into(binding.authorImage)
+            }
+        }
+
+    fun systemMessageAdapterItem(itemClickedListener: (Message) -> Unit) =
+        adapterDelegateViewBinding(on = { item: Message, _: List<Message>, _: Int ->
+            item.content !is Message.Content.Text || item.content !is Message.Content.Message
+        },
+            viewBinding = { layoutInflater, root ->
+                TextAdapterItemBinding.inflate(
+                    layoutInflater,
+                    root,
+                    false
+                )
+            }
+        ) {
+            bind {
+                binding.authorName.text = item.authorName
+                binding.text.text = (item.content as? Message.Content.Message)?.content
+                    ?: (item.content as? Message.Content.Text)?.content
                 binding.date.text = UlidTimeDecoder.getTimestamp(item.id).toDate(requireContext())
                 Glide.with(context).load(item.author.avatarUrl).into(binding.authorImage)
             }

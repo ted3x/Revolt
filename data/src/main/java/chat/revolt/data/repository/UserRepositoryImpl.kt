@@ -33,6 +33,10 @@ class UserRepositoryImpl(
         return userDao.getCurrentUser()?.let { userEntityMapper.mapToDomain(it) } ?: throw IllegalStateException("Current user can't be null")
     }
 
+    override suspend fun getMessageAuthor(authorId: String, users: List<User>): User {
+        return users.firstOrNull { it.id == authorId } ?: getCurrentUser()
+    }
+
     override suspend fun getUsers(userIds: List<String>): List<User> {
        return userIds.toSet().map { getUser(it) }
     }

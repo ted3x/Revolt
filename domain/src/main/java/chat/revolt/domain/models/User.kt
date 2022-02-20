@@ -20,6 +20,8 @@ data class User(
     val bot: Bot? = null
 ) {
 
+    val isSystemUser = id == SYSTEM_USER_ID
+
     data class Relationship(val userId: String, val status: RelationshipStatus)
 
     enum class RelationshipStatus {
@@ -47,4 +49,8 @@ data class User(
     }
 
     data class Bot(val ownerId: String)
+
+    companion object {
+        private const val SYSTEM_USER_ID = "00000000000000000000000000"
+    }
 }
