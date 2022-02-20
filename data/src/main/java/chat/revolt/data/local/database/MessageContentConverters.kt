@@ -132,7 +132,8 @@ fun stringToChannelIconChanged(string: String): MessageEntity.ContentEntity.Chan
 fun channelIconChangedToString(content: MessageEntity.ContentEntity.ChannelIconChanged): String {
     return channelIconChangedTypeAdapter.toJson(content).withType(content.type)
 }
-
+// Moshi does not include parent class field when converting class into json, so adding by hand
+// Probably have to refactor with Moshi Adapter?
 private fun String.withType(type: ContentType): String {
     val newMap = mapAdapter.fromJson(this)?.toMutableMap()
     newMap?.set("type", type)
