@@ -9,7 +9,7 @@ package chat.revolt.domain.models
 data class User(
     val id: String,
     val username: String,
-    var avatarUrl: String?,
+    var avatarUrl: String,
     var backgroundUrl: String? = null,
     val relations: List<Relationship>? = null,
     val badges: Int? = null,

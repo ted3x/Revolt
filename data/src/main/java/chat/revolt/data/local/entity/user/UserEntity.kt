@@ -16,7 +16,7 @@ data class UserEntity(
     @PrimaryKey
     val id: String,
     val username: String,
-    val avatarUrl: String?,
+    val avatarUrl: String,
     val backgroundUrl: String?,
     val relations: List<Relationship>?,
     val badges: Int?,

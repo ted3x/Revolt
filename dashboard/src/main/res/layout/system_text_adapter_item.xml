@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 2/20/22, 2:51 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 2/20/22, 2:51 PM
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dimen_p_10">
+
+    <TextView
+        android:id="@+id/messageDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_sp_12"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/systemMessageIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/systemMessageIcon"
+        tools:text="23:15" />
+
+    <ImageView
+        android:id="@+id/systemMessageIcon"
+        android:layout_width="@dimen/dimen_p_18"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_p_2"
+        app:layout_constraintBottom_toBottomOf="@id/authorImage"
+        app:layout_constraintStart_toEndOf="@id/messageDate"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/authorImage"
+        android:layout_width="@dimen/dimen_p_24"
+        android:layout_height="@dimen/dimen_p_24"
+        android:layout_marginStart="@dimen/dimen_p_10"
+        android:layout_marginEnd="@dimen/dimen_p_10"
+        app:layout_constraintEnd_toStartOf="@id/message"
+        app:layout_constraintStart_toEndOf="@id/systemMessageIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_p_5"
+        android:layout_marginEnd="@dimen/dimen_p_5"
+        android:layout_marginBottom="@dimen/dimen_p_5"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_sp_14"
+        app:layout_constraintStart_toEndOf="@id/authorImage"
+        app:layout_constraintTop_toTopOf="@id/authorImage"
+        tools:text="ted3x joined" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

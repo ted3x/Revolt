@@ -10,14 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.ChannelRepository
+import chat.revolt.dashboard.presentation.chat_fragment.LoadingType
 import chat.revolt.dashboard.presentation.chat_fragment.PagingData
 import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
 import chat.revolt.domain.models.Message
 import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
@@ -27,7 +26,7 @@ class ChatViewModel(
 ) : BaseViewModel() {
 
     var pagingData: PagingData? = null
-    var isLoading: Boolean = true
+    var loadingState: MutableStateFlow<LoadingType> = MutableStateFlow(LoadingType.NotLoading)
     val typers: MutableLiveData<String?> = MutableLiveData()
     private val typersList: MutableList<String> = mutableListOf()
     private lateinit var messageListener: Job
@@ -42,6 +41,7 @@ class ChatViewModel(
         stopEventListeners()
         typersList.clear()
         typers.value = null
+        currentChannel.value = channelId
         startEventListeners()
     }
 
@@ -78,10 +78,11 @@ class ChatViewModel(
             channelStopTypingListener.cancel()
     }
 
-    fun load() {
+    fun load(isInitial: Boolean = false) {
         if (pagingData?.isPaginationEndReached == true) return
-        isLoading = true
         viewModelScope.launch {
+            if (isInitial) loadingState.emit(LoadingType.Initial)
+            else loadingState.emit(LoadingType.OnScroll)
             pagingData =
                 pagingManager.load(channelId = currentChannel.value!!, pagingData?.lastId)
         }

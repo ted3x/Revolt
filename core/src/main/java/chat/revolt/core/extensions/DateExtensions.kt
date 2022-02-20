@@ -40,3 +40,8 @@ fun Long.toDate(context: Context): String {
         }
     }
 }
+
+fun Long.toHour(): String? {
+    val date = Date(this)
+    return SimpleDateFormat(HOUR_FORMAT, Locale.US).format(date)
+}

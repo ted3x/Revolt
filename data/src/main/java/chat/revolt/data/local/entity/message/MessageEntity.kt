@@ -24,6 +24,7 @@ data class MessageEntity(
     val createdAt: Long,
     val mentions: List<String>?,
     val replies: List<String>?,
+    val synchronizedAt: Long
 ) {
 
     sealed class ContentEntity(@Json(name = "type") val type: ContentType) {

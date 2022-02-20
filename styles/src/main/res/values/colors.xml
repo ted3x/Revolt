@@ -8,7 +8,7 @@
     <color name="accent">#FD6671</color>
     <color name="background">#191919</color>
     <color name="foreground">#F6F6F6</color>
-    <color name="tertiary_foreground">#F6F6F6</color>
+    <color name="tertiary_foreground">#848484</color>
     <color name="block">#2D2D2D</color>
     <color name="message_box">#363636</color>
     <color name="mention">#0FFBFF00</color>
