@@ -51,14 +51,18 @@ class ChatViewModel(
         }
         channelStartTypingListener = viewModelScope.launch {
             dataSource.onChannelStartTyping(currentChannel.value!!).cancellable().collect {
-                typersList.add(it.user.username)
-                typers.postValue(getTypersMessage(typersList))
+                if (it.user.username !in typersList) {
+                    typersList.add(it.user.username)
+                    typers.postValue(getTypersMessage(typersList))
+                }
             }
         }
         channelStopTypingListener = viewModelScope.launch {
             dataSource.onChannelStopTyping(currentChannel.value!!).cancellable().collect {
-                typersList.remove(it.user.username)
-                typers.postValue(getTypersMessage(typersList))
+                if (it.user.username in typersList) {
+                    typersList.remove(it.user.username)
+                    typers.postValue(getTypersMessage(typersList))
+                }
             }
         }
     }

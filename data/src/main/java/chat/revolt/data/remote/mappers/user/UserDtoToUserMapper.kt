@@ -20,7 +20,7 @@ class UserDtoToUserMapper(
         return User(
             id = from.id,
             username = from.username,
-            avatarUrl = from.avatar?.getAvatarUrl(),
+            avatarUrl = from.avatar?.getAvatarUrl() ?: getDefaultAvatarUrl(from.id) ,
             relations = relationsMapper.map(from.relations),
             badges = from.badges,
             status = statusMapper.map(from.status),
@@ -33,7 +33,9 @@ class UserDtoToUserMapper(
 
     private fun UserDto.AvatarDto?.getAvatarUrl() = AVATAR_BASE_URL + this?.id
 
+    private fun getDefaultAvatarUrl(userId: String) = "$DEFAULT_AVATAR_BASE_URL/$userId/default_avatar"
     companion object {
         private const val AVATAR_BASE_URL = "https://autumn.revolt.chat/avatars/"
+        private const val DEFAULT_AVATAR_BASE_URL = "https://api.revolt.chat/users"
     }
 }
