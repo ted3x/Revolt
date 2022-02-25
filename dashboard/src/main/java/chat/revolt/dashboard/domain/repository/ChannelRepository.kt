@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.Flow
 interface ChannelRepository {
 
     fun getMessages(channelId: String): Flow<List<Message>>
+    suspend fun getMessagesBetween(channelId: String, startDate: Long, endDate: Long, limit: Int): List<Message>
+    suspend fun getMessagesBefore(channelId: String, startDate: Long, limit: Int): List<Message>
     suspend fun addMessage(message: Message)
+    suspend fun addMessages(messages: List<Message>)
     suspend fun fetchMessages(channelId: String, request: FetchMessagesRequest): FetchMessagesResponse
+    suspend fun deleteMessage(messageId: String)
 }

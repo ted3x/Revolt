@@ -67,18 +67,20 @@ class ChatFragment :
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                if(!isOnTop && viewModel.loadingState.value == LoadingType.Initial)
-                    binding.chatRecyclerView.scrollToPosition(adapter.itemCount - 1)
-                lifecycleScope.launch { viewModel.loadingState.emit(LoadingType.NotLoading)  }
+                if (!isOnTop && viewModel.loadingState.value == LoadingType.Initial)
+                    binding.chatRecyclerView.scrollToPosition(0)
+                lifecycleScope.launch { viewModel.loadingState.emit(LoadingType.NotLoading) }
             }
         })
         val lm = LinearLayoutManager(context)
+        lm.reverseLayout = true
+        lm.stackFromEnd = true
 
         binding.chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val currentFirstVisible: Int = lm.findFirstCompletelyVisibleItemPosition()
-                if (currentFirstVisible < 5 && viewModel.loadingState.value == LoadingType.NotLoading && dy < 0) {
+                val currentFirstVisible: Int = lm.findLastCompletelyVisibleItemPosition()
+                if (currentFirstVisible > recyclerView.adapter?.itemCount?.minus(5) ?: -1 && viewModel.loadingState.value == LoadingType.NotLoading && dy < 0) {
                     isOnTop = true
                     viewModel.load()
                 }
@@ -90,13 +92,16 @@ class ChatFragment :
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
         lifecycleScope.launchWhenResumed {
-            viewModel.changeChannel("01FVDG79NRQCS9MRJSVTDYHYPV")
-            launch { viewModel.loadingState.collect {
-                when(it) {
-                    LoadingType.NotLoading,LoadingType.Initial-> binding.loading.root.visibility = View.GONE
-                    LoadingType.OnScroll -> binding.loading.root.visibility = View.VISIBLE
+            viewModel.changeChannel("01F7ZSBSFHCAAJQ92ZGTY67HMN")
+            launch {
+                viewModel.loadingState.collect {
+                    when (it) {
+                        LoadingType.NotLoading, LoadingType.Initial -> binding.loading.root.visibility =
+                            View.GONE
+                        LoadingType.OnScroll -> binding.loading.root.visibility = View.VISIBLE
+                    }
                 }
-            } }
+            }
         }
         viewModel.typers.observe {
             binding.typers.text = it
@@ -106,7 +111,6 @@ class ChatFragment :
             viewModel.changeChannel(channelId = if (viewModel.currentChannel.value == "01FVDG79NRQCS9MRJSVTDYHYPV") "01FVSDRN16DHQ8FANQS3TKS1WF" else "01FVDG79NRQCS9MRJSVTDYHYPV")
         }
         viewModel.currentChannel.observe {
-            viewModel.load(isInitial = true)
             if (this@ChatFragment::messageCollectorJob.isInitialized) {
                 messageCollectorJob.cancel()
             }
@@ -119,9 +123,9 @@ class ChatFragment :
         adapter: PagedListDelegationAdapter<Message>
     ) {
         messageCollectorJob = coroutineScope.launch {
-            viewModel.flow.cancellable().collect {
-                adapter.submitList(it)
-            }
+            viewModel.messages.collect(adapter::submitList)
+            if(viewModel.isPaginationEndReached)
+                viewModel.loadingState.emit(LoadingType.NotLoading)
         }
     }
 

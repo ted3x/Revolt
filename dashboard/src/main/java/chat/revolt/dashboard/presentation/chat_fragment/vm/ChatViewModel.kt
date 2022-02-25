@@ -9,6 +9,7 @@ package chat.revolt.dashboard.presentation.chat_fragment.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
+import chat.revolt.dashboard.data.repository.ChannelManager
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.dashboard.presentation.chat_fragment.LoadingType
 import chat.revolt.dashboard.presentation.chat_fragment.PagingData
@@ -20,35 +21,35 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    private val pagingManager: PagingManager,
-    private val channelRepository: ChannelRepository,
+    private val channelManager: ChannelManager,
     private val dataSource: ServerDataSource
 ) : BaseViewModel() {
 
-    var pagingData: PagingData? = null
-    var loadingState: MutableStateFlow<LoadingType> = MutableStateFlow(LoadingType.NotLoading)
+    val loadingState: MutableStateFlow<LoadingType> = MutableStateFlow(LoadingType.Initial)
     val typers: MutableLiveData<String?> = MutableLiveData()
     private val typersList: MutableList<String> = mutableListOf()
     private lateinit var messageListener: Job
     private lateinit var channelStartTypingListener: Job
     private lateinit var channelStopTypingListener: Job
     val currentChannel = MutableLiveData<String>()
-    val flow: Flow<List<Message>> get() = channelRepository.getMessages(channelId = currentChannel.value!!)
+    val messages get() = channelManager.messages
+    val isPaginationEndReached get() = channelManager.isPaginationEndReached()
 
     fun changeChannel(channelId: String) {
-        currentChannel.value = channelId
-        pagingData = null
-        stopEventListeners()
-        typersList.clear()
-        typers.value = null
-        currentChannel.value = channelId
-        startEventListeners()
+        viewModelScope.launch {
+            channelManager.initializeMessages(channelId)
+            currentChannel.value = channelId
+            stopEventListeners()
+            typersList.clear()
+            typers.value = null
+            startEventListeners()
+        }
     }
 
     private fun startEventListeners() {
         messageListener = viewModelScope.launch {
             dataSource.onMessage(channelId = currentChannel.value!!).cancellable().collect {
-                channelRepository.addMessage(it)
+                //channelRepository.addMessage(it)
             }
         }
         channelStartTypingListener = viewModelScope.launch {
@@ -79,12 +80,10 @@ class ChatViewModel(
     }
 
     fun load(isInitial: Boolean = false) {
-        if (pagingData?.isPaginationEndReached == true) return
+        if(channelManager.isPaginationEndReached()) return
         viewModelScope.launch {
-            if (isInitial) loadingState.emit(LoadingType.Initial)
-            else loadingState.emit(LoadingType.OnScroll)
-            pagingData =
-                pagingManager.load(channelId = currentChannel.value!!, pagingData?.lastId)
+            loadingState.emit(if (isInitial) LoadingType.Initial else LoadingType.OnScroll)
+            channelManager.loadMoreMessages()
         }
     }
 

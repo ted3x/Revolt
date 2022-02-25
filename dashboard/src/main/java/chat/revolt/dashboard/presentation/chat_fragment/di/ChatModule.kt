@@ -10,6 +10,7 @@ import chat.revolt.dashboard.data.ChannelService
 import chat.revolt.dashboard.data.data_source.ChannelDataSource
 import chat.revolt.dashboard.data.data_source.ChannelDataSourceImpl
 import chat.revolt.dashboard.data.mapper.FetchMessageMapper
+import chat.revolt.dashboard.data.repository.ChannelManager
 import chat.revolt.dashboard.data.repository.ChannelRepositoryImpl
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
@@ -46,10 +47,10 @@ val chatModule = module {
                 userDBMapper = get()
             )
         }
+        scoped { ChannelManager(database = get(), channelRepository = get(), userRepository = get()) }
         viewModel {
             ChatViewModel(
-                pagingManager = get(),
-                channelRepository = get(),
+                channelManager = get(),
                 dataSource = get()
             )
         }

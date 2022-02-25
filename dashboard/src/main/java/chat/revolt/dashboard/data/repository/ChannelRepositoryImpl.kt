@@ -40,8 +40,37 @@ class ChannelRepositoryImpl(
             }
     }
 
+    override suspend fun getMessagesBetween(
+        channelId: String,
+        startDate: Long,
+        endDate: Long,
+        limit: Int
+    ): List<Message> {
+        return messageDao.getMessagesBetween(channelId, startDate, endDate, limit).map {
+            val user =
+                userDao.getUser(it.author) ?: throw IllegalStateException("User not found")
+            messageMapper.mapToDomain(user, it)
+        }
+    }
+
+    override suspend fun getMessagesBefore(
+        channelId: String,
+        startDate: Long,
+        limit: Int
+    ): List<Message> {
+        return messageDao.getMessagesBefore(channelId, startDate, limit).map {
+            val user =
+                userDao.getUser(it.author) ?: throw IllegalStateException("User not found")
+            messageMapper.mapToDomain(user, it)
+        }
+    }
+
     override suspend fun addMessage(message: Message) {
         messageDao.addMessage(messageMapper.mapToEntity(message))
+    }
+
+    override suspend fun addMessages(messages: List<Message>) {
+        messageDao.addMessages(messages.map { messageMapper.mapToEntity(it) })
     }
 
     override suspend fun fetchMessages(
@@ -56,5 +85,9 @@ class ChannelRepositoryImpl(
             userDao.getCurrentUser()?.let { userDBMapper.mapToDomain(it) }
                 ?: throw IllegalStateException("User not found")
         )
+    }
+
+    override suspend fun deleteMessage(messageId: String) {
+        messageDao.deleteMessage(messageId)
     }
 }

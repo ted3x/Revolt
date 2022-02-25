@@ -22,12 +22,18 @@ interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMessages(messages: List<MessageEntity>)
 
-    @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt")
+    @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt DESC, synchronizedAt DESC LIMIT 100")
     fun getMessages(channelId: String): Flow<List<MessageEntity>>
 
-    @Query("SELECT * FROM messages WHERE channel LIKE :channelId AND :before < createdAt ORDER BY createdAt")
-    fun getMessagesAfter(channelId: String, before: Long): Flow<List<MessageEntity>>
+    @Query("SELECT * FROM messages WHERE channel LIKE :channelId AND createdAt BETWEEN :startDate AND :endDate ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getMessagesBetween(channelId: String, startDate: Long, endDate: Long, limit: Int): List<MessageEntity>
+
+    @Query("SELECT * FROM messages WHERE channel LIKE :channelId AND createdAt < :startDate ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getMessagesBefore(channelId: String, startDate: Long, limit: Int): List<MessageEntity>
 
     @Query("DELETE FROM messages WHERE channel LIKE :channelId")
     suspend fun clear(channelId: String)
+
+    @Query("DELETE from messages WHERE id LIKE :messageId")
+    suspend fun deleteMessage(messageId: String)
 }
