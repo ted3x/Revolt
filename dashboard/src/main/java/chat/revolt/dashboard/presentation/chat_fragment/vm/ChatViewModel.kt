@@ -60,7 +60,7 @@ class ChatViewModel(
         }
         channelStartTypingListener = viewModelScope.launch {
             dataSource.onChannelStartTyping(currentChannel.value!!).cancellable().collect {
-                if (it.user.username !in typersList) {
+                if (it.user.username !in typersList && !it.isCurrentUser) {
                     typersList.add(it.user.username)
                     typers.postValue(getTypersMessage(typersList))
                 }

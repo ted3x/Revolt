@@ -49,7 +49,7 @@ class ChatFragment :
         lm.stackFromEnd = true
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
-        viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
+        viewModel.changeChannel("01F7ZSBSFHCAAJQ92ZGTY67HMN")
         viewModel.currentChannel.observe {
             isInitial = true
             lifecycleScope.launchWhenCreated {
@@ -57,6 +57,10 @@ class ChatFragment :
                     adapter.submitList(it)
                 }
             }
+        }
+        viewModel.typers.observe {
+            binding.typers.text = it
+            binding.typers.visibility = if (it != null) View.VISIBLE else View.GONE
         }
     }
 }

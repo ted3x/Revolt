@@ -26,15 +26,18 @@ data class ChannelStartTypingEvent(
 
 data class ChannelStartTyping(
     val channelId: String,
-    val user: User
+    val user: User,
+    val isCurrentUser: Boolean
 )
 
 class ChannelStartTypingEventMapper(private val userRepository: UserRepository) :
     Mapper<ChannelStartTypingEvent, ChannelStartTyping> {
     override suspend fun map(from: ChannelStartTypingEvent): ChannelStartTyping {
+        val user = userRepository.getUser(from.userId)
         return ChannelStartTyping(
             channelId = from.channelId,
-            user = userRepository.getUser(from.userId)
+            user = userRepository.getUser(from.userId),
+            isCurrentUser = userRepository.getCurrentUser()?.id == user.id
         )
     }
 
