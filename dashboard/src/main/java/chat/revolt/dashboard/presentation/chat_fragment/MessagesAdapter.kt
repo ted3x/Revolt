@@ -10,13 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import chat.revolt.core.UlidTimeDecoder
 import chat.revolt.core.extensions.toDate
 import chat.revolt.core.extensions.toHour
+import chat.revolt.core.paging_manager.LoadingAdapter
+import chat.revolt.core.paging_manager.LoadingAdapterListener
 import chat.revolt.dashboard.databinding.SystemTextAdapterItemBinding
 import chat.revolt.dashboard.databinding.TextAdapterItemBinding
 import chat.revolt.domain.models.Message
@@ -24,37 +25,15 @@ import chat.revolt.styles.R
 import com.bumptech.glide.Glide
 import java.lang.IllegalStateException
 
-class MessagesAdapter : PagingDataAdapter<Message, MessagesAdapter.MessageViewHolder>(Comparator) {
+class MessagesAdapter(listener: LoadingAdapterListener) :
+    LoadingAdapter<Message, LoadingAdapter.BaseLoadingAdapterViewHolder>(Comparator, listener) {
 
-    abstract class MessageViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    abstract class MessageViewHolder(binding: ViewBinding) : LoadingAdapter.BaseLoadingAdapterViewHolder(binding.root) {
         abstract fun onBind(item: Message)
     }
 
-    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        getItem(position)?.let { holder.onBind(it) }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        return when (viewType) {
-            MESSAGE -> TextMessageViewHolder(
-                TextAdapterItemBinding.inflate(
-                    LayoutInflater.from(
-                        parent.context
-                    ), parent, false
-                )
-            )
-            SYSTEM_MESSAGE -> SystemTextMessageViewHolder(
-                SystemTextAdapterItemBinding.inflate(
-                    LayoutInflater.from(
-                        parent.context
-                    ), parent, false
-                )
-            )
-            else -> throw IllegalStateException("")
-        }
-    }
-
-    class TextMessageViewHolder(private val binding: TextAdapterItemBinding) : MessageViewHolder(binding) {
+    class TextMessageViewHolder(private val binding: TextAdapterItemBinding) :
+        MessageViewHolder(binding) {
 
         override fun onBind(item: Message) {
             binding.authorName.text = item.authorName
@@ -65,7 +44,8 @@ class MessagesAdapter : PagingDataAdapter<Message, MessagesAdapter.MessageViewHo
         }
     }
 
-    class SystemTextMessageViewHolder(private val binding: SystemTextAdapterItemBinding) : MessageViewHolder(binding) {
+    class SystemTextMessageViewHolder(private val binding: SystemTextAdapterItemBinding) :
+        MessageViewHolder(binding) {
 
         fun Message.Content.getSystemMessageIconRes(): Int {
             return when (this) {
@@ -87,20 +67,50 @@ class MessagesAdapter : PagingDataAdapter<Message, MessagesAdapter.MessageViewHo
                     else View.VISIBLE
             }
             val iconRes = item.content.getSystemMessageIconRes()
-            binding.systemMessageIcon.setImageDrawable(ContextCompat.getDrawable(binding.root.context, iconRes))
+            binding.systemMessageIcon.setImageDrawable(
+                ContextCompat.getDrawable(
+                    binding.root.context,
+                    iconRes
+                )
+            )
             binding.message.text = (item.content as? Message.SystemMessage)?.message
             binding.messageDate.text = UlidTimeDecoder.getTimestamp(item.id).toHour()
-            Glide.with(binding.root.context).load((item.content as? Message.SystemMessage)?.authorImageUrl)
+            Glide.with(binding.root.context)
+                .load((item.content as? Message.SystemMessage)?.authorImageUrl)
                 .into(binding.authorImage)
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
+    override fun getViewType(position: Int): Int {
         val item = getItem(position)
         return if (item?.content is Message.Content.Text || item?.content is Message.Content.Message) MESSAGE
         else if (item?.content is Message.SystemMessage) SYSTEM_MESSAGE
         else -1
     }
+
+    override val positionToLoad: Int
+        get() = 5
+
+    override fun getViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+        return when (viewType) {
+            MESSAGE -> TextMessageViewHolder(
+                TextAdapterItemBinding.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), parent, false
+                )
+            )
+            SYSTEM_MESSAGE -> SystemTextMessageViewHolder(
+                SystemTextAdapterItemBinding.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), parent, false
+                )
+            )
+            else -> throw IllegalStateException("")
+        }
+    }
+
 
     companion object {
         object Comparator : DiffUtil.ItemCallback<Message>() {
@@ -117,4 +127,8 @@ class MessagesAdapter : PagingDataAdapter<Message, MessagesAdapter.MessageViewHo
         const val SYSTEM_MESSAGE = 12312414
     }
 
+    override fun onBindViewHolder(holder: BaseLoadingAdapterViewHolder, position: Int) {
+        if(holder is MessageViewHolder)
+            getItem(position)?.let { holder.onBind(it) }
+    }
 }

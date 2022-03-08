@@ -38,13 +38,14 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getCurrentUser(): User {
+    override suspend fun getCurrentUser(): User? {
         return userDao.getCurrentUser()?.let { userEntityMapper.mapToDomain(it) }
-            ?: throw IllegalStateException("Current user can't be null")
     }
 
     override suspend fun getMessageAuthor(authorId: String, users: List<User>): User {
-        return users.firstOrNull { it.id == authorId } ?: getCurrentUser()
+        return users.firstOrNull { it.id == authorId } ?: fetchUser(authorId) ?: getCurrentUser() ?: throw IllegalStateException(
+            "Current user is null"
+        )
     }
 
     override suspend fun getUsers(userIds: List<String>): List<User> {

@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.Flow
 interface ChannelRepository {
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getMessages(channelId: String): Flow<PagingData<Message>>
+    fun getMessages(channelId: String): Flow<List<Message>>
     suspend fun addMessage(message: Message)
     suspend fun addMessages(messages: List<Message>)
-    suspend fun fetchMessages(channelId: String, request: FetchMessagesRequest): FetchMessagesResponse
+    suspend fun fetchMessages(request: FetchMessagesRequest): FetchMessagesResponse
     suspend fun deleteMessage(messageId: String)
 }

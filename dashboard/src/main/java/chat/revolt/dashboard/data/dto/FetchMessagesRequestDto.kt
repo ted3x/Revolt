@@ -11,6 +11,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class FetchMessagesRequestDto(
+    val channelId: String,
     val limit: Int,
     val before: String? = null,
     val after: String? = null,

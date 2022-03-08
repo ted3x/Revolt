@@ -13,11 +13,10 @@ import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
 
 class ChannelDataSourceImpl(private val service: ChannelService) : ChannelDataSource {
     override suspend fun fetchMessages(
-        channelId: String,
         requestDto: FetchMessagesRequestDto
     ): FetchMessagesResponseDto {
         return service.fetchMessages(
-            channelId = channelId,
+            channelId = requestDto.channelId,
             before = requestDto.before,
             limit = requestDto.limit,
             sort = requestDto.sort,

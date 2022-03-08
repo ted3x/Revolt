@@ -24,7 +24,7 @@ interface MessageDao {
     suspend fun addMessages(messages: List<MessageEntity>)
 
     @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt DESC")
-    fun getMessages(channelId: String): PagingSource<Int, MessageEntity>
+    fun getMessages(channelId: String): Flow<List<MessageEntity>>
 
     @Query("DELETE FROM messages WHERE channel LIKE :channelId")
     suspend fun clear(channelId: String)

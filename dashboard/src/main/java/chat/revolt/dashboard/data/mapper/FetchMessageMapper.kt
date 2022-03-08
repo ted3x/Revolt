@@ -20,6 +20,7 @@ import chat.revolt.domain.models.User
 class FetchMessageMapper(private val userMapper: UserDtoToUserMapper, private val messageMapper: MessageMapperDto) {
     fun mapToRequest(from: FetchMessagesRequest): FetchMessagesRequestDto {
         return FetchMessagesRequestDto(
+            channelId = from.channelId,
             limit = from.limit,
             before = from.before,
             after = from.after,

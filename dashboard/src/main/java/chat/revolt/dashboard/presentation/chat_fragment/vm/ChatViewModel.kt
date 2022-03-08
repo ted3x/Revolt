@@ -12,7 +12,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import chat.revolt.core.view_model.BaseViewModel
+import chat.revolt.dashboard.domain.models.FetchMessagesRequest
 import chat.revolt.dashboard.domain.repository.ChannelRepository
+import chat.revolt.dashboard.presentation.chat_fragment.MessagesManager
 import chat.revolt.domain.models.Message
 import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.Job
@@ -21,8 +23,8 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel(
     private val dataSource: ServerDataSource,
-    private val repository: ChannelRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val manager: MessagesManager,
+    private val channelRepository: ChannelRepository
 ) : BaseViewModel() {
 
     val typers: MutableLiveData<String?> = MutableLiveData()
@@ -31,23 +33,29 @@ class ChatViewModel(
     private lateinit var channelStartTypingListener: Job
     private lateinit var channelStopTypingListener: Job
     val currentChannel = MutableLiveData<String>()
-    //var flow: Flow<PagingData<Message>>? =
-     //   repository.getMessages("01F7ZSBSFHCAAJQ92ZGTY67HMN").cachedIn(viewModelScope)
+    val flow get() = manager.getMessages()
+
+    fun loadMore() {
+        viewModelScope.launch {
+            manager.loadMore()
+        }
+    }
 
     fun changeChannel(channelId: String) {
         viewModelScope.launch {
+            manager.initChannel(channelId)
             stopEventListeners()
             typersList.clear()
             typers.value = null
+            currentChannel.value = channelId
             startEventListeners()
-            //createPager(channelId)
         }
     }
 
     private fun startEventListeners() {
         messageListener = viewModelScope.launch {
             dataSource.onMessage(channelId = currentChannel.value!!).cancellable().collect {
-                //channelRepository.addMessage(it)
+                channelRepository.addMessage(it)
             }
         }
         channelStartTypingListener = viewModelScope.launch {

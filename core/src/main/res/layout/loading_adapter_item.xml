@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 2/20/22, 7:23 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 2/20/22, 7:23 PM
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dimen_p_10">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/dimen_p_30"
+        android:layout_height="@dimen/dimen_p_30"
+        android:layout_gravity="center_horizontal"
+        android:progressBackgroundTint="@color/accent" />
+</FrameLayout>

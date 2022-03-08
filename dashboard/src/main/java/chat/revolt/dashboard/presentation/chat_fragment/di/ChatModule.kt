@@ -13,6 +13,7 @@ import chat.revolt.dashboard.data.data_source.ChannelDataSourceImpl
 import chat.revolt.dashboard.data.mapper.FetchMessageMapper
 import chat.revolt.dashboard.data.repository.ChannelRepositoryImpl
 import chat.revolt.dashboard.domain.repository.ChannelRepository
+import chat.revolt.dashboard.presentation.chat_fragment.MessagesManager
 import chat.revolt.dashboard.presentation.chat_fragment.ui.ChatFragment
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
 import chat.revolt.data.local.mappers.MessageDBMapper
@@ -38,20 +39,20 @@ val chatModule = module {
 //        }
         scoped<ChannelRepository> {
             ChannelRepositoryImpl(
-                messageDao = get(),
+                database = get(),
+                userRepository = get(),
                 dataSource = get(),
                 mapper = get(),
-                userDao = get(),
                 messageMapper = get(),
                 userDBMapper = get()
             )
         }
-        //scoped { ChannelManager(database = get(), channelRepository = get(), userRepository = get()) }
+        scoped { MessagesManager(repository = get(), userRepository = get(), database = get(), messagesMapper = get(), usersMapper = get()) }
         viewModel {
             ChatViewModel(
-                repository = get(),
                 dataSource = get(),
-                savedStateHandle = SavedStateHandle()
+                manager = get(),
+                channelRepository = get()
             )
         }
     }

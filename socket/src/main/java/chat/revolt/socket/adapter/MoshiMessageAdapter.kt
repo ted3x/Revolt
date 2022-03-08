@@ -2,6 +2,7 @@ package chat.revolt.socket.adapter
 
 import chat.revolt.socket.events.Event
 import chat.revolt.socket.events.Events
+import chat.revolt.socket.server.message.MessageEventContentAdapter
 import com.squareup.moshi.*
 import okio.ByteString.Companion.decodeHex
 import com.tinder.scarlet.Message
@@ -74,7 +75,6 @@ class MoshiMessageAdapter<T> private constructor(
                     Any::class.java
                 )
             )
-
             val enumAdapter = moshi.adapter(Event::class.java)
             return MoshiMessageAdapter(adapter, mapAdapter, enumAdapter)
         }
@@ -100,7 +100,7 @@ class MoshiMessageAdapter<T> private constructor(
     }
 
     private companion object {
-        private val DEFAULT_MOSHI = Moshi.Builder().build()
+        private val DEFAULT_MOSHI = Moshi.Builder().add(MessageEventContentAdapter()).build()
         private val UTF8_BOM = "EFBBBF".decodeHex()
     }
 }
