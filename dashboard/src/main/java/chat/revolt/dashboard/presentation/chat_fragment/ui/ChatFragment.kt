@@ -35,21 +35,21 @@ class ChatFragment :
         val adapter = MessagesAdapter(object : LoadingAdapterListener{
             override fun onLoadMore() { viewModel.loadMore() }
         })
+        val lm = LinearLayoutManager(context)
+        lm.reverseLayout = true
+        lm.stackFromEnd = true
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                if(isInitial) {
+                if(isInitial || lm.findFirstCompletelyVisibleItemPosition() < 5) {
                     binding.chatRecyclerView.scrollToPosition(0)
                     isInitial = false
                 }
             }
         })
-        val lm = LinearLayoutManager(context)
-        lm.reverseLayout = true
-        lm.stackFromEnd = true
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
-        viewModel.changeChannel("01F7ZSBSFHCAAJQ92ZGTY67HMN")
+        viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
         viewModel.currentChannel.observe {
             isInitial = true
             lifecycleScope.launchWhenCreated {
