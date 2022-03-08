@@ -7,30 +7,33 @@
 package chat.revolt.core.extensions
 
 import android.content.Context
+import android.os.Build
+import android.text.format.DateUtils
+import androidx.annotation.RequiresApi
 import chat.revolt.core.R
 import java.text.SimpleDateFormat
 import java.util.*
 
 private const val HOUR_FORMAT = "HH:mm"
 private const val WEEK_DAY_WITH_HOUR_FORMAT = "EEEE 'at' HH:mm"
-private const val DATE_FORMAT = "dd/mm/yyyy HH:mm"
-private const val ONE_DAY_IN_MS = 86400000
-private const val TWO_DAY_IN_MS = 172800000
-private const val ONE_WEEK_IN_MS = 604800000
+private const val DATE_FORMAT = "dd/MM/yyyy HH:mm"
+
+@RequiresApi(Build.VERSION_CODES.CUPCAKE)
 fun Long.toDate(context: Context): String {
     val date = Date(this)
     val current = System.currentTimeMillis()
     val sdf: SimpleDateFormat
-    return when (current - this) {
-        in 0 until ONE_DAY_IN_MS -> {
+    DateUtils.isToday(current)
+    return when {
+        DateUtils.isToday(this) -> {
             sdf = SimpleDateFormat(HOUR_FORMAT, Locale.US)
             context.getString(R.string.date_today_at, sdf.format(date))
         }
-        in ONE_DAY_IN_MS until TWO_DAY_IN_MS -> {
+        isYesterday(this) -> {
             sdf = SimpleDateFormat(HOUR_FORMAT, Locale.US)
             context.getString(R.string.date_yesterday_at, sdf.format(date))
         }
-        in TWO_DAY_IN_MS..ONE_WEEK_IN_MS -> {
+        (current - this) <= DateUtils.WEEK_IN_MILLIS -> {
             sdf = SimpleDateFormat(WEEK_DAY_WITH_HOUR_FORMAT, Locale.US)
             context.getString(R.string.date_last_day_at, sdf.format(date))
         }
@@ -39,6 +42,16 @@ fun Long.toDate(context: Context): String {
             sdf.format(date)
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.CUPCAKE)
+fun isYesterday(millis: Long): Boolean {
+    return DateUtils.isToday(millis + DateUtils.DAY_IN_MILLIS)
+}
+
+@RequiresApi(Build.VERSION_CODES.CUPCAKE)
+fun isLastWeek(millis: Long): Boolean {
+    return DateUtils.isToday(millis + DateUtils.WEEK_IN_MILLIS)
 }
 
 fun Long.toHour(): String? {

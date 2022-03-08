@@ -6,18 +6,26 @@
 
 package chat.revolt.dashboard.data.repository
 
+import androidx.paging.*
 import chat.revolt.dashboard.data.data_source.ChannelDataSource
 import chat.revolt.dashboard.data.mapper.FetchMessageMapper
 import chat.revolt.dashboard.domain.models.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.FetchMessagesResponse
 import chat.revolt.dashboard.domain.repository.ChannelRepository
+import chat.revolt.dashboard.presentation.new_chat_fragment.NewMessagesMediator
 import chat.revolt.data.local.dao.MessageDao
 import chat.revolt.data.local.dao.UserDao
+import chat.revolt.data.local.database.RevoltDatabase
+import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.mappers.MessageDBMapper
 import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import org.koin.java.KoinJavaComponent
 import java.lang.IllegalStateException
 
 class ChannelRepositoryImpl(
@@ -29,40 +37,25 @@ class ChannelRepositoryImpl(
     private val userDBMapper: UserDBMapper
 ) : ChannelRepository {
 
-    override fun getMessages(channelId: String): Flow<List<Message>> {
-        return messageDao.getMessages(channelId)
-            .map {
-                it.map {
-                    val user =
-                        userDao.getUser(it.author) ?: throw IllegalStateException("User not found")
-                    messageMapper.mapToDomain(user, it)
-                }
-            }
-    }
-
-    override suspend fun getMessagesBetween(
-        channelId: String,
-        startDate: Long,
-        endDate: Long,
-        limit: Int
-    ): List<Message> {
-        return messageDao.getMessagesBetween(channelId, startDate, endDate, limit).map {
-            val user =
-                userDao.getUser(it.author) ?: throw IllegalStateException("User not found")
-            messageMapper.mapToDomain(user, it)
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getMessages(channelId: String): Flow<PagingData<Message>> {
+        val userMapper = UserDBMapper()
+        val userRepository = KoinJavaComponent.get<UserRepository>(UserRepository::class.java)
+        val database = KoinJavaComponent.get<RevoltDatabase>(RevoltDatabase::class.java)
+        val mediator = NewMessagesMediator(
+            userMapper,
+            MessageDBMapper(userMapper, userRepository),
+            channelId,
+            database = database,
+            repository = this
+        )
+        val pager = Pager(
+            config = PagingConfig(pageSize = 30, enablePlaceholders = false),
+            remoteMediator = mediator
+        ){
+            messageDao.getMessages(channelId)
         }
-    }
-
-    override suspend fun getMessagesBefore(
-        channelId: String,
-        startDate: Long,
-        limit: Int
-    ): List<Message> {
-        return messageDao.getMessagesBefore(channelId, startDate, limit).map {
-            val user =
-                userDao.getUser(it.author) ?: throw IllegalStateException("User not found")
-            messageMapper.mapToDomain(user, it)
-        }
+        return pager.flow.mapLatest { it.map { messageMapper.mapToDomain(it)} }
     }
 
     override suspend fun addMessage(message: Message) {

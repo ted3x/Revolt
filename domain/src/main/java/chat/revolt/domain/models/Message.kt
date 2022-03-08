@@ -15,7 +15,8 @@ data class Message(
     val edited: String?,
     val mentions: List<User>?,
     val replies: List<String>?,
-    val masquerade: Masquerade?
+    val masquerade: Masquerade?,
+    val isLoadingItem: Boolean = false
 ) {
 
     val authorName = masquerade?.name ?: author.username

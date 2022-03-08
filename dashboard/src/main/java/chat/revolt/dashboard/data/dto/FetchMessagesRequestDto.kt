@@ -11,7 +11,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class FetchMessagesRequestDto(
-    val limit: Int = 10,
+    val limit: Int,
     val before: String? = null,
     val after: String? = null,
     val sort: String,

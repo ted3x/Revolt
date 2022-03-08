@@ -17,11 +17,11 @@ class MessageDBMapper(
     private val userDBMapper: UserDBMapper,
     private val userRepository: UserRepository,
 ) {
-    suspend fun mapToDomain(userEntity: UserEntity, from: MessageEntity): Message {
+    suspend fun mapToDomain(from: MessageEntity): Message {
         return Message(
             id = from.id,
             channel = from.channel,
-            author = userDBMapper.mapToDomain(userEntity),
+            author = userRepository.getUser(from.author),
             content = from.content.map(),
             attachments = emptyList(),
             edited = from.edited,

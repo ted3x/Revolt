@@ -7,13 +7,12 @@
 package chat.revolt.dashboard.presentation.chat_fragment.vm
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import chat.revolt.core.view_model.BaseViewModel
-import chat.revolt.dashboard.data.repository.ChannelManager
 import chat.revolt.dashboard.domain.repository.ChannelRepository
-import chat.revolt.dashboard.presentation.chat_fragment.LoadingType
-import chat.revolt.dashboard.presentation.chat_fragment.PagingData
-import chat.revolt.dashboard.presentation.chat_fragment.PagingManager
 import chat.revolt.domain.models.Message
 import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.Job
@@ -21,28 +20,27 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    private val channelManager: ChannelManager,
-    private val dataSource: ServerDataSource
+    private val dataSource: ServerDataSource,
+    private val repository: ChannelRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
-    val loadingState: MutableStateFlow<LoadingType> = MutableStateFlow(LoadingType.Initial)
     val typers: MutableLiveData<String?> = MutableLiveData()
     private val typersList: MutableList<String> = mutableListOf()
     private lateinit var messageListener: Job
     private lateinit var channelStartTypingListener: Job
     private lateinit var channelStopTypingListener: Job
     val currentChannel = MutableLiveData<String>()
-    val messages get() = channelManager.messages
-    val isPaginationEndReached get() = channelManager.isPaginationEndReached()
+    //var flow: Flow<PagingData<Message>>? =
+     //   repository.getMessages("01F7ZSBSFHCAAJQ92ZGTY67HMN").cachedIn(viewModelScope)
 
     fun changeChannel(channelId: String) {
         viewModelScope.launch {
-            channelManager.initializeMessages(channelId)
-            currentChannel.value = channelId
             stopEventListeners()
             typersList.clear()
             typers.value = null
             startEventListeners()
+            //createPager(channelId)
         }
     }
 
@@ -77,14 +75,6 @@ class ChatViewModel(
             channelStartTypingListener.cancel()
         if (this::channelStopTypingListener.isInitialized)
             channelStopTypingListener.cancel()
-    }
-
-    fun load(isInitial: Boolean = false) {
-        if(channelManager.isPaginationEndReached()) return
-        viewModelScope.launch {
-            loadingState.emit(if (isInitial) LoadingType.Initial else LoadingType.OnScroll)
-            channelManager.loadMoreMessages()
-        }
     }
 
     fun getTypersMessage(typersList: MutableList<String>): String? {

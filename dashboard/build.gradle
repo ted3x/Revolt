@@ -66,6 +66,8 @@ dependencies {
     implementation libs.glide.glide
     annotationProcessor(libs.glide.kapt)
     implementation libs.exoplayer
+    implementation libs.paging
+    implementation libs.androidx.room.paging
 
     implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime

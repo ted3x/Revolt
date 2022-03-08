@@ -6,6 +6,7 @@
 
 package chat.revolt.data.local.entity.message
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import chat.revolt.data.local.entity.user.UserEntity
@@ -24,7 +25,7 @@ data class MessageEntity(
     val createdAt: Long,
     val mentions: List<String>?,
     val replies: List<String>?,
-    val synchronizedAt: Long
+    val synchronizedAt: Long,
 ) {
 
     sealed class ContentEntity(@Json(name = "type") val type: ContentType) {

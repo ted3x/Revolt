@@ -6,6 +6,7 @@
 
 package chat.revolt.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -22,14 +23,8 @@ interface MessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMessages(messages: List<MessageEntity>)
 
-    @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt DESC, synchronizedAt DESC LIMIT 100")
-    fun getMessages(channelId: String): Flow<List<MessageEntity>>
-
-    @Query("SELECT * FROM messages WHERE channel LIKE :channelId AND createdAt BETWEEN :startDate AND :endDate ORDER BY createdAt DESC LIMIT :limit")
-    suspend fun getMessagesBetween(channelId: String, startDate: Long, endDate: Long, limit: Int): List<MessageEntity>
-
-    @Query("SELECT * FROM messages WHERE channel LIKE :channelId AND createdAt < :startDate ORDER BY createdAt DESC LIMIT :limit")
-    suspend fun getMessagesBefore(channelId: String, startDate: Long, limit: Int): List<MessageEntity>
+    @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt DESC")
+    fun getMessages(channelId: String): PagingSource<Int, MessageEntity>
 
     @Query("DELETE FROM messages WHERE channel LIKE :channelId")
     suspend fun clear(channelId: String)

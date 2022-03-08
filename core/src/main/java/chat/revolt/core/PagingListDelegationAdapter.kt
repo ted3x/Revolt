@@ -7,6 +7,7 @@
 package chat.revolt.core
 
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,7 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegatesManager
 
 class PagedListDelegationAdapter<T : Any>(private val diffCallback: DiffUtil.ItemCallback<T>) :
-    ListAdapter<T, RecyclerView.ViewHolder>(diffCallback) {
+    PagingDataAdapter<T, RecyclerView.ViewHolder>(diffCallback) {
 
     private val delegatesManager: AdapterDelegatesManager<List<T>> = AdapterDelegatesManager()
 
@@ -33,7 +34,7 @@ class PagedListDelegationAdapter<T : Any>(private val diffCallback: DiffUtil.Ite
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         getItem(position) // Internally triggers loading items around items around the given position
-        delegatesManager.onBindViewHolder(currentList, position, holder, null)
+        delegatesManager.onBindViewHolder(snapshot().items, position, holder, null)
     }
 
     override fun onBindViewHolder(
@@ -41,11 +42,11 @@ class PagedListDelegationAdapter<T : Any>(private val diffCallback: DiffUtil.Ite
         payloads: List<*>
     ) {
         getItem(position) // Internally triggers loading items around items around the given position
-        delegatesManager.onBindViewHolder(currentList, position, holder, payloads)
+        delegatesManager.onBindViewHolder(snapshot().items, position, holder, payloads)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return delegatesManager.getItemViewType(currentList, position)
+        return delegatesManager.getItemViewType(snapshot().items, position)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {

@@ -30,15 +30,19 @@ class SplashViewModel(
         viewModelScope.launch {
             getRevoltConfigUseCase.execute(params = Unit,
                 onSuccess = { revoltConfig ->
-                    getUserUseCase.execute(params = "01FVDATAJD2V5XTSZQ2B9DA876", onSuccess = {
-                        addUserInDbUseCase.execute(params = it!!,
-                        onSuccess = {
-                            revoltConfigManager.setConfig(revoltConfig)
-                            globalNavigator.navigateTo(Feature.Auth(state = AuthStates.SignIn))
-                        })
-                    })
+                    revoltConfigManager.setConfig(revoltConfig)
+                    fetchUser()
                 }
             )
         }
+    }
+
+    private suspend fun fetchUser() {
+        getUserUseCase.execute(params = "01FVDATAJD2V5XTSZQ2B9DA876", onSuccess = {
+            addUserInDbUseCase.execute(params = it!!,
+                onSuccess = {
+                    globalNavigator.navigateTo(Feature.Auth(state = AuthStates.SignIn))
+                })
+        })
     }
 }
