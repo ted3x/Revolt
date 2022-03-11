@@ -1,10 +1,10 @@
 /*
- * Created by Tedo Manvelidze(ted3x) on 2/14/22, 11:45 PM
+ * Created by Tedo Manvelidze(ted3x) on 3/11/22, 11:06 PM
  * Copyright (c) 2022 . All rights reserved.
- * Last modified 2/14/22, 11:45 PM
+ * Last modified 2/14/22, 11:46 PM
  */
 
-package chat.revolt.core
+package chat.revolt.domain
 
 object UlidTimeDecoder {
 

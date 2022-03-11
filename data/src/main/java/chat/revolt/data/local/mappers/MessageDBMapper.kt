@@ -6,10 +6,8 @@
 
 package chat.revolt.data.local.mappers
 
-import chat.revolt.core.UlidTimeDecoder
-import chat.revolt.core.mapper.EntityMapper
+import chat.revolt.domain.UlidTimeDecoder
 import chat.revolt.data.local.entity.message.MessageEntity
-import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.repository.UserRepository
 

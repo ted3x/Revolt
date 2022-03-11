@@ -11,13 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import chat.revolt.core.UlidTimeDecoder
+import chat.revolt.domain.UlidTimeDecoder
 import chat.revolt.core.extensions.toDate
 import chat.revolt.core.extensions.toHour
+import chat.revolt.core.extensions.visibleIf
 import chat.revolt.core.paging_manager.LoadingAdapter
 import chat.revolt.core.paging_manager.LoadingAdapterListener
+import chat.revolt.dashboard.databinding.GroupedTextAdapterItemBinding
 import chat.revolt.dashboard.databinding.SystemTextAdapterItemBinding
 import chat.revolt.dashboard.databinding.TextAdapterItemBinding
 import chat.revolt.domain.models.Message
@@ -28,7 +29,8 @@ import java.lang.IllegalStateException
 class MessagesAdapter(listener: LoadingAdapterListener) :
     LoadingAdapter<Message, LoadingAdapter.BaseLoadingAdapterViewHolder>(Comparator, listener) {
 
-    abstract class MessageViewHolder(binding: ViewBinding) : LoadingAdapter.BaseLoadingAdapterViewHolder(binding.root) {
+    abstract class MessageViewHolder(binding: ViewBinding) :
+        LoadingAdapter.BaseLoadingAdapterViewHolder(binding.root) {
         abstract fun onBind(item: Message)
     }
 
@@ -37,10 +39,19 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
 
         override fun onBind(item: Message) {
             binding.authorName.text = item.authorName
-            binding.text.text = (item.content as? Message.Content.Message)?.content
-                ?: (item.content as? Message.Content.Text)?.content
             binding.date.text = UlidTimeDecoder.getTimestamp(item.id).toDate(binding.root.context)
             Glide.with(binding.root.context).load(item.author.avatarUrl).into(binding.authorImage)
+            binding.text.text = (item.content as? Message.Content.Message)?.content
+                ?: (item.content as? Message.Content.Text)?.content
+        }
+    }
+
+    class GroupedTextMessageViewHolder(private val binding: GroupedTextAdapterItemBinding) :
+        MessageViewHolder(binding) {
+
+        override fun onBind(item: Message) {
+            binding.text.text = (item.content as? Message.Content.Message)?.content
+                ?: (item.content as? Message.Content.Text)?.content
         }
     }
 
@@ -83,8 +94,12 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
 
     override fun getViewType(position: Int): Int {
         val item = getItem(position)
-        return if (item?.content is Message.Content.Text || item?.content is Message.Content.Message) MESSAGE
-        else if (item?.content is Message.SystemMessage) SYSTEM_MESSAGE
+        return if (item?.content is Message.Content.Text || item?.content is Message.Content.Message) {
+            if (position == itemCount - 1) MESSAGE else {
+                val previousItem = getItem(position + 1)
+                if (item.isDivided(previousItem)) MESSAGE else GROUPED_MESSAGE
+            }
+        } else if (item?.content is Message.SystemMessage) SYSTEM_MESSAGE
         else -1
     }
 
@@ -100,6 +115,13 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
                     ), parent, false
                 )
             )
+            GROUPED_MESSAGE -> GroupedTextMessageViewHolder(
+                GroupedTextAdapterItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
             SYSTEM_MESSAGE -> SystemTextMessageViewHolder(
                 SystemTextAdapterItemBinding.inflate(
                     LayoutInflater.from(
@@ -111,6 +133,10 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
         }
     }
 
+    override fun onBindViewHolder(holder: BaseLoadingAdapterViewHolder, position: Int) {
+        val item = getItem(position)
+        if (holder is MessageViewHolder) holder.onBind(item)
+    }
 
     companion object {
         object Comparator : DiffUtil.ItemCallback<Message>() {
@@ -123,12 +149,8 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
             }
         }
 
-        const val MESSAGE = 1234123
-        const val SYSTEM_MESSAGE = 12312414
-    }
-
-    override fun onBindViewHolder(holder: BaseLoadingAdapterViewHolder, position: Int) {
-        if(holder is MessageViewHolder)
-            getItem(position)?.let { holder.onBind(it) }
+        const val MESSAGE = 111
+        const val GROUPED_MESSAGE = 112
+        const val SYSTEM_MESSAGE = 113
     }
 }

@@ -6,6 +6,9 @@
 
 package chat.revolt.domain.models
 
+import chat.revolt.domain.UlidTimeDecoder
+import kotlin.math.abs
+
 data class Message(
     val id: String,
     val channel: String,
@@ -20,6 +23,7 @@ data class Message(
 ) {
 
     val authorName = masquerade?.name ?: author.username
+    val timestamp = UlidTimeDecoder.getTimestamp(id)
 
     sealed interface SystemMessage {
         val message: String
@@ -124,4 +128,14 @@ data class Message(
         val name: String? = null,
         val avatar: String? = null
     )
+
+    fun isDivided(previousMessage: Message): Boolean {
+        return (previousMessage.author.id != author.id || (previousMessage.author.id == author.id && abs(
+            previousMessage.timestamp - timestamp
+        ) > DIVIDER_MAX_TIME))
+    }
+
+    companion object {
+        private const val DIVIDER_MAX_TIME = 420000
+    }
 }
