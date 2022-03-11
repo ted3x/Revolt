@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import chat.revolt.core.fragment.BaseFragment
 import chat.revolt.core.paging_manager.LoadingAdapterListener
 import chat.revolt.dashboard.databinding.ChatFragmentBinding
-import chat.revolt.dashboard.presentation.chat_fragment.MessagesAdapter
+import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessagesAdapter
 import chat.revolt.dashboard.presentation.chat_fragment.di.chatModule
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
