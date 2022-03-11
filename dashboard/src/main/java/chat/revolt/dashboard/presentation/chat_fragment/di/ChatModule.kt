@@ -31,11 +31,9 @@ val chatModule = module {
         scoped<ChannelRepository> {
             ChannelRepositoryImpl(
                 messageDao = get(),
-                userRepository = get(),
                 dataSource = get(),
                 mapper = get(),
                 messageMapper = get(),
-                userDBMapper = get()
             )
         }
         scoped { MessagesManager(channelRepository = get(), userRepository = get(), database = get()) }

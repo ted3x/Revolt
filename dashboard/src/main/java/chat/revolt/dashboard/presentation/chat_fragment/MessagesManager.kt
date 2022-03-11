@@ -33,13 +33,13 @@ class MessagesManager(
         val response = channelRepository.fetchMessages(
             request = FetchMessagesRequest(
                 channelId = channelId,
-                limit = 30,
+                limit = LIMIT,
                 before = lastMessageId,
                 sort = "Latest",
                 includeUsers = true
             )
         )
-        lastMessageId = if (response.messages.size < 20) {
+        lastMessageId = if (response.messages.size < LIMIT) {
             isEndReached.postValue(true)
             null
         } else response.messages.last().id
@@ -52,4 +52,9 @@ class MessagesManager(
     }
 
     fun getMessages() = channelRepository.getMessages(channelId)
+    suspend fun getInitialMessages() = channelRepository.getInitialMessages(channelId, LIMIT)
+
+    companion object {
+        private const val LIMIT = 30
+    }
 }

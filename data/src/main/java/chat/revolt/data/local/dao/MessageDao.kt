@@ -25,6 +25,9 @@ interface MessageDao {
     @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt DESC")
     fun getMessages(channelId: String): Flow<List<MessageEntity>>
 
+    @Query("SELECT * FROM messages WHERE channel LIKE :channelId ORDER BY createdAt DESC LIMIT :limit")
+    suspend fun getInitialMessages(channelId: String, limit: Int): List<MessageEntity>
+
     @Query("DELETE FROM messages WHERE channel LIKE :channelId")
     suspend fun clear(channelId: String)
 

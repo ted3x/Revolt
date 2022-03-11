@@ -11,8 +11,10 @@ import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.dashboard.presentation.chat_fragment.MessagesManager
+import chat.revolt.domain.models.Message
 import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -30,6 +32,7 @@ class ChatViewModel(
     private lateinit var channelStopTypingListener: Job
     val currentChannel = MutableLiveData<String>()
     val flow get() = manager.getMessages()
+    val initialMessages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val isEndReached = manager.isEndReached
 
     fun loadMore(isInitial: Boolean = false) {
@@ -40,6 +43,7 @@ class ChatViewModel(
 
     fun changeChannel(channelId: String) {
         manager.initChannel(channelId)
+        viewModelScope.launch { initialMessages.emit(manager.getInitialMessages()) }
         stopEventListeners()
         typersList.clear()
         typers.value = null

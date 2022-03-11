@@ -49,6 +49,9 @@ class ChatFragment :
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
         viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
+        lifecycleScope.launchWhenCreated {
+            viewModel.initialMessages.collectLatest(adapter::submitList)
+        }
         viewModel.currentChannel.observe {
             isInitial = true
             lifecycleScope.launchWhenCreated {

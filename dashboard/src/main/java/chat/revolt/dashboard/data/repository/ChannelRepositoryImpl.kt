@@ -21,15 +21,17 @@ import kotlinx.coroutines.flow.map
 
 class ChannelRepositoryImpl(
     private val messageDao: MessageDao,
-    private val userRepository: UserRepository,
     private val dataSource: ChannelDataSource,
     private val mapper: FetchMessageMapper,
     private val messageMapper: MessageDBMapper,
-    private val userDBMapper: UserDBMapper
 ) : ChannelRepository {
 
     override fun getMessages(channelId: String): Flow<List<Message>> {
         return messageDao.getMessages(channelId).map { it.map { messageMapper.mapToDomain(it) } }
+    }
+
+    override suspend fun getInitialMessages(channelId: String, limit: Int): List<Message> {
+        return messageMapper.mapToDomain(messageDao.getInitialMessages(channelId, limit))
     }
 
     override suspend fun addMessage(message: Message) {

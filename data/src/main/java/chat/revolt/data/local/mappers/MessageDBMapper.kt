@@ -14,8 +14,8 @@ import chat.revolt.domain.repository.UserRepository
 class MessageDBMapper(
     private val userDBMapper: UserDBMapper,
     private val userRepository: UserRepository,
-) {
-    suspend fun mapToDomain(from: MessageEntity): Message {
+): EntityDomainMapper<MessageEntity, Message> {
+    override suspend fun mapToDomain(from: MessageEntity): Message {
         return Message(
             id = from.id,
             channel = from.channel,
@@ -74,7 +74,7 @@ class MessageDBMapper(
         }
     }
 
-    fun mapToEntity(from: Message): MessageEntity {
+    override suspend fun mapToEntity(from: Message): MessageEntity {
         return MessageEntity(
             id = from.id,
             channel = from.channel,
