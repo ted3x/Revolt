@@ -6,7 +6,6 @@
 
 package chat.revolt.dashboard.presentation.chat_fragment.di
 
-import androidx.lifecycle.SavedStateHandle
 import chat.revolt.dashboard.data.ChannelService
 import chat.revolt.dashboard.data.data_source.ChannelDataSource
 import chat.revolt.dashboard.data.data_source.ChannelDataSourceImpl
@@ -29,17 +28,9 @@ val chatModule = module {
         scoped { MessageMapperDto(userRepository = get()) }
         scoped { FetchMessageMapper(userMapper = get(), messageMapper = get()) }
         scoped { MessageDBMapper(userDBMapper = get(), userRepository = get()) }
-//        scoped {
-//            PagingManager(
-//                database = get(),
-//                channelRepository = get(),
-//                mapper = get(),
-//                userDBMapper = get(),
-//            )
-//        }
         scoped<ChannelRepository> {
             ChannelRepositoryImpl(
-                database = get(),
+                messageDao = get(),
                 userRepository = get(),
                 dataSource = get(),
                 mapper = get(),
@@ -47,7 +38,7 @@ val chatModule = module {
                 userDBMapper = get()
             )
         }
-        scoped { MessagesManager(repository = get(), userRepository = get(), database = get(), messagesMapper = get(), usersMapper = get()) }
+        scoped { MessagesManager(channelRepository = get(), userRepository = get(), database = get()) }
         viewModel {
             ChatViewModel(
                 dataSource = get(),

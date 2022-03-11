@@ -6,22 +6,17 @@
 
 package chat.revolt.dashboard.domain.repository
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.RemoteMediator
 import chat.revolt.dashboard.domain.models.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.FetchMessagesResponse
-import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.domain.models.Message
 import kotlinx.coroutines.flow.Flow
 
 interface ChannelRepository {
 
-    @OptIn(ExperimentalPagingApi::class)
     fun getMessages(channelId: String): Flow<List<Message>>
     suspend fun addMessage(message: Message)
     suspend fun addMessages(messages: List<Message>)
     suspend fun fetchMessages(request: FetchMessagesRequest): FetchMessagesResponse
     suspend fun deleteMessage(messageId: String)
+    suspend fun clear(channelId: String)
 }

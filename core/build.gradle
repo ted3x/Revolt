@@ -40,5 +40,4 @@ dependencies {
     implementation libs.koin.android
     implementation libs.moshi.core
     ksp(libs.moshi.ksp)
-    implementation libs.paging
 }

@@ -61,5 +61,8 @@ class ChatFragment :
             binding.typers.text = it
             binding.typers.visibility = if (it != null) View.VISIBLE else View.GONE
         }
+        viewModel.isEndReached.observe {
+            adapter.isEndReached = it
+        }
     }
 }

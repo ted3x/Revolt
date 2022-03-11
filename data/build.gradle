@@ -31,11 +31,9 @@ dependencies {
     implementation libs.moshi.core
     ksp(libs.moshi.ksp)
     implementation libs.koin.core
-    implementation libs.paging
     implementation libs.androidx.core
     implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime
-    implementation libs.androidx.room.paging
     kapt libs.androidx.room.compiler
 
 }

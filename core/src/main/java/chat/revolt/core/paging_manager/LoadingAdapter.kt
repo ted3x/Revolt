@@ -21,6 +21,7 @@ abstract class LoadingAdapter<T, VH : LoadingAdapter.BaseLoadingAdapterViewHolde
 ) :
     ListAdapter<T,VH>(diffUtil) {
 
+    var isEndReached = false
     protected var isLoaderVisible = false
     abstract val positionToLoad: Int
 
@@ -33,7 +34,7 @@ abstract class LoadingAdapter<T, VH : LoadingAdapter.BaseLoadingAdapterViewHolde
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
-                if (lastVisibleItem + positionToLoad >= itemCount) {
+                if (lastVisibleItem + positionToLoad >= itemCount && !isEndReached) {
                     isLoaderVisible = true
                     notifyItemInserted(itemCount)
                     listener.onLoadMore()

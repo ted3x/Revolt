@@ -29,10 +29,7 @@ class FetchMessageMapper(private val userMapper: UserDtoToUserMapper, private va
         )
     }
 
-    suspend fun mapToResponse(
-        from: FetchMessagesResponseDto,
-        selfUser: User
-    ): FetchMessagesResponse {
+    suspend fun mapToResponse(from: FetchMessagesResponseDto): FetchMessagesResponse {
         val users = from.users.toSet().map { userMapper.map(it) }
         return FetchMessagesResponse(
             messages = from.messages.map { messageMapper.map(it, users) },

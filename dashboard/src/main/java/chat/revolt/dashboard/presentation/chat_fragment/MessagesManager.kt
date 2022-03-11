@@ -6,34 +6,31 @@
 
 package chat.revolt.dashboard.presentation.chat_fragment
 
+import androidx.lifecycle.MutableLiveData
 import androidx.room.withTransaction
 import chat.revolt.dashboard.domain.models.FetchMessagesRequest
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.data.local.database.RevoltDatabase
-import chat.revolt.data.local.mappers.MessageDBMapper
-import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.domain.repository.UserRepository
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class MessagesManager(
     private val database: RevoltDatabase,
-    private val repository: ChannelRepository,
+    private val channelRepository: ChannelRepository,
     private val userRepository: UserRepository,
-    private val usersMapper: UserDBMapper,
-    private val messagesMapper: MessageDBMapper
 ) {
 
+    val isEndReached = MutableLiveData(false)
     private var lastMessageId: String? = null
     private var channelId: String = ""
 
     fun initChannel(channelId: String) {
+        isEndReached.value = false
         this.channelId = channelId
-        GlobalScope.launch { loadMore(isInitial = true)}
     }
 
     suspend fun loadMore(isInitial: Boolean = false) {
-        val response = repository.fetchMessages(
+        if (isEndReached.value == true) return
+        val response = channelRepository.fetchMessages(
             request = FetchMessagesRequest(
                 channelId = channelId,
                 limit = 30,
@@ -42,13 +39,17 @@ class MessagesManager(
                 includeUsers = true
             )
         )
-        lastMessageId = response.messages.last().id
+        lastMessageId = if (response.messages.size < 20) {
+            isEndReached.postValue(true)
+            null
+        } else response.messages.last().id
+
         database.withTransaction {
-            if(isInitial) database.messageDao().clear(channelId)
-            database.userDao().addUsers(response.users.map { usersMapper.mapToEntity(it) })
-            database.messageDao().addMessages(response.messages.map { messagesMapper.mapToEntity(it) })
+            if (isInitial) channelRepository.clear(channelId)
+            userRepository.addUsers(response.users)
+            channelRepository.addMessages(response.messages)
         }
     }
 
-    fun getMessages() = repository.getMessages(channelId)
+    fun getMessages() = channelRepository.getMessages(channelId)
 }
