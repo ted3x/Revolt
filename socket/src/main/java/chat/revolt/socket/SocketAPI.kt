@@ -7,10 +7,7 @@
 package chat.revolt.socket
 
 import chat.revolt.socket.client.data.AuthenticateRequest
-import chat.revolt.socket.server.message.ChannelStartTypingEvent
-import chat.revolt.socket.server.message.ChannelStopTypingEvent
-import chat.revolt.socket.server.message.ChannelStopTypingEventMapper
-import chat.revolt.socket.server.message.MessageEvent
+import chat.revolt.socket.server.message.*
 import com.tinder.scarlet.WebSocket
 import com.tinder.scarlet.ws.Receive
 import com.tinder.scarlet.ws.Send
@@ -23,6 +20,12 @@ interface SocketAPI {
 
     @Send
     fun authenticate(request: AuthenticateRequest)
+
+    @Receive
+    fun onAuthenticated(): Flow<AuthenticatedEvent>
+
+    @Receive
+    fun onReady(): Flow<ReadyEvent>
 
     @Receive
     fun onMessage(): Flow<MessageEvent>

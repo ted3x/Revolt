@@ -7,6 +7,9 @@
 package chat.revolt.socket.server.message
 
 import chat.revolt.core.mapper.Mapper
+import chat.revolt.data.remote.dto.channel.ChannelDto
+import chat.revolt.data.remote.dto.server.ServerDto
+import chat.revolt.data.remote.dto.user.UserDto
 import chat.revolt.domain.models.User
 import chat.revolt.domain.repository.UserRepository
 import chat.revolt.socket.events.Event
@@ -68,4 +71,20 @@ class ChannelStopTypingEventMapper(private val userRepository: UserRepository) :
         )
     }
 
+}
+
+@JsonClass(generateAdapter = true)
+data class AuthenticatedEvent(val authenticated: Boolean = false): Events() {
+    override val type: Event
+        get() = Event.Authenticated
+}
+
+@JsonClass(generateAdapter = true)
+data class ReadyEvent(
+    val users: List<UserDto>,
+    val servers: List<ServerDto>,
+    val channels: List<ChannelDto>
+): Events() {
+    override val type: Event
+        get() = Event.Ready
 }

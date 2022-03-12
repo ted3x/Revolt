@@ -58,8 +58,6 @@ class RVApp : Application(), Application.ActivityLifecycleCallbacks, RevoltSocke
 
     override fun onConnectionOpened() {
         Log.d("onConnectionOpened", "*******************")
-        val socket by inject<SocketAPI>()
-        socket.authenticate(AuthenticateRequest(token = "-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE"))
     }
 
     override fun onMessageReceived(message: String) {

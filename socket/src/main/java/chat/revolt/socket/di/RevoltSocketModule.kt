@@ -14,6 +14,8 @@ import chat.revolt.socket.adapter.MoshiMessageAdapter
 import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.server.ServerDataSource
 import chat.revolt.socket.server.ServerDataSourceImpl
+import chat.revolt.socket.server.authenticate.AuthenticateDataSource
+import chat.revolt.socket.server.authenticate.AuthenticateDataSourceImpl
 import chat.revolt.socket.server.message.ChannelStartTypingEventMapper
 import chat.revolt.socket.server.message.ChannelStopTypingEventMapper
 import chat.revolt.socket.server.message.MessageEventMapper
@@ -48,6 +50,11 @@ val revoltSocketModule = module {
             messageEventMapper = get(),
             channelStartTypingMapper = get(),
             channelStopTypingMapper = get()
+        )
+    }
+    single<AuthenticateDataSource> {
+        AuthenticateDataSourceImpl(
+            socket = get()
         )
     }
 }

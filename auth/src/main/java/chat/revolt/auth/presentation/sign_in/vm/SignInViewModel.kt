@@ -25,7 +25,11 @@ import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.core_navigation.features.Feature
 import chat.revolt.core_navigation.features.dashboard.DashboardStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
+import chat.revolt.socket.SocketAPI
+import chat.revolt.socket.client.data.AuthenticateRequest
+import chat.revolt.socket.server.authenticate.AuthenticateDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
@@ -36,6 +40,7 @@ class SignInViewModel(
     private val emailValidation: EmailValidation,
     private val captchaManager: CaptchaManager,
     private val signInUseCase: SignInUseCase,
+    private val authenticateDataSource: AuthenticateDataSource
 ) :
     BaseViewModel() {
 
@@ -59,7 +64,7 @@ class SignInViewModel(
     }
 
     init {
-        navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+        authenticateWebSocket()
         //if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
     }
 
@@ -106,9 +111,19 @@ class SignInViewModel(
             signInUseCase.execute(params = request,
                 onLoading = { loadingManager.toggleLoading(it) },
                 onSuccess = {
-                    navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+                    authenticateWebSocket()
                 }
             )
+        }
+    }
+
+    private fun authenticateWebSocket() {
+        authenticateDataSource.authenticate(AuthenticateRequest(token = "-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE"))
+        viewModelScope.launch {
+            authenticateDataSource.onReady().collectLatest {
+                println(it)
+                navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+            }
         }
     }
 

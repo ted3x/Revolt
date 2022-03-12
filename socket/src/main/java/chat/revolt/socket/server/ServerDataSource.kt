@@ -32,12 +32,10 @@ class ServerDataSourceImpl(
     override suspend fun onChannelStartTyping(channelId: String): Flow<ChannelStartTyping> {
         return socket.onChannelStartTyping().filter { it.channelId == channelId }
             .map { channelStartTypingMapper.map(it) }
-
     }
 
     override suspend fun onChannelStopTyping(channelId: String): Flow<ChannelStopTyping> {
         return socket.onChannelStopTyping().filter { it.channelId == channelId }
             .map { channelStopTypingMapper.map(it) }
-
     }
 }
