@@ -109,19 +109,13 @@ data class Message(
     }
 
     data class Attachment(
-        val id: String?,
+        val id: String,
         val tag: String,
-        val size: String?,
-        val filename: String?,
-        val metadata: Metadata?,
+        val size: String,
+        val filename: String,
+        val metadata: Metadata,
         val contentType: String?
-    ) {
-        data class Metadata(
-            val value: String?,
-            val width: Int?,
-            val height: Int?
-        )
-    }
+    )
 
     data class Masquerade(
         val name: String? = null,

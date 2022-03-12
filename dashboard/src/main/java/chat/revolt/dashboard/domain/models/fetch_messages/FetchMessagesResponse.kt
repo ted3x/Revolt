@@ -4,7 +4,7 @@
  * Last modified 2/14/22, 12:46 AM
  */
 
-package chat.revolt.dashboard.domain.models
+package chat.revolt.dashboard.domain.models.fetch_messages
 
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.models.User

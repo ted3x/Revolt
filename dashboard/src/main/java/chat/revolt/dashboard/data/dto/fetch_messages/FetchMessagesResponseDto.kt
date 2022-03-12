@@ -4,7 +4,7 @@
  * Last modified 2/14/22, 12:38 AM
  */
 
-package chat.revolt.dashboard.data.dto
+package chat.revolt.dashboard.data.dto.fetch_messages
 
 import chat.revolt.data.remote.dto.message.MessageDto
 import chat.revolt.data.remote.dto.user.UserDto

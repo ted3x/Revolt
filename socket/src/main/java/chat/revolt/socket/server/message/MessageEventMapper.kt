@@ -8,11 +8,12 @@ package chat.revolt.socket.server.message
 
 import chat.revolt.core.mapper.Mapper
 import chat.revolt.data.remote.dto.message.MessageDto
+import chat.revolt.data.remote.mappers.MetadataMapper
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.models.User
 import chat.revolt.domain.repository.UserRepository
 
-class MessageEventMapper(private val userRepository: UserRepository): Mapper<MessageEvent, Message> {
+class MessageEventMapper(private val userRepository: UserRepository, private val metadataMapper: MetadataMapper): Mapper<MessageEvent, Message> {
     override suspend fun map(from: MessageEvent): Message {
         val user = userRepository.getUser(from.author)
         return Message(
@@ -61,16 +62,8 @@ class MessageEventMapper(private val userRepository: UserRepository): Mapper<Mes
             tag = this.tag,
             size = this.size,
             filename = this.filename,
-            metadata = this.metadata?.map(),
+            metadata = metadataMapper.mapToDomain(this.metadata),
             contentType = this.contentType
-        )
-    }
-
-    private fun MessageEvent.Attachment.Metadata.map(): Message.Attachment.Metadata {
-        return Message.Attachment.Metadata(
-            value = this.value,
-            width = this.width,
-            height = this.height
         )
     }
 }

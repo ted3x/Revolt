@@ -8,6 +8,8 @@ package chat.revolt.data.local.entity.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import chat.revolt.data.local.entity.MetadataEntity
+import chat.revolt.domain.models.Metadata
 import com.squareup.moshi.JsonClass
 
 @Entity(tableName = "user")
@@ -16,7 +18,7 @@ data class UserEntity(
     @PrimaryKey
     val id: String,
     val username: String,
-    val avatarUrl: String,
+    val avatar: Avatar?,
     val backgroundUrl: String?,
     val relations: List<Relationship>?,
     val badges: Int?,
@@ -26,6 +28,16 @@ data class UserEntity(
     val flags: Int?,
     val bot: Bot?
 ) {
+
+    @JsonClass(generateAdapter = true)
+    data class Avatar(
+        val id: String,
+        val tag: String,
+        val size: String,
+        val filename: String,
+        val metadata: MetadataEntity,
+        val contentType: String
+    )
 
     @JsonClass(generateAdapter = true)
     data class Relationship(val userId: String, val status: RelationshipStatus)

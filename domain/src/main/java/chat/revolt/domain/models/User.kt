@@ -9,7 +9,7 @@ package chat.revolt.domain.models
 data class User(
     val id: String,
     val username: String,
-    var avatarUrl: String,
+    var avatar: Avatar?,
     var backgroundUrl: String? = null,
     val relations: List<Relationship>? = null,
     val badges: Int? = null,
@@ -21,6 +21,19 @@ data class User(
 ) {
 
     val isSystemUser = id == SYSTEM_USER_ID
+    val avatarUrl
+        get() =
+            if (avatar == null) "$DEFAULT_AVATAR_BASE_URL/$id/default_avatar"
+            else AVATAR_BASE_URL + avatar!!.id
+
+    data class Avatar(
+        val id: String,
+        val tag: String,
+        val size: String,
+        val filename: String,
+        val metadata: Metadata,
+        val contentType: String
+    )
 
     data class Relationship(val userId: String, val status: RelationshipStatus)
 
@@ -52,10 +65,12 @@ data class User(
 
     companion object {
         private const val SYSTEM_USER_ID = "00000000000000000000000000"
+        private const val AVATAR_BASE_URL = "https://autumn.revolt.chat/avatars/"
+        private const val DEFAULT_AVATAR_BASE_URL = "https://api.revolt.chat/users"
         val EMPTY = User(
             id = "",
             username = "",
-            avatarUrl = "",
+            avatar = null,
             status = Status("", Presence.Idle),
             relationship = RelationshipStatus.User,
             online = false

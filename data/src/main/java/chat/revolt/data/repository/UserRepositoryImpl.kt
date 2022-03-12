@@ -9,18 +9,16 @@ package chat.revolt.data.repository
 import chat.revolt.data.remote.data_source.UserDataSource
 import chat.revolt.data.local.dao.UserDao
 import chat.revolt.data.local.mappers.UserDBMapper
-import chat.revolt.data.remote.mappers.user.UserDtoToUserMapper
+import chat.revolt.data.remote.mappers.user.UserMapper
 import chat.revolt.domain.models.User
 import chat.revolt.domain.repository.UserRepository
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.lang.IllegalStateException
 
 class UserRepositoryImpl(
     private val userDao: UserDao,
     private val userDataSource: UserDataSource,
     private val userEntityMapper: UserDBMapper,
-    private val userDtoMapper: UserDtoToUserMapper
+    private val userDtoMapper: UserMapper
 ) : UserRepository {
     override suspend fun getUser(userId: String): User {
         return userDao.getUser(userId)?.let {
@@ -31,7 +29,7 @@ class UserRepositoryImpl(
     // Make Worker
     private suspend fun fetchUser(userId: String): User? {
         return userDataSource.getUser(userId)?.let { userDto ->
-            userDtoMapper.map(userDto).also {
+            userDtoMapper.mapToDomain(userDto).also {
                 val userEntity = userEntityMapper.mapToEntity(it)
                 userDao.addUser(userEntity)
             }
@@ -42,8 +40,8 @@ class UserRepositoryImpl(
         return userDao.getCurrentUser()?.let { userEntityMapper.mapToDomain(it) }
     }
 
-    override suspend fun getMessageAuthor(authorId: String, users: List<User>): User {
-        return users.firstOrNull { it.id == authorId } ?: getUser(authorId)
+    override suspend fun getMessageAuthor(authorId: String, users: List<User>?): User {
+        return users?.firstOrNull { it.id == authorId } ?: getUser(authorId)
     }
 
     override suspend fun getUsers(userIds: List<String>): List<User> {

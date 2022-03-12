@@ -6,10 +6,13 @@
 
 package chat.revolt.dashboard.data.data_source
 
-import chat.revolt.dashboard.data.dto.FetchMessagesRequestDto
-import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
+import chat.revolt.dashboard.data.dto.fetch_messages.FetchMessagesRequestDto
+import chat.revolt.dashboard.data.dto.fetch_messages.FetchMessagesResponseDto
+import chat.revolt.dashboard.data.dto.send_message.SendMessageRequestDto
+import chat.revolt.data.remote.dto.message.MessageDto
 
 interface ChannelDataSource {
 
-    suspend fun fetchMessages(requestDto: FetchMessagesRequestDto): FetchMessagesResponseDto
+    suspend fun fetchMessages(request: FetchMessagesRequestDto): FetchMessagesResponseDto
+    suspend fun sendMessage(request: SendMessageRequestDto): MessageDto
 }

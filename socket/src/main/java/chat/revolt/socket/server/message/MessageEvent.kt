@@ -6,6 +6,7 @@
 
 package chat.revolt.socket.server.message
 
+import chat.revolt.data.remote.dto.MetadataDto
 import chat.revolt.domain.models.ContentType
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.models.User
@@ -138,21 +139,14 @@ data class MessageEvent(
     @JsonClass(generateAdapter = true)
     data class Attachment(
         @Json(name = "_id")
-        val id: String?,
+        val id: String,
         val tag: String,
-        val size: String?,
-        val filename: String?,
-        val metadata: Metadata?,
+        val size: String,
+        val filename: String,
+        val metadata: MetadataDto,
         @Json(name = "content_type")
         val contentType: String?
-    ) {
-        @JsonClass(generateAdapter = true)
-        data class Metadata(
-            val value: String?,
-            val width: Int?,
-            val height: Int?
-        )
-    }
+    )
 
     @JsonClass(generateAdapter = true)
     data class Masquerade(

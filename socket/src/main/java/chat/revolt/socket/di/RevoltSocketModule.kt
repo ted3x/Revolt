@@ -39,7 +39,7 @@ val revoltSocketModule = module {
     }
     single { get<Scarlet>().create(SocketAPI::class.java) }
     single { ClientSocketManager(socket = get()) }
-    single { MessageEventMapper(userRepository = get()) }
+    single { MessageEventMapper(userRepository = get(), metadataMapper = get()) }
     single { ChannelStartTypingEventMapper(userRepository = get()) }
     single { ChannelStopTypingEventMapper(userRepository = get()) }
     single<ServerDataSource> {

@@ -4,7 +4,7 @@
  * Last modified 2/14/22, 12:36 AM
  */
 
-package chat.revolt.dashboard.data.dto
+package chat.revolt.dashboard.data.dto.fetch_messages
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

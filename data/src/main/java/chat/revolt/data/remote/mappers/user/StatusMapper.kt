@@ -6,15 +6,21 @@
 
 package chat.revolt.data.remote.mappers.user
 
-import chat.revolt.core.mapper.Mapper
 import chat.revolt.data.remote.dto.user.UserDto
 import chat.revolt.domain.models.User
 
-class StatusDtoToStatusMapper : Mapper<UserDto.StatusDto?, User.Status> {
-    override suspend fun map(from: UserDto.StatusDto?): User.Status {
+class StatusMapper {
+    fun mapToDomain(from: UserDto.StatusDto?): User.Status {
         return if(from != null) User.Status(
             text = from.text ?: "",
             presence = if (from.presence != null) User.Presence.valueOf(from.presence) else User.Presence.Idle
         ) else User.Status.NOT_LOADED
+    }
+
+    fun mapToDto(from: User.Status?): UserDto.StatusDto? {
+        return if(from != null) UserDto.StatusDto(
+            text = from.text ?: "",
+            presence = from.presence.name
+        ) else null
     }
 }

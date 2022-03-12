@@ -10,8 +10,12 @@ import chat.revolt.core.mapper.Mapper
 import chat.revolt.data.remote.dto.user.UserDto
 import chat.revolt.domain.models.User
 
-class BotDtoToBotMapper: Mapper<UserDto.BotDto?, User.Bot?> {
-    override suspend fun map(from: UserDto.BotDto?): User.Bot? {
+class BotMapper {
+    fun mapToDomain(from: UserDto.BotDto?): User.Bot? {
         return from?.owner?.let { User.Bot(ownerId = it) }
+    }
+
+    fun mapToDto(from: User.Bot?): UserDto.BotDto? {
+        return from?.ownerId?.let { UserDto.BotDto(it) }
     }
 }

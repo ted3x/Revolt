@@ -6,18 +6,14 @@
 
 package chat.revolt.dashboard.data.mapper
 
-import chat.revolt.dashboard.data.dto.FetchMessagesRequestDto
-import chat.revolt.dashboard.data.dto.FetchMessagesResponseDto
-import chat.revolt.dashboard.domain.models.FetchMessagesRequest
-import chat.revolt.dashboard.domain.models.FetchMessagesResponse
-import chat.revolt.data.remote.dto.message.MessageDto
-import chat.revolt.data.remote.dto.user.UserDto
-import chat.revolt.data.remote.mappers.message.MessageMapperDto
-import chat.revolt.data.remote.mappers.user.UserDtoToUserMapper
-import chat.revolt.domain.models.Message
-import chat.revolt.domain.models.User
+import chat.revolt.dashboard.data.dto.fetch_messages.FetchMessagesRequestDto
+import chat.revolt.dashboard.data.dto.fetch_messages.FetchMessagesResponseDto
+import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
+import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesResponse
+import chat.revolt.data.remote.mappers.message.MessageMapper
+import chat.revolt.data.remote.mappers.user.UserMapper
 
-class FetchMessageMapper(private val userMapper: UserDtoToUserMapper, private val messageMapper: MessageMapperDto) {
+class FetchMessageMapper(private val userMapper: UserMapper, private val messageMapper: MessageMapper) {
     fun mapToRequest(from: FetchMessagesRequest): FetchMessagesRequestDto {
         return FetchMessagesRequestDto(
             channelId = from.channelId,
@@ -30,9 +26,9 @@ class FetchMessageMapper(private val userMapper: UserDtoToUserMapper, private va
     }
 
     suspend fun mapToResponse(from: FetchMessagesResponseDto): FetchMessagesResponse {
-        val users = from.users.toSet().map { userMapper.map(it) }
+        val users = from.users.toSet().map { userMapper.mapToDomain(it) }
         return FetchMessagesResponse(
-            messages = from.messages.map { messageMapper.map(it, users) },
+            messages = from.messages.map { messageMapper.mapToDomain(it, users) },
             users = users
         )
     }

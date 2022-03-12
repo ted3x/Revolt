@@ -8,7 +8,7 @@ package chat.revolt.dashboard.presentation.chat_fragment
 
 import androidx.lifecycle.MutableLiveData
 import androidx.room.withTransaction
-import chat.revolt.dashboard.domain.models.FetchMessagesRequest
+import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.data.local.database.RevoltDatabase
 import chat.revolt.domain.repository.UserRepository

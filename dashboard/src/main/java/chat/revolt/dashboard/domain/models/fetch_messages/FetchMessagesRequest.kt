@@ -4,7 +4,7 @@
  * Last modified 2/14/22, 12:48 AM
  */
 
-package chat.revolt.dashboard.domain.models
+package chat.revolt.dashboard.domain.models.fetch_messages
 
 
 data class FetchMessagesRequest(

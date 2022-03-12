@@ -6,11 +6,14 @@
 
 package chat.revolt.data.remote.mappers.user
 
-import chat.revolt.core.mapper.Mapper
 import chat.revolt.domain.models.User
 
-class RelationshipStatusMapper: Mapper<String, User.RelationshipStatus> {
-    override suspend fun map(from: String): User.RelationshipStatus {
+class RelationshipStatusMapper {
+    fun mapToDomain(from: String): User.RelationshipStatus {
         return User.RelationshipStatus.valueOf(from)
+    }
+
+    fun mapToDto(from: User.RelationshipStatus): String {
+        return from.name
     }
 }

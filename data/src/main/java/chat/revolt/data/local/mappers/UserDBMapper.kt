@@ -12,13 +12,13 @@ import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.User
 import chat.revolt.domain.models.User.Status.Companion.NOT_LOADED
 
-class UserDBMapper : EntityMapper<UserEntity, User> {
+class UserDBMapper(private val avatarMapper: AvatarEntityMapper) : EntityMapper<UserEntity, User> {
 
     override fun mapToDomain(from: UserEntity): User {
         return User(
             id = from.id,
             username = from.username,
-            avatarUrl = from.avatarUrl,
+            avatar = from.avatar?.let { avatarMapper.mapToDomain(it) },
             backgroundUrl = from.backgroundUrl,
             relations = from.relations?.map { it.map() },
             badges = from.badges,
@@ -54,7 +54,7 @@ class UserDBMapper : EntityMapper<UserEntity, User> {
         return UserEntity(
             id = from.id,
             username = from.username,
-            avatarUrl = from.avatarUrl,
+            avatar = from.avatar?.let { avatarMapper.mapToEntity(it) },
             backgroundUrl = from.backgroundUrl,
             relations = from.relations?.map { it.map() },
             badges = from.badges,

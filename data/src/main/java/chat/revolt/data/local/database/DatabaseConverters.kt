@@ -24,6 +24,8 @@ class DatabaseConverters {
 
     private val botAdapter = moshi.adapter(UserEntity.Bot::class.java)
 
+    private val avatarAdapter = moshi.adapter(UserEntity.Avatar::class.java)
+
     @TypeConverter
     fun stringToRelationships(string: String): List<UserEntity.Relationship> {
         return relationshipAdapter.fromJson(string).orEmpty()
@@ -53,6 +55,16 @@ class DatabaseConverters {
     @TypeConverter
     fun botToString(bot: UserEntity.Bot?): String {
         return botAdapter.toJson(bot)
+    }
+
+    @TypeConverter
+    fun stringToAvatar(string: String): UserEntity.Avatar? {
+        return avatarAdapter.fromJson(string)
+    }
+
+    @TypeConverter
+    fun avatarToString(avatar: UserEntity.Avatar?): String {
+        return avatarAdapter.toJson(avatar)
     }
 
     @TypeConverter

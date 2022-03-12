@@ -8,14 +8,14 @@ package chat.revolt.dashboard.data.repository
 
 import chat.revolt.dashboard.data.data_source.ChannelDataSource
 import chat.revolt.dashboard.data.mapper.FetchMessageMapper
-import chat.revolt.dashboard.domain.models.FetchMessagesRequest
-import chat.revolt.dashboard.domain.models.FetchMessagesResponse
+import chat.revolt.dashboard.data.mapper.SendMessageMapper
+import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
+import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesResponse
+import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.data.local.dao.MessageDao
 import chat.revolt.data.local.mappers.MessageDBMapper
-import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.domain.models.Message
-import chat.revolt.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -24,6 +24,7 @@ class ChannelRepositoryImpl(
     private val dataSource: ChannelDataSource,
     private val mapper: FetchMessageMapper,
     private val messageMapper: MessageDBMapper,
+    private val sendMessageMapper: SendMessageMapper
 ) : ChannelRepository {
 
     override fun getMessages(channelId: String): Flow<List<Message>> {
@@ -40,6 +41,12 @@ class ChannelRepositoryImpl(
 
     override suspend fun addMessages(messages: List<Message>) {
         messageDao.addMessages(messages.map { messageMapper.mapToEntity(it) })
+    }
+
+    override suspend fun sendMessage(request: SendMessageRequest): Message {
+        return sendMessageMapper.mapToResponse(
+            dataSource.sendMessage(request = sendMessageMapper.mapToRequest(request))
+        )
     }
 
     override suspend fun fetchMessages(
