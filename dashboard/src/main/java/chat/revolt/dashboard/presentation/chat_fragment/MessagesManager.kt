@@ -10,14 +10,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.room.withTransaction
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
-import chat.revolt.dashboard.domain.repository.ChannelRepository
+import chat.revolt.dashboard.domain.repository.MessagesRepository
 import chat.revolt.data.local.database.RevoltDatabase
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.repository.UserRepository
 
 class MessagesManager(
     private val database: RevoltDatabase,
-    private val channelRepository: ChannelRepository,
+    private val messagesRepository: MessagesRepository,
     private val userRepository: UserRepository,
 ) {
 
@@ -33,7 +33,7 @@ class MessagesManager(
 
     suspend fun loadMore(isInitial: Boolean = false) {
         if (isEndReached.value == true) return
-        val response = channelRepository.fetchMessages(
+        val response = messagesRepository.fetchMessages(
             request = FetchMessagesRequest(
                 channelId = channelId,
                 limit = LIMIT,
@@ -48,20 +48,20 @@ class MessagesManager(
         } else response.messages.last().id
 
         database.withTransaction {
-            if (isInitial) channelRepository.clear(channelId)
+            if (isInitial) messagesRepository.clear(channelId)
             userRepository.addUsers(response.users)
-            channelRepository.addMessages(response.messages)
+            messagesRepository.addMessages(response.messages)
         }
     }
 
-    fun getMessages() = channelRepository.getMessages(channelId)
-    suspend fun getInitialMessages() = channelRepository.getInitialMessages(channelId, LIMIT)
+    fun getMessages() = messagesRepository.getMessages(channelId)
+    suspend fun getInitialMessages() = messagesRepository.getInitialMessages(channelId, LIMIT)
 
     suspend fun sendMessage(message: String) {
-        channelRepository.sendMessage(request = SendMessageRequest(
+        messagesRepository.sendMessage(request = SendMessageRequest(
             channelId = channelId,
             content = Message.Content.Message(message),
-        )).also { channelRepository.addMessage(it) }
+        )).also { messagesRepository.addMessage(it) }
     }
     companion object {
         private const val LIMIT = 30

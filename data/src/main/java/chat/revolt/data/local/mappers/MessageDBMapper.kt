@@ -14,6 +14,7 @@ import chat.revolt.domain.repository.UserRepository
 class MessageDBMapper(
     private val userDBMapper: UserDBMapper,
     private val userRepository: UserRepository,
+    private val attachmentEntityMapper: AttachmentEntityMapper
 ): EntityDomainMapper<MessageEntity, Message> {
     override suspend fun mapToDomain(from: MessageEntity): Message {
         return Message(
@@ -21,7 +22,7 @@ class MessageDBMapper(
             channel = from.channel,
             author = userRepository.getUser(from.author),
             content = from.content.map(),
-            attachments = emptyList(),
+            attachments = from.attachments?.let { attachmentEntityMapper.mapToDomain(it) },
             edited = from.edited,
             mentions = from.mentions?.let { userRepository.getUsers(it) },
             replies = from.replies,
@@ -29,7 +30,7 @@ class MessageDBMapper(
         )
     }
 
-    private fun MessageEntity.ContentEntity.map(): Message.Content {
+    private suspend fun MessageEntity.ContentEntity.map(): Message.Content {
         return when (this) {
             is MessageEntity.ContentEntity.ChannelDescriptionChanged -> Message.Content.ChannelDescriptionChanged(
                 changedBy = userDBMapper.mapToDomain(this.changedBy)
@@ -81,6 +82,7 @@ class MessageDBMapper(
             author = from.author.id,
             content = from.content.map(),
             createdAt = UlidTimeDecoder.getTimestamp(from.id),
+            attachments = from.attachments?.map { attachmentEntityMapper.mapToEntity(it) },
             edited = from.edited,
             mentions = from.mentions?.map { it.id },
             replies = from.replies,
@@ -88,7 +90,7 @@ class MessageDBMapper(
         )
     }
 
-    private fun Message.Content.map(): MessageEntity.ContentEntity {
+    private suspend fun Message.Content.map(): MessageEntity.ContentEntity {
         return when (this) {
             is Message.Content.ChannelDescriptionChanged -> MessageEntity.ContentEntity.ChannelDescriptionChanged(
                 changedBy = userDBMapper.mapToEntity(this.changedBy)

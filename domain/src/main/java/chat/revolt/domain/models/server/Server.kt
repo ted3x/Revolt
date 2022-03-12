@@ -6,8 +6,9 @@
 
 package chat.revolt.domain.models.server
 
-import chat.revolt.domain.models.Message
+import chat.revolt.domain.models.Attachment
 import chat.revolt.domain.models.User
+import chat.revolt.domain.models.channel.Channel
 
 data class Server(
     val id: String,
@@ -19,8 +20,8 @@ data class Server(
     val systemMessages: SystemMessageChannels?,
     val roles: List<Role>?,
     val defaultPermissions: IntArray,
-    val icon: Message.Attachment?,
-    val banner: Message.Attachment?,
+    val icon: Attachment?,
+    val banner: Attachment?,
     val nsfw: Boolean?,
     val flags: Int?,
     val analytics: Boolean?,
@@ -29,17 +30,18 @@ data class Server(
     data class Category(
         val id: String,
         val title: String,
-        val channels: List<String>
+        val channels: List<Channel>
     )
 
     data class SystemMessageChannels(
-        val userJoined: String?,
-        val userLeft: String?,
-        val userKicked: String?,
-        val userBanned: String?,
+        val userJoined: Channel?,
+        val userLeft: Channel?,
+        val userKicked: Channel?,
+        val userBanned: Channel?,
     )
 
     data class Role(
+        val id: String,
         val name: String,
         val permissions: IntArray,
         val color: String?,

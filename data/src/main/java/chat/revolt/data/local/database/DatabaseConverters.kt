@@ -7,9 +7,11 @@
 package chat.revolt.data.local.database
 
 import androidx.room.TypeConverter
+import chat.revolt.data.local.entity.AttachmentEntity
 import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.ContentType
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import java.lang.IllegalStateException
 import java.lang.NullPointerException
@@ -26,6 +28,20 @@ class DatabaseConverters {
 
     private val avatarAdapter = moshi.adapter(UserEntity.Avatar::class.java)
 
+    private val attachmentAdapter = moshi.adapter(AttachmentEntity::class.java)
+
+    private val attachmentType =
+        Types.newParameterizedType(List::class.java, AttachmentEntity::class.java)
+    private val attachmentListAdapter = moshi.adapter<List<AttachmentEntity>>(attachmentType)
+
+    private val mapStringToIntAdapter: JsonAdapter<Map<String, Integer>> =
+        moshi.adapter(
+            Types.newParameterizedType(
+                Map::class.java,
+                String::class.java,
+                Integer::class.java
+            )
+        )
     @TypeConverter
     fun stringToRelationships(string: String): List<UserEntity.Relationship> {
         return relationshipAdapter.fromJson(string).orEmpty()
@@ -68,6 +84,26 @@ class DatabaseConverters {
     }
 
     @TypeConverter
+    fun stringToAttachment(string: String): AttachmentEntity? {
+        return attachmentAdapter.fromJson(string)
+    }
+
+    @TypeConverter
+    fun attachmentToString(attachment: AttachmentEntity?): String {
+        return attachmentAdapter.toJson(attachment)
+    }
+
+    @TypeConverter
+    fun stringToAttachmentList(string: String): List<AttachmentEntity>? {
+        return attachmentListAdapter.fromJson(string)
+    }
+
+    @TypeConverter
+    fun attachmentListToString(attachment: List<AttachmentEntity>?): String {
+        return attachmentListAdapter.toJson(attachment)
+    }
+
+    @TypeConverter
     fun stringToList(string: String): List<String>? {
         val type = Types.newParameterizedType(List::class.java, String::class.java)
         return moshi.adapter<List<String>>(type).fromJson(string)
@@ -77,6 +113,16 @@ class DatabaseConverters {
     fun listToString(list: List<String>?): String {
         val type = Types.newParameterizedType(List::class.java, String::class.java)
         return moshi.adapter<List<String>>(type).toJson(list)
+    }
+
+    @TypeConverter
+    fun stringToMapStringToInt(string: String): Map<String, Integer>? {
+        return mapStringToIntAdapter.fromJson(string)
+    }
+
+    @TypeConverter
+    fun mapStringToIntToString(map: Map<String, Integer>?): String {
+        return mapStringToIntAdapter.toJson(map)
     }
 
     @TypeConverter

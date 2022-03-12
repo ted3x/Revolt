@@ -6,6 +6,7 @@
 
 package chat.revolt.data.remote.dto.message
 
+import chat.revolt.data.remote.dto.AttachmentDto
 import chat.revolt.data.remote.dto.MetadataDto
 import chat.revolt.data.remote.type.EventType
 import com.squareup.moshi.Json
@@ -133,18 +134,6 @@ data class MessageDto(
             val changedBy: String) :
             ContentDto(ContentTypeDto.ChannelIconChanged)
     }
-
-    @JsonClass(generateAdapter = true)
-    data class AttachmentDto(
-        @Json(name = "_id")
-        val id: String,
-        val tag: String,
-        val size: String,
-        val filename: String,
-        val metadata: MetadataDto,
-        @Json(name = "content_type")
-        val contentType: String?
-    )
 
     @JsonClass(generateAdapter = true)
     data class EditedDto(

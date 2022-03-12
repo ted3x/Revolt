@@ -27,7 +27,7 @@ private val splashViewModelModule = module {
                 revoltConfigManager = get(),
                 getRevoltConfigUseCase = get(),
                 getUserUseCase = get(),
-                addUserInDbUseCase = get()
+                addUserInDbUseCase = get(),
             )
         }
     }

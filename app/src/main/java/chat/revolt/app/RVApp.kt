@@ -20,12 +20,11 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.lang.ref.WeakReference
 
-class RVApp : Application(), Application.ActivityLifecycleCallbacks, RevoltSocketListener {
+class RVApp : Application(), Application.ActivityLifecycleCallbacks {
 
     var currentActivity: WeakReference<Activity>? = null
         private set
 
-    private val socketManager by inject<ClientSocketManager>()
     override fun onCreate() {
         super.onCreate()
         startKoin {
@@ -33,7 +32,6 @@ class RVApp : Application(), Application.ActivityLifecycleCallbacks, RevoltSocke
             modules(appModules)
         }
         registerActivityLifecycleCallbacks(this)
-        GlobalScope.launch { socketManager.initialize(this@RVApp) }
     }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {}
@@ -53,24 +51,4 @@ class RVApp : Application(), Application.ActivityLifecycleCallbacks, RevoltSocke
     override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {}
 
     override fun onActivityDestroyed(p0: Activity) {}
-
-    override fun onConnectionOpened() {
-        Log.d("onConnectionOpened", "*******************")
-    }
-
-    override fun onMessageReceived(message: String) {
-        Log.d("onMessageReceived", message)
-    }
-
-    override fun onConnectionClosing() {
-        Log.d("onConnectionClosing", "*******************")
-    }
-
-    override fun onConnectionClosed() {
-        Log.d("onConnectionClosed", "*******************")
-    }
-
-    override fun onConnectionFailed() {
-        Log.d("onConnectionFailed", "*******************")
-    }
 }

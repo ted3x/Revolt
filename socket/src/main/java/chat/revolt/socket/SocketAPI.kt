@@ -9,9 +9,10 @@ package chat.revolt.socket
 import chat.revolt.data.remote.dto.channel.ChannelDto
 import chat.revolt.data.remote.dto.message.MessageDto
 import chat.revolt.socket.client.data.AuthenticateEvent
+import chat.revolt.socket.data.authenticate.AuthenticatedEventDto
 import chat.revolt.socket.data.channel.ChannelActionDto
 import chat.revolt.socket.data.channel.ChannelUpdateDto
-import chat.revolt.socket.server.message.*
+import chat.revolt.socket.data.ready.ReadyEventDto
 import com.tinder.scarlet.WebSocket
 import com.tinder.scarlet.ws.Receive
 import com.tinder.scarlet.ws.Send
@@ -26,10 +27,10 @@ interface SocketAPI {
     fun authenticate(request: AuthenticateEvent)
 
     @Receive
-    fun onAuthenticated(): Flow<AuthenticatedEvent>
+    fun onAuthenticated(): Flow<AuthenticatedEventDto>
 
     @Receive
-    fun onReady(): Flow<ReadyEvent>
+    fun onReady(): Flow<ReadyEventDto>
 
     @Receive
     fun onMessage(): Flow<MessageDto>

@@ -9,11 +9,12 @@ package chat.revolt.socket.api
 import chat.revolt.socket.SocketAPI
 import com.tinder.scarlet.WebSocket
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 
 class ClientSocketManager(private val socket: SocketAPI) {
 
     suspend fun initialize(listener: RevoltSocketListener) {
-        socket.observerWebSocketEvent().collect {
+        socket.observerWebSocketEvent().collectLatest {
             when (it) {
                 is WebSocket.Event.OnConnectionOpened<*> -> listener.onConnectionOpened()
                 is WebSocket.Event.OnMessageReceived -> listener.onMessageReceived(it.message.toString())

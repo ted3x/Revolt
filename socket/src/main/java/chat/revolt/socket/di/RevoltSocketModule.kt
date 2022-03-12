@@ -6,17 +6,21 @@
 
 package chat.revolt.socket.di
 
+import androidx.lifecycle.LifecycleOwner
 import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.adapter.CoroutinesStreamAdapterFactory
 import chat.revolt.socket.adapter.MoshiMessageAdapter
 import chat.revolt.socket.api.ClientSocketManager
 import chat.revolt.socket.data.channel.mapper.ChannelActionMapper
+import chat.revolt.socket.data.ready.mapper.ReadyEventMapper
 import chat.revolt.socket.server.ServerDataSource
 import chat.revolt.socket.server.ServerDataSourceImpl
 import chat.revolt.socket.server.authenticate.AuthenticateDataSource
 import chat.revolt.socket.server.authenticate.AuthenticateDataSourceImpl
+import com.tinder.scarlet.Lifecycle
 import com.tinder.scarlet.Scarlet
+import com.tinder.scarlet.lifecycle.android.AndroidLifecycle
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -49,9 +53,11 @@ val revoltSocketModule = module {
             channelMapper = get()
         )
     }
+    single { ReadyEventMapper(userMapper = get(), channelMapper = get(), serverMapper = get()) }
     single<AuthenticateDataSource> {
         AuthenticateDataSourceImpl(
-            socket = get()
+            socket = get(),
+            readyEventMapper = get()
         )
     }
 }

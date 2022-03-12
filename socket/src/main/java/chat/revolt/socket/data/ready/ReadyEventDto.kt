@@ -9,10 +9,12 @@ package chat.revolt.socket.data.ready
 import chat.revolt.data.remote.dto.channel.ChannelDto
 import chat.revolt.data.remote.dto.server.ServerDto
 import chat.revolt.data.remote.dto.user.UserDto
+import chat.revolt.data.remote.type.EventType
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ReadyEventDto(
+    val type: EventType,
     val users: List<UserDto>,
     val servers: List<ServerDto>,
     val channels: List<ChannelDto>

@@ -6,12 +6,13 @@
 
 package chat.revolt.dashboard.domain.models.send_message
 
+import chat.revolt.domain.models.Attachment
 import chat.revolt.domain.models.Message
 
 data class SendMessageRequest(
     val channelId: String,
     val content: Message.Content.Message,
-    val attachments: List<Message.Attachment>? = null,
+    val attachments: List<Attachment>? = null,
     val replies: List<SendMessageReply>? = null,
     val masquerade: Message.Masquerade? = null
 ) {

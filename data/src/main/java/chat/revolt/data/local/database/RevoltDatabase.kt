@@ -12,20 +12,18 @@ import androidx.room.TypeConverters
 import chat.revolt.data.local.dao.*
 import chat.revolt.data.local.entity.account.AccountEntity
 import chat.revolt.data.local.entity.channel.ChannelEntity
-import chat.revolt.data.local.entity.channel.ChannelRemoteKey
 import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.entity.user.UserEntity
 
 @Database(
     version = 1,
     exportSchema = false,
-    entities = [UserEntity::class, AccountEntity::class, ChannelEntity::class, MessageEntity::class, ChannelRemoteKey::class]
+    entities = [UserEntity::class, AccountEntity::class, ChannelEntity::class, MessageEntity::class]
 )
 @TypeConverters(DatabaseConverters::class)
 abstract class RevoltDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun accountDao(): AccountDao
     abstract fun channelDao(): ChannelDao
-    abstract fun channelRemoteKeyDao(): ChannelRemoteKeyDao
     abstract fun messageDao(): MessageDao
 }

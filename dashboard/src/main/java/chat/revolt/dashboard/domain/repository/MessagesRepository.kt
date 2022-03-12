@@ -12,7 +12,7 @@ import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
 import chat.revolt.domain.models.Message
 import kotlinx.coroutines.flow.Flow
 
-interface ChannelRepository {
+interface MessagesRepository {
 
     fun getMessages(channelId: String): Flow<List<Message>>
     suspend fun getInitialMessages(channelId: String, limit: Int): List<Message>

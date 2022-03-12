@@ -12,20 +12,20 @@ import chat.revolt.dashboard.data.mapper.SendMessageMapper
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesResponse
 import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
-import chat.revolt.dashboard.domain.repository.ChannelRepository
+import chat.revolt.dashboard.domain.repository.MessagesRepository
 import chat.revolt.data.local.dao.MessageDao
 import chat.revolt.data.local.mappers.MessageDBMapper
 import chat.revolt.domain.models.Message
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class ChannelRepositoryImpl(
+class MessagesRepositoryImpl(
     private val messageDao: MessageDao,
     private val dataSource: ChannelDataSource,
     private val mapper: FetchMessageMapper,
     private val messageMapper: MessageDBMapper,
     private val sendMessageMapper: SendMessageMapper
-) : ChannelRepository {
+) : MessagesRepository {
 
     override fun getMessages(channelId: String): Flow<List<Message>> {
         return messageDao.getMessages(channelId).map { it.map { messageMapper.mapToDomain(it) } }

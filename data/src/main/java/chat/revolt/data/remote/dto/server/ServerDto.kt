@@ -6,6 +6,7 @@
 
 package chat.revolt.data.remote.dto.server
 
+import chat.revolt.data.remote.dto.AttachmentDto
 import chat.revolt.data.remote.dto.message.MessageDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -23,9 +24,9 @@ data class ServerDto(
     val systemMessages: SystemMessageChannelsDto,
     val roles: Map<String, RoleDto>,
     @Json(name = "default_permissions")
-    val defaultPermissions: IntArray?,
-    val icon: MessageDto.AttachmentDto?,
-    val banner: MessageDto.AttachmentDto?,
+    val defaultPermissions: IntArray,
+    val icon: AttachmentDto?,
+    val banner: AttachmentDto?,
     val nsfw: Boolean?,
     val flags: Int?,
     val analytics: Boolean?,

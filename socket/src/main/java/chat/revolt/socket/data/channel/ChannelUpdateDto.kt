@@ -6,6 +6,7 @@
 
 package chat.revolt.socket.data.channel
 
+import chat.revolt.data.remote.dto.AttachmentDto
 import chat.revolt.data.remote.dto.message.MessageDto
 import chat.revolt.data.remote.type.EventType
 import com.squareup.moshi.Json
@@ -23,7 +24,7 @@ data class ChannelUpdateDto(
         val name: String?,
         val description: String?,
         val nsfw: Boolean?,
-        val icon: MessageDto.AttachmentDto?,
+        val icon: AttachmentDto?,
         @Json(name = "role_permissions")
         val rolePermissions: Map<String, Int>?
     )

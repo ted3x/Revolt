@@ -9,7 +9,7 @@ package chat.revolt.dashboard.presentation.chat_fragment.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
-import chat.revolt.dashboard.domain.repository.ChannelRepository
+import chat.revolt.dashboard.domain.repository.MessagesRepository
 import chat.revolt.dashboard.presentation.chat_fragment.MessagesManager
 import chat.revolt.domain.models.Message
 import chat.revolt.socket.server.ServerDataSource
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class ChatViewModel(
     private val dataSource: ServerDataSource,
     private val manager: MessagesManager,
-    private val channelRepository: ChannelRepository
+    private val messagesRepository: MessagesRepository
 ) : BaseViewModel() {
 
     val typers: MutableLiveData<String?> = MutableLiveData()
@@ -59,7 +59,7 @@ class ChatViewModel(
     private fun startEventListeners() {
         messageListener = viewModelScope.launch {
             dataSource.onMessage(channelId = currentChannel.value!!).cancellable().collect {
-                channelRepository.addMessage(it)
+                messagesRepository.addMessage(it)
             }
         }
         channelStartTypingListener = viewModelScope.launch {

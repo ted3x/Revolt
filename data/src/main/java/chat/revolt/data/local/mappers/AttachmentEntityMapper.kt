@@ -4,17 +4,15 @@
  * Last modified 3/12/22, 4:55 PM
  */
 
-package chat.revolt.data.remote.mappers.message
+package chat.revolt.data.local.mappers
 
-import chat.revolt.data.remote.dto.AttachmentDto
-import chat.revolt.data.remote.dto.message.MessageDto
-import chat.revolt.data.remote.mappers.MetadataMapper
+import chat.revolt.data.local.entity.AttachmentEntity
 import chat.revolt.domain.models.Attachment
-import chat.revolt.domain.models.Message
 
-class AttachmentMapper(private val metadataMapper: MetadataMapper) {
+class AttachmentEntityMapper(private val metadataMapper: MetadataEntityMapper) :
+    EntityDomainMapper<AttachmentEntity, Attachment> {
 
-    fun mapToDomain(from: AttachmentDto): Attachment {
+    override suspend fun mapToDomain(from: AttachmentEntity): Attachment {
         return Attachment(
             id = from.id,
             tag = from.tag,
@@ -25,13 +23,13 @@ class AttachmentMapper(private val metadataMapper: MetadataMapper) {
         )
     }
 
-    fun mapToDto(from: Attachment): AttachmentDto {
-        return AttachmentDto(
+    override suspend fun mapToEntity(from: Attachment): AttachmentEntity {
+        return AttachmentEntity(
             id = from.id,
             tag = from.tag,
             size = from.size,
             filename = from.filename,
-            metadata = metadataMapper.mapToDto(from.metadata),
+            metadata = metadataMapper.mapToEntity(from.metadata),
             contentType = from.contentType
         )
     }

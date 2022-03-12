@@ -6,11 +6,23 @@
 
 package chat.revolt.data.remote.mappers.server
 
+import chat.revolt.data.remote.dto.server.ServerCategoryMapper
 import chat.revolt.data.remote.dto.server.ServerDto
+import chat.revolt.data.remote.dto.server.ServerRolesMapper
+import chat.revolt.data.remote.dto.server.SystemMessagesMapper
+import chat.revolt.data.remote.mappers.message.AttachmentMapper
 import chat.revolt.domain.models.server.Server
+import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.UserRepository
 
-class ServerMapper(private val userRepository: UserRepository) {
+class ServerMapper(
+    private val userRepository: UserRepository,
+    private val channelRepository: ChannelRepository,
+    private val serverCategoryMapper: ServerCategoryMapper,
+    private val attachmentMapper: AttachmentMapper,
+    private val systemMessagesMapper: SystemMessagesMapper,
+    private val serverRolesMapper: ServerRolesMapper
+) {
 
     suspend fun mapToDomain(from: ServerDto): Server {
         return Server(
@@ -18,7 +30,17 @@ class ServerMapper(private val userRepository: UserRepository) {
             owner = userRepository.getUser(userId = from.owner),
             name = from.name,
             description = from.description,
-            channels = from.channels.
+            channels = from.channels.map { channelRepository.getChannel(it) },
+            categories = from.categories.map { serverCategoryMapper.mapToDomain(it) },
+            systemMessages = systemMessagesMapper.mapToDomain(from.systemMessages),
+            roles = from.roles.map { serverRolesMapper.mapToDomain(it.key, it.value) },
+            defaultPermissions = from.defaultPermissions,
+            icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
+            banner = from.banner?.let { attachmentMapper.mapToDomain(it) },
+            nsfw = from.nsfw,
+            flags = from.flags,
+            analytics = from.analytics,
+            discoverable = from.discoverable
         )
     }
 }

@@ -6,6 +6,4 @@
 
 package chat.revolt.socket.domain.authenticate
 
-import com.squareup.moshi.JsonClass
-
 object AuthenticatedEvent

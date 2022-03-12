@@ -6,7 +6,8 @@
 
 package chat.revolt.socket.data.authenticate
 
+import chat.revolt.data.remote.type.EventType
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class AuthenticatedEventDto(val authenticated: Boolean = false)
+data class AuthenticatedEventDto(val type: EventType)

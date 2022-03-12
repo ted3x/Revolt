@@ -6,7 +6,7 @@
 
 package chat.revolt.core.mapper
 
-interface EntityMapper<F, T> {
-    fun mapToDomain(from: F): T
-    fun mapToEntity(from: T): F
+interface EntityMapper<E, D> {
+    suspend fun mapToDomain(from: E): D
+    suspend fun mapToEntity(from: D): E
 }
