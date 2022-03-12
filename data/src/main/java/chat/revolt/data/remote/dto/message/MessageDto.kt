@@ -7,6 +7,7 @@
 package chat.revolt.data.remote.dto.message
 
 import chat.revolt.data.remote.dto.MetadataDto
+import chat.revolt.data.remote.type.EventType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -23,7 +24,9 @@ data class MessageDto(
     val embeds: List<Any>?,
     val mentions: List<String>?,
     val replies: List<String>?,
-    val masquerade: MasqueradeDto?
+    val masquerade: MasqueradeDto?,
+    @Json(name = "type")
+    val eventType: EventType? = null
 ) {
 
     enum class ContentTypeDto {

@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
@@ -75,6 +76,11 @@ class ChatViewModel(
                     typersList.remove(it.user.username)
                     typers.postValue(getTypersMessage(typersList))
                 }
+            }
+        }
+        viewModelScope.launch {
+            dataSource.onChannelUpdate().collectLatest {
+                println(it)
             }
         }
     }

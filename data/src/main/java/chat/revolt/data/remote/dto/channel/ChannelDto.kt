@@ -7,6 +7,7 @@
 package chat.revolt.data.remote.dto.channel
 
 import chat.revolt.data.remote.dto.message.MessageDto
+import chat.revolt.data.remote.type.EventType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -17,20 +18,23 @@ data class ChannelDto(
     @Json(name = "channel_type")
     val channelType: ChannelType,
     @Json(name = "user")
-    val userId: String?,
-    val active: Boolean?,
-    val recipients: List<String>?,
+    val userId: String? = null,
+    val active: Boolean? = null,
+    val recipients: List<String>? = null,
     @Json(name = "last_message_id")
-    val lastMessageId: String?,
-    val name: String?,
+    val lastMessageId: String? = null,
+    val name: String? = null,
     @Json(name = "owner")
-    val ownerId: String?,
-    val description: String?,
-    val icon: MessageDto.AttachmentDto?,
-    val permissions: Int?,
-    val nsfw: Boolean?,
+    val ownerId: String? = null,
+    val description: String? = null,
+    val icon: MessageDto.AttachmentDto? = null,
+    val permissions: Int? = null,
+    val nsfw: Boolean? = null,
     @Json(name = "default_permissions")
-    val defaultPermissions: Int?,
+    val defaultPermissions: Int? = null,
     @Json(name = "role_permissions")
-    val rolePermissions: Map<String, Int>?
+    val rolePermissions: Map<String, Int>? = null,
+    val server: String? = null,
+    @Json(name = "type")
+    val eventType: EventType? = null
 )

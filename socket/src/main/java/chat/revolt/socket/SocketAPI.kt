@@ -6,7 +6,11 @@
 
 package chat.revolt.socket
 
-import chat.revolt.socket.client.data.AuthenticateRequest
+import chat.revolt.data.remote.dto.channel.ChannelDto
+import chat.revolt.data.remote.dto.message.MessageDto
+import chat.revolt.socket.client.data.AuthenticateEvent
+import chat.revolt.socket.data.channel.ChannelActionDto
+import chat.revolt.socket.data.channel.ChannelUpdateDto
 import chat.revolt.socket.server.message.*
 import com.tinder.scarlet.WebSocket
 import com.tinder.scarlet.ws.Receive
@@ -19,7 +23,7 @@ interface SocketAPI {
     fun observerWebSocketEvent(): Flow<WebSocket.Event>
 
     @Send
-    fun authenticate(request: AuthenticateRequest)
+    fun authenticate(request: AuthenticateEvent)
 
     @Receive
     fun onAuthenticated(): Flow<AuthenticatedEvent>
@@ -28,11 +32,17 @@ interface SocketAPI {
     fun onReady(): Flow<ReadyEvent>
 
     @Receive
-    fun onMessage(): Flow<MessageEvent>
+    fun onMessage(): Flow<MessageDto>
 
     @Receive
-    fun onChannelStartTyping(): Flow<ChannelStartTypingEvent>
+    fun onChannelCreate(): Flow<ChannelDto>
 
     @Receive
-    fun onChannelStopTyping(): Flow<ChannelStopTypingEvent>
+    fun onChannelUpdate(): Flow<ChannelUpdateDto>
+
+    @Receive
+    fun onChannelStartTyping(): Flow<ChannelActionDto>
+
+    @Receive
+    fun onChannelStopTyping(): Flow<ChannelActionDto>
 }

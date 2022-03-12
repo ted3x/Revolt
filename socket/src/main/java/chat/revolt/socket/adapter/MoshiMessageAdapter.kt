@@ -1,12 +1,19 @@
+/*
+ * Created by Tedo Manvelidze(ted3x) on 3/12/22, 10:08 PM
+ * Copyright (c) 2022 . All rights reserved.
+ * Last modified 3/12/22, 10:08 PM
+ */
+
 package chat.revolt.socket.adapter
 
-import chat.revolt.socket.events.Event
-import chat.revolt.socket.events.Events
-import chat.revolt.socket.server.message.MessageEventContentAdapter
-import com.squareup.moshi.*
-import okio.ByteString.Companion.decodeHex
+import chat.revolt.data.remote.dto.message.MessageContentAdapter
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonQualifier
+import com.squareup.moshi.Moshi
 import com.tinder.scarlet.Message
 import com.tinder.scarlet.MessageAdapter
+import okio.ByteString
+import okio.ByteString.Companion.decodeHex
 import okio.ByteString.Companion.toByteString
 import java.lang.reflect.Type
 
@@ -14,9 +21,7 @@ import java.lang.reflect.Type
  * A [message adapter][MessageAdapter] that uses Moshi.
  */
 class MoshiMessageAdapter<T> private constructor(
-    private val jsonAdapter: JsonAdapter<T>,
-    private val mapAdapter: JsonAdapter<Map<String, Any>>,
-    private val enumAdapter: JsonAdapter<Event>
+    private val jsonAdapter: JsonAdapter<T>
 ) : MessageAdapter<T> {
 
     override fun fromMessage(message: Message): T {
@@ -33,9 +38,6 @@ class MoshiMessageAdapter<T> private constructor(
                 }
             }
         }
-        val obj = jsonAdapter.fromJson(stringValue) as? Events
-        val mapType = mapAdapter.fromJson(stringValue)?.get("type") as? String
-        if (enumAdapter.fromJson("\"$mapType\"") != obj?.type) throw JsonParseException("type")
         return jsonAdapter.fromJson(stringValue)!!
     }
 
@@ -43,9 +45,6 @@ class MoshiMessageAdapter<T> private constructor(
         val stringValue = jsonAdapter.toJson(data)
         return Message.Text(stringValue)
     }
-
-    class JsonParseException(fieldName: String) :
-        RuntimeException("Field $fieldName was not initialized!")
 
     class Factory constructor(
         private val moshi: Moshi = DEFAULT_MOSHI,
@@ -68,15 +67,7 @@ class MoshiMessageAdapter<T> private constructor(
                 }
             }
 
-            val mapAdapter: JsonAdapter<Map<String, Any>> = moshi.adapter(
-                Types.newParameterizedType(
-                    MutableMap::class.java,
-                    String::class.java,
-                    Any::class.java
-                )
-            )
-            val enumAdapter = moshi.adapter(Event::class.java)
-            return MoshiMessageAdapter(adapter, mapAdapter, enumAdapter)
+            return MoshiMessageAdapter(adapter)
         }
 
         private fun filterJsonAnnotations(annotations: Array<Annotation>): Set<Annotation> {
@@ -100,7 +91,7 @@ class MoshiMessageAdapter<T> private constructor(
     }
 
     private companion object {
-        private val DEFAULT_MOSHI = Moshi.Builder().add(MessageEventContentAdapter()).build()
+        private val DEFAULT_MOSHI = Moshi.Builder().add(MessageContentAdapter()).build()
         private val UTF8_BOM = "EFBBBF".decodeHex()
     }
 }

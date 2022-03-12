@@ -24,7 +24,7 @@ sealed class Channel {
         val id: String,
         val recipients: List<User>,
         val name: String,
-        val owner: String,
+        val owner: User,
         val description: String?,
         val lastMessageId: String?,
         val icon: Message.Attachment?,
@@ -39,10 +39,10 @@ sealed class Channel {
         val description: String?,
         val icon: Message.Attachment?,
         val defaultPermissions: Int?,
-        val rolePermissions: Map<String, Int>,
+        val rolePermissions: Map<String, Int>?,
         val nsfw: Boolean?,
         val lastMessageId: String?
-    )
+    ): Channel()
 
     data class VoiceChannel(
         val id: String,
@@ -51,7 +51,7 @@ sealed class Channel {
         val description: String?,
         val icon: Message.Attachment?,
         val defaultPermissions: Int?,
-        val rolePermissions: Map<String, Int>,
+        val rolePermissions: Map<String, Int>?,
         val nsfw: Boolean?,
-    )
+    ): Channel()
 }

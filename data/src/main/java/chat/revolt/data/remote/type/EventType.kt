@@ -29,6 +29,14 @@ enum class EventType {
     MessageDelete,
 
     //Channel
+    ChannelCreate,
+    ChannelUpdate,
+    ChannelDelete,
+    ChannelGroupJoin,
+    ChannelGroupLeave,
+    ChannelStartTyping,
+    ChannelStopTyping,
+    ChannelAck,
 
     //Server
     ServerUpdate,

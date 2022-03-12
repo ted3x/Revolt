@@ -7,15 +7,16 @@
 package chat.revolt.domain.models.server
 
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.models.User
 
 data class Server(
     val id: String,
-    val owner: String,
+    val owner: User,
     val name: String,
     val description: String?,
-    val channels: List<String>,
-    val categories: List<Category>,
-    val systemMessages: SystemMessageChannels,
+    val channels: List<Channel>,
+    val categories: List<Category>?,
+    val systemMessages: SystemMessageChannels?,
     val roles: List<Role>?,
     val defaultPermissions: IntArray,
     val icon: Message.Attachment?,
@@ -100,5 +101,25 @@ data class Server(
         if (discoverable != other.discoverable) return false
 
         return true
+    }
+
+    companion object {
+        val EMPTY = Server(
+            id = "",
+            owner = User.EMPTY,
+            name = "",
+            description = "",
+            channels = listOf(),
+            categories = listOf(),
+            systemMessages = null,
+            roles = null,
+            defaultPermissions = intArrayOf(),
+            icon = null,
+            banner = null,
+            nsfw = null,
+            flags = null,
+            analytics = null,
+            discoverable = null
+        )
     }
 }

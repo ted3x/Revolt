@@ -9,7 +9,7 @@ package chat.revolt.socket.client.data
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class AuthenticateRequest(
+data class AuthenticateEvent(
     val type: String = "Authenticate",
     val token: String
 )
