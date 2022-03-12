@@ -98,4 +98,8 @@ class ChatViewModel(
             else -> null
         }
     }
+
+    fun sendMessage(message: String) {
+        viewModelScope.launch { manager.sendMessage(message) }
+    }
 }

@@ -10,10 +10,7 @@ import chat.revolt.dashboard.data.dto.fetch_messages.FetchMessagesResponseDto
 import chat.revolt.dashboard.data.dto.send_message.SendMessageRequestDto
 import chat.revolt.data.remote.dto.message.MessageDto
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ChannelService {
 
@@ -29,9 +26,6 @@ interface ChannelService {
     @POST("channels/{channelId}/messages")
     fun sendMessage(
         @Path(value = "channelId") channelId: String,
-        @Query("content") content: MessageDto.ContentDto,
-        @Query("attachments") attachments: List<MessageDto.AttachmentDto>,
-        @Query("replies") replies: List<SendMessageRequestDto.SendMessageReplyDto>,
-        @Query("masquerade") masquerade: MessageDto.MasqueradeDto
+        @Body request: SendMessageRequestDto
     ): Call<MessageDto>
 }

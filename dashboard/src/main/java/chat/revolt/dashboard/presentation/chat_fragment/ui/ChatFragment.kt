@@ -77,5 +77,9 @@ class ChatFragment :
         viewModel.isEndReached.observe {
             adapter.isEndReached = it
         }
+        binding.plus.setOnClickListener {
+            viewModel.sendMessage(binding.input.text.toString())
+            binding.input.editableText.clear()
+        }
     }
 }

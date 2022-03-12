@@ -9,8 +9,10 @@ package chat.revolt.dashboard.presentation.chat_fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.room.withTransaction
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
+import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
 import chat.revolt.dashboard.domain.repository.ChannelRepository
 import chat.revolt.data.local.database.RevoltDatabase
+import chat.revolt.domain.models.Message
 import chat.revolt.domain.repository.UserRepository
 
 class MessagesManager(
@@ -54,6 +56,12 @@ class MessagesManager(
     fun getMessages() = channelRepository.getMessages(channelId)
     suspend fun getInitialMessages() = channelRepository.getInitialMessages(channelId, LIMIT)
 
+    suspend fun sendMessage(message: String) {
+        channelRepository.sendMessage(request = SendMessageRequest(
+            channelId = channelId,
+            content = Message.Content.Message(message),
+        )).also { channelRepository.addMessage(it) }
+    }
     companion object {
         private const val LIMIT = 30
     }

@@ -11,9 +11,9 @@ import chat.revolt.domain.models.Message
 data class SendMessageRequest(
     val channelId: String,
     val content: Message.Content.Message,
-    val attachments: List<Message.Attachment>,
-    val replies: List<SendMessageReply>,
-    val masquerade: Message.Masquerade
+    val attachments: List<Message.Attachment>? = null,
+    val replies: List<SendMessageReply>? = null,
+    val masquerade: Message.Masquerade? = null
 ) {
     data class SendMessageReply(val id: String, val mention: Boolean)
 }

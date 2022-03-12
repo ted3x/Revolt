@@ -27,12 +27,6 @@ class ChannelDataSourceImpl(private val service: ChannelService) : ChannelDataSo
     }
 
     override suspend fun sendMessage(request: SendMessageRequestDto): MessageDto {
-        return service.sendMessage(
-            channelId = request.channelId,
-            content = request.content,
-            attachments = request.attachments,
-            replies = request.replies,
-            masquerade = request.masquerade
-        ).awaitResult()
+        return service.sendMessage(channelId = request.channelId, request = request).awaitResult()
     }
 }

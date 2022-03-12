@@ -7,13 +7,16 @@
 package chat.revolt.dashboard.data.dto.send_message
 
 import chat.revolt.data.remote.dto.message.MessageDto
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class SendMessageRequestDto(
     val channelId: String,
-    val content: MessageDto.ContentDto,
-    val attachments: List<MessageDto.AttachmentDto>,
-    val replies: List<SendMessageReplyDto>,
-    val masquerade: MessageDto.MasqueradeDto
+    val content: String,
+    val attachments: List<MessageDto.AttachmentDto>?,
+    val replies: List<SendMessageReplyDto>?,
+    val masquerade: MessageDto.MasqueradeDto?
 ) {
+    @JsonClass(generateAdapter = true)
     data class SendMessageReplyDto(val id: String, val mention: Boolean)
 }

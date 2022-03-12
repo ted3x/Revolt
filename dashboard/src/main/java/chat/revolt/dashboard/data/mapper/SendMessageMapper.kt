@@ -26,10 +26,10 @@ class SendMessageMapper(
     override suspend fun mapToRequest(from: SendMessageRequest): SendMessageRequestDto {
         return SendMessageRequestDto(
             channelId = from.channelId,
-            content = MessageDto.ContentDto.Message(from.content.content),
-            attachments = from.attachments.map { attachmentMapper.mapToDto(it) },
-            replies = from.replies.map { it.map() },
-            masquerade = masqueradeMapper.mapToDto(from.masquerade)
+            content = from.content.content,
+            attachments = from.attachments?.map { attachmentMapper.mapToDto(it) },
+            replies = from.replies?.map { it.map() },
+            masquerade = from.masquerade?.let { masqueradeMapper.mapToDto(it) }
         )
     }
 
