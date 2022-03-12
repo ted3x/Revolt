@@ -24,9 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:padding="@dimen/dimen_p_3"
+        android:padding="@dimen/dimen_p_5"
         android:textColor="@android:color/white"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/plus"
         app:layout_constraintTop_toBottomOf="@id/chatRecyclerView"
         tools:text="User1 and user2 typing..." />

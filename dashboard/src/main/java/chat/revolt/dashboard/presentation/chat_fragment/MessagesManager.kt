@@ -27,6 +27,7 @@ class MessagesManager(
 
     fun initChannel(channelId: String) {
         isEndReached.value = false
+        lastMessageId = null
         this.channelId = channelId
     }
 

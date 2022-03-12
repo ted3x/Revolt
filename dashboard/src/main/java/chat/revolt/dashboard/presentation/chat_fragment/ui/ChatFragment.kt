@@ -20,6 +20,8 @@ import chat.revolt.dashboard.databinding.ChatFragmentBinding
 import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessagesAdapter
 import chat.revolt.dashboard.presentation.chat_fragment.di.chatModule
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
@@ -32,6 +34,7 @@ class ChatFragment :
         get() = listOf(chatModule)
     private var isInitial = false
     private var isWaitingForFetch: Boolean? = null
+    private var job: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,8 +64,8 @@ class ChatFragment :
         }
         viewModel.initialPhaseFinished.observe { finished ->
             if (finished) {
-                lifecycleScope.launchWhenCreated {
-                    viewModel.flow.collectLatest {
+                job = lifecycleScope.launchWhenCreated {
+                    viewModel.flow.cancellable().collectLatest {
                         adapter.setList(it)
                         if (isWaitingForFetch == true) viewModel.loadMore()
                         isWaitingForFetch = false
@@ -71,11 +74,15 @@ class ChatFragment :
             }
         }
         viewModel.currentChannel.observe {
+            job?.cancel()
             isInitial = true
         }
         viewModel.typers.observe {
             binding.typers.text = it
-            binding.typers.visibility = if (it != null) View.VISIBLE else View.GONE
+            binding.typers.visibleIf { it != null }
+            if(it != null && lm.findFirstVisibleItemPosition() == 0) {
+                lm.scrollToPosition(0)
+            }
         }
         viewModel.isEndReached.observe {
             adapter.isEndReached = it
@@ -83,6 +90,9 @@ class ChatFragment :
         binding.send.setOnClickListener {
             viewModel.sendMessage(binding.input.text.toString())
             binding.input.editableText.clear()
+        }
+        binding.plus.setOnClickListener {
+            viewModel.changeChannel("01F7ZSBSFHCAAJQ92ZGTY67HMN")
         }
         binding.input.doOnTextChanged { _, _, _, _ ->
             binding.send.visibleIf { !binding.input.text.isNullOrBlank() }
