@@ -74,6 +74,8 @@ class ChatFragment :
             }
         }
         viewModel.currentChannel.observe {
+            //TODO
+            setChannelName("General")
             job?.cancel()
             isInitial = true
         }
@@ -97,5 +99,11 @@ class ChatFragment :
         binding.input.doOnTextChanged { _, _, _, _ ->
             binding.send.visibleIf { !binding.input.text.isNullOrBlank() }
         }
+    }
+
+    private fun setChannelName(channelName: String) {
+        binding.header.channelName.text = channelName
+        //TODO
+        binding.input.hint = "Message $channelName"
     }
 }

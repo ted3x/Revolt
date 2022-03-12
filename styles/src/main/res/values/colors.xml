@@ -6,7 +6,8 @@
 
 <resources>
     <color name="accent">#FD6671</color>
-    <color name="background">#191919</color>
+    <color name="background">#1B1B1B</color>
+    <color name="header_background">#191919</color>
     <color name="foreground">#F6F6F6</color>
     <color name="tertiary_foreground">#848484</color>
     <color name="block">#2D2D2D</color>

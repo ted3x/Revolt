@@ -11,13 +11,17 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <include
+        android:id="@+id/header"
+        layout="@layout/chat_fragment_header" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/typers"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/header" />
 
     <TextView
         android:id="@+id/typers"
@@ -26,7 +30,7 @@
         android:maxLines="1"
         android:padding="@dimen/dimen_p_5"
         android:textColor="@android:color/white"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/plus"
         app:layout_constraintTop_toBottomOf="@id/chatRecyclerView"
         tools:text="User1 and user2 typing..." />
@@ -45,7 +49,6 @@
         android:id="@+id/input"
         android:layout_width="0dp"
         android:layout_height="@dimen/dimen_p_60"
-        android:hint="Message general"
         android:padding="@dimen/dimen_p_5"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
