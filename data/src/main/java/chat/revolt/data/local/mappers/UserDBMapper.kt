@@ -22,7 +22,7 @@ class UserDBMapper : EntityMapper<UserEntity, User> {
             backgroundUrl = from.backgroundUrl,
             relations = from.relations?.map { it.map() },
             badges = from.badges,
-            status = from.status?.map() ?: User.Status.NOT_LOADED,
+            status = from.status?.map() ?: NOT_LOADED,
             relationship = from.relationship.map(),
             online = from.online,
             flags = from.flags,

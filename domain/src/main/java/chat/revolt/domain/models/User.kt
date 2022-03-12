@@ -52,5 +52,13 @@ data class User(
 
     companion object {
         private const val SYSTEM_USER_ID = "00000000000000000000000000"
+        val EMPTY = User(
+            id = "",
+            username = "",
+            avatarUrl = "",
+            status = Status("", Presence.Idle),
+            relationship = RelationshipStatus.User,
+            online = false
+        )
     }
 }

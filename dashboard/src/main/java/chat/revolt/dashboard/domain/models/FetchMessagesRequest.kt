@@ -9,7 +9,7 @@ package chat.revolt.dashboard.domain.models
 
 data class FetchMessagesRequest(
     val channelId: String,
-    val limit: Int = 10,
+    val limit: Int,
     val before: String? = null,
     val after: String? = null,
     val sort: String = "Latest",

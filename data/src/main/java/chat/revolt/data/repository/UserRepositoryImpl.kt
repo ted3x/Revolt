@@ -43,9 +43,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getMessageAuthor(authorId: String, users: List<User>): User {
-        return users.firstOrNull { it.id == authorId } ?: fetchUser(authorId) ?: getCurrentUser() ?: throw IllegalStateException(
-            "Current user is null"
-        )
+        return users.firstOrNull { it.id == authorId } ?: getUser(authorId)
     }
 
     override suspend fun getUsers(userIds: List<String>): List<User> {

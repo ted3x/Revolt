@@ -19,8 +19,10 @@ import chat.revolt.domain.models.Message
 class MessagesAdapter(listener: LoadingAdapterListener) :
     LoadingAdapter<Message, LoadingAdapter.BaseLoadingAdapterViewHolder>(Comparator, listener) {
 
-    override val positionToLoad: Int
-        get() = 5
+    override val emptyItem: Message
+        get() = Message.EMPTY
+
+    override val loadOffset: Int = 10
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder<*> {
         return when (viewType) {
@@ -41,7 +43,7 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
         return if (item?.content is Message.Content.Text || item?.content is Message.Content.Message) {
             if (position == itemCount - 1) MESSAGE else {
                 val previousItem = getItem(position + 1)
-                if (item.isDivided(previousItem)) MESSAGE else GROUPED_MESSAGE
+                if (previousItem == null || item.isDivided(previousItem)) MESSAGE else GROUPED_MESSAGE
             }
         } else if (item?.content is Message.SystemMessage) SYSTEM_MESSAGE
         else -1

@@ -23,7 +23,8 @@ abstract class LoadingAdapter<T, VH : LoadingAdapter.BaseLoadingAdapterViewHolde
 
     var isEndReached = false
     protected var isLoaderVisible = false
-    abstract val positionToLoad: Int
+    abstract val emptyItem:T
+    abstract val loadOffset: Int
 
     abstract fun getViewHolder(parent: ViewGroup, viewType: Int): VH
     abstract fun getViewType(position: Int): Int
@@ -34,9 +35,8 @@ abstract class LoadingAdapter<T, VH : LoadingAdapter.BaseLoadingAdapterViewHolde
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
-                if (lastVisibleItem + positionToLoad >= itemCount && !isEndReached) {
-                    isLoaderVisible = true
-                    notifyItemInserted(itemCount)
+                if (lastVisibleItem + loadOffset >= itemCount && !isEndReached && !isLoaderVisible) {
+                    toggleLoader(true)
                     listener.onLoadMore()
                 }
             }
@@ -44,14 +44,8 @@ abstract class LoadingAdapter<T, VH : LoadingAdapter.BaseLoadingAdapterViewHolde
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position == itemCount - 1 && isLoaderVisible) LOADING_TYPE
+        return if(position == currentList.lastIndex && isLoaderVisible) LOADING_TYPE
         else getViewType(position)
-    }
-
-    override fun submitList(list: List<T>?) {
-        if(isLoaderVisible) notifyItemRemoved(itemCount - 1)
-        isLoaderVisible = false
-        super.submitList(list)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -60,6 +54,22 @@ abstract class LoadingAdapter<T, VH : LoadingAdapter.BaseLoadingAdapterViewHolde
         else getViewHolder(parent, viewType)
     }
 
+    fun setList(list: List<T>) {
+        if(isLoaderVisible) toggleLoader(false)
+        submitList(list)
+    }
+
+    private fun toggleLoader(show: Boolean) {
+        isLoaderVisible = show
+        val newList = currentList.toMutableList()
+        if(show) {
+            newList.add(emptyItem)
+        }
+        else {
+            newList.removeAt(newList.size - 1)
+        }
+        submitList(newList)
+    }
     class LoadingViewHolder(binding: LoadingAdapterItemBinding) : BaseLoadingAdapterViewHolder(binding.root)
     abstract class BaseLoadingAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 

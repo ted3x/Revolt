@@ -19,7 +19,6 @@ data class Message(
     val mentions: List<User>?,
     val replies: List<String>?,
     val masquerade: Masquerade?,
-    val isLoadingItem: Boolean = false
 ) {
 
     val authorName = masquerade?.name ?: author.username
@@ -137,5 +136,17 @@ data class Message(
 
     companion object {
         private const val DIVIDER_MAX_TIME = 420000
+        val EMPTY =
+            Message(
+                id = "",
+                channel = "",
+                author = User.EMPTY,
+                content = Content.Message(""),
+                attachments = null,
+                edited = null,
+                mentions = null,
+                replies = null,
+                masquerade = null,
+            )
     }
 }

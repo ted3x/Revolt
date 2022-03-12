@@ -55,6 +55,7 @@ object UlidTimeDecoder {
     )
 
     fun getTimestamp(ulid: CharSequence): Long {
+        if(ulid.isBlank()) return 0
         return (charToByteMapping[ulid[0].code].toLong() shl 45
                 or (charToByteMapping[ulid[1].code].toLong() shl 40)
                 or (charToByteMapping[ulid[2].code].toLong() shl 35)

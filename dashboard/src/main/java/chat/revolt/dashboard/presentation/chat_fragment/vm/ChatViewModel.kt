@@ -34,10 +34,13 @@ class ChatViewModel(
     val flow get() = manager.getMessages()
     val initialMessages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val isEndReached = manager.isEndReached
+    val initialPhaseFinished = MutableLiveData(false)
 
     fun loadMore(isInitial: Boolean = false) {
         viewModelScope.launch {
             manager.loadMore(isInitial)
+            if(isInitial)
+                initialPhaseFinished.postValue(true)
         }
     }
 

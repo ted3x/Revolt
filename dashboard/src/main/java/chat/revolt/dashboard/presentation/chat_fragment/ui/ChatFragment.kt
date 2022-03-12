@@ -28,11 +28,15 @@ class ChatFragment :
     override val module: List<Module>
         get() = listOf(chatModule)
     private var isInitial = false
+    private var isWaitingForFetch: Boolean? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = MessagesAdapter(object : LoadingAdapterListener{
-            override fun onLoadMore() { viewModel.loadMore() }
+            override fun onLoadMore() {
+                if(isWaitingForFetch == null) isWaitingForFetch = true
+                else if(isWaitingForFetch == false) viewModel.loadMore()
+            }
         })
         val lm = LinearLayoutManager(context)
         lm.reverseLayout = true
@@ -50,15 +54,21 @@ class ChatFragment :
         binding.chatRecyclerView.adapter = adapter
         viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
         lifecycleScope.launchWhenCreated {
-            viewModel.initialMessages.collectLatest(adapter::submitList)
+            viewModel.initialMessages.collectLatest(adapter::setList)
+        }
+        viewModel.initialPhaseFinished.observe { finished ->
+            if(finished) {
+                lifecycleScope.launchWhenCreated {
+                    viewModel.flow.collectLatest {
+                        adapter.setList(it)
+                        if (isWaitingForFetch == true) viewModel.loadMore()
+                        isWaitingForFetch = false
+                    }
+                }
+            }
         }
         viewModel.currentChannel.observe {
             isInitial = true
-            lifecycleScope.launchWhenCreated {
-                viewModel.flow.collectLatest {
-                    adapter.submitList(it)
-                }
-            }
         }
         viewModel.typers.observe {
             binding.typers.text = it
