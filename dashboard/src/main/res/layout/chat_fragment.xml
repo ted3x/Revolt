@@ -51,7 +51,21 @@
         android:textColorHint="@android:color/white"
         android:textSize="@dimen/dimen_sp_12"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/send"
         app:layout_constraintStart_toEndOf="@id/plus"
+        app:layout_constraintTop_toBottomOf="@id/typers" />
+
+
+    <ImageButton
+        android:id="@+id/send"
+        android:layout_width="@dimen/dimen_p_40"
+        android:layout_height="@dimen/dimen_p_40"
+        android:layout_margin="@dimen/dimen_p_5"
+        android:background="@drawable/send_button_bkg"
+        android:src="@drawable/ic_send"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/input"
         app:layout_constraintTop_toBottomOf="@id/typers" />
 </androidx.constraintlayout.widget.ConstraintLayout>

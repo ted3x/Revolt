@@ -8,9 +8,12 @@ package chat.revolt.dashboard.presentation.chat_fragment.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import chat.revolt.core.extensions.visibleIf
 import chat.revolt.core.fragment.BaseFragment
 import chat.revolt.core.paging_manager.LoadingAdapterListener
 import chat.revolt.dashboard.databinding.ChatFragmentBinding
@@ -32,10 +35,10 @@ class ChatFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = MessagesAdapter(object : LoadingAdapterListener{
+        val adapter = MessagesAdapter(object : LoadingAdapterListener {
             override fun onLoadMore() {
-                if(isWaitingForFetch == null) isWaitingForFetch = true
-                else if(isWaitingForFetch == false) viewModel.loadMore()
+                if (isWaitingForFetch == null) isWaitingForFetch = true
+                else if (isWaitingForFetch == false) viewModel.loadMore()
             }
         })
         val lm = LinearLayoutManager(context)
@@ -44,7 +47,7 @@ class ChatFragment :
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                if(isInitial || lm.findFirstCompletelyVisibleItemPosition() < 5) {
+                if (isInitial || lm.findFirstCompletelyVisibleItemPosition() < 5) {
                     binding.chatRecyclerView.scrollToPosition(0)
                     isInitial = false
                 }
@@ -57,7 +60,7 @@ class ChatFragment :
             viewModel.initialMessages.collectLatest(adapter::setList)
         }
         viewModel.initialPhaseFinished.observe { finished ->
-            if(finished) {
+            if (finished) {
                 lifecycleScope.launchWhenCreated {
                     viewModel.flow.collectLatest {
                         adapter.setList(it)
@@ -77,9 +80,12 @@ class ChatFragment :
         viewModel.isEndReached.observe {
             adapter.isEndReached = it
         }
-        binding.plus.setOnClickListener {
+        binding.send.setOnClickListener {
             viewModel.sendMessage(binding.input.text.toString())
             binding.input.editableText.clear()
+        }
+        binding.input.doOnTextChanged { _, _, _, _ ->
+            binding.send.visibleIf { !binding.input.text.isNullOrBlank() }
         }
     }
 }
