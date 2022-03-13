@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
+import chat.revolt.core.BaseApp
 import chat.revolt.core.view_model.BaseViewModel
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.scope.ScopeFragment
@@ -65,6 +66,8 @@ abstract class BaseFragment<VM: BaseViewModel, VB : ViewBinding>(private val vie
             callback.invoke(it)
         })
     }
+
+    protected fun getApplication() = requireActivity().application as BaseApp
 }
 
 private typealias ViewBinder<T> = (LayoutInflater, ViewGroup?, Boolean) -> T

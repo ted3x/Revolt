@@ -118,12 +118,14 @@ class SignInViewModel(
 
     private fun authenticateWebSocket() {
         authenticateDataSource.authenticate(AuthenticateEvent(token = "-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE"))
-        viewModelScope.launch {
-            authenticateDataSource.onReady().collectLatest {
-                println(it)
-                navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
-            }
-        }
+//        viewModelScope.launch {
+//            authenticateDataSource.onReady().collectLatest {
+//                println(it)
+//                navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+//            }
+//        }
+        navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+
     }
 
     override fun onCleared() {

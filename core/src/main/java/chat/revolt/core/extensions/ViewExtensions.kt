@@ -8,6 +8,10 @@ package chat.revolt.core.extensions
 
 import android.view.View
 
+fun View.visibleIf(value: Boolean) {
+    this.visibility = if (value) View.VISIBLE else View.GONE
+}
+
 fun View.visibleIf(block: () -> Boolean) {
     this.visibility = if (block.invoke()) View.VISIBLE else View.GONE
 }

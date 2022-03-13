@@ -8,19 +8,26 @@ package chat.revolt.app
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
+import android.net.*
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import chat.revolt.app.di.appModules
+import chat.revolt.core.BaseApp
 import chat.revolt.socket.api.RevoltSocketListener
 import chat.revolt.socket.api.ClientSocketManager
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import okio.IOException
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.lang.ref.WeakReference
 
-class RVApp : Application(), Application.ActivityLifecycleCallbacks {
+
+class RVApp : BaseApp(), Application.ActivityLifecycleCallbacks {
 
     var currentActivity: WeakReference<Activity>? = null
         private set

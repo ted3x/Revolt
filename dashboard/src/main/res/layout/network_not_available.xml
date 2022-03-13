@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 3/13/22, 4:13 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 3/13/22, 4:13 PM
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/header_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dimen_sp_12"
+        android:paddingVertical="@dimen/dimen_p_5"
+        android:layout_gravity="center"
+        android:drawablePadding="@dimen/dimen_p_5"
+        android:text="@string/network_connectivity_limited_or_unavailable"
+        android:drawableStart="@drawable/ic_network_unavailable" />
+
+</FrameLayout>

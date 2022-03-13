@@ -3,6 +3,7 @@
     package="chat.revolt.app" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <application
         android:name=".RVApp"
         android:fullBackupOnly="true"
