@@ -13,11 +13,13 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import chat.revolt.core.extensions.hiddenIf
 import chat.revolt.core.extensions.visibleIf
 import chat.revolt.core.fragment.BaseFragment
 import chat.revolt.core.paging_manager.LoadingAdapterListener
 import chat.revolt.dashboard.databinding.ChatFragmentBinding
 import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessagesAdapter
+import chat.revolt.dashboard.presentation.chat_fragment.adapter.decorator.MessagesDecorator
 import chat.revolt.dashboard.presentation.chat_fragment.di.chatModule
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
 import kotlinx.coroutines.Job
@@ -56,6 +58,7 @@ class ChatFragment :
                 }
             }
         })
+        binding.chatRecyclerView.addItemDecoration(MessagesDecorator())
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
         viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
@@ -82,9 +85,6 @@ class ChatFragment :
         viewModel.typers.observe {
             binding.typers.text = it
             binding.typers.visibleIf { it != null }
-            if(it != null && lm.findFirstVisibleItemPosition() == 0) {
-                lm.scrollToPosition(0)
-            }
         }
         viewModel.isEndReached.observe {
             adapter.isEndReached = it

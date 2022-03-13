@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/typers"
+        app:layout_constraintBottom_toTopOf="@id/input"
         app:layout_constraintTop_toBottomOf="@id/header" />
 
     <TextView
@@ -29,10 +29,11 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:padding="@dimen/dimen_p_5"
+        android:textSize="@dimen/dimen_sp_14"
         android:textColor="@android:color/white"
         android:visibility="gone"
+        android:background="@color/header_background"
         app:layout_constraintBottom_toTopOf="@id/plus"
-        app:layout_constraintTop_toBottomOf="@id/chatRecyclerView"
         tools:text="User1 and user2 typing..." />
 
     <Button
@@ -43,7 +44,7 @@
         android:text="+"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/typers" />
+        app:layout_constraintTop_toTopOf="@id/input" />
 
     <EditText
         android:id="@+id/input"
@@ -55,9 +56,7 @@
         android:textSize="@dimen/dimen_sp_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/send"
-        app:layout_constraintStart_toEndOf="@id/plus"
-        app:layout_constraintTop_toBottomOf="@id/typers" />
-
+        app:layout_constraintStart_toEndOf="@id/plus" />
 
     <ImageButton
         android:id="@+id/send"
@@ -70,5 +69,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/input"
-        app:layout_constraintTop_toBottomOf="@id/typers" />
+        app:layout_constraintTop_toTopOf="@id/input" />
 </androidx.constraintlayout.widget.ConstraintLayout>
