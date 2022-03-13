@@ -6,6 +6,8 @@
 
 package chat.revolt.dashboard.data.repository
 
+import chat.revolt.core.extensions.ResultWrapper
+import chat.revolt.core.extensions.safeApiCall
 import chat.revolt.dashboard.data.data_source.ChannelDataSource
 import chat.revolt.dashboard.data.mapper.FetchMessageMapper
 import chat.revolt.dashboard.data.mapper.SendMessageMapper
@@ -51,8 +53,8 @@ class MessagesRepositoryImpl(
 
     override suspend fun fetchMessages(
         request: FetchMessagesRequest
-    ): FetchMessagesResponse {
-        return mapper.mapToResponse(dataSource.fetchMessages(mapper.mapToRequest(request)))
+    ): ResultWrapper<FetchMessagesResponse> {
+        return safeApiCall { mapper.mapToResponse(dataSource.fetchMessages(mapper.mapToRequest(request))) }
     }
 
     override suspend fun deleteMessage(messageId: String) {

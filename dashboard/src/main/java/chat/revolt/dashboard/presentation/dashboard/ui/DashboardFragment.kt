@@ -11,8 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import chat.revolt.core.NetworkState
 import chat.revolt.core.extensions.visibleIf
 import chat.revolt.core.fragment.BaseFragment
+import chat.revolt.dashboard.R
 import chat.revolt.dashboard.databinding.DashboardFragmentBinding
 import chat.revolt.dashboard.presentation.chat_fragment.ui.ChatFragment
 import chat.revolt.dashboard.presentation.dashboard.di.dashboardModule
@@ -39,8 +41,18 @@ class DashboardFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            getApplication().networkState.collectLatest {
-                binding.networkUnavailable.root.visibleIf(it == false)
+            viewModel.networkStateManager.getStateFlow().collectLatest {
+                when (it) {
+                    is NetworkState.Connected -> binding.networkUnavailable.root.visibleIf(false)
+                    is NetworkState.Disconnected -> binding.networkUnavailable.root.visibleIf(true)
+                        .also {
+                            binding.networkUnavailable.message.text = requireContext().getString(
+                                R.string.network_connectivity_limited_or_unavailable
+                            )
+                        }
+                    is NetworkState.NoInternet -> binding.networkUnavailable.root.visibleIf(true)
+                        .also { binding.networkUnavailable.message.text = "Connecting..." }
+                }
             }
         }
     }

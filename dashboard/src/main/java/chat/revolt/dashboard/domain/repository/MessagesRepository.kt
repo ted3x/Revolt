@@ -6,6 +6,7 @@
 
 package chat.revolt.dashboard.domain.repository
 
+import chat.revolt.core.extensions.ResultWrapper
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesResponse
 import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
@@ -19,7 +20,7 @@ interface MessagesRepository {
     suspend fun addMessage(message: Message)
     suspend fun addMessages(messages: List<Message>)
     suspend fun sendMessage(request: SendMessageRequest): Message
-    suspend fun fetchMessages(request: FetchMessagesRequest): FetchMessagesResponse
+    suspend fun fetchMessages(request: FetchMessagesRequest): ResultWrapper<FetchMessagesResponse>
     suspend fun deleteMessage(messageId: String)
     suspend fun clear(channelId: String)
 }

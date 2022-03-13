@@ -8,6 +8,10 @@ package chat.revolt.dashboard.presentation.chat_fragment
 
 import androidx.lifecycle.MutableLiveData
 import androidx.room.withTransaction
+import chat.revolt.core.extensions.Error
+import chat.revolt.core.extensions.ResultWrapper.Companion.onError
+import chat.revolt.core.extensions.ResultWrapper.Companion.onSuccess
+import chat.revolt.core.network.NetworkStateManager
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
 import chat.revolt.dashboard.domain.repository.MessagesRepository
@@ -19,6 +23,7 @@ class MessagesManager(
     private val database: RevoltDatabase,
     private val messagesRepository: MessagesRepository,
     private val userRepository: UserRepository,
+    private val networkStateManager: NetworkStateManager
 ) {
 
     val isEndReached = MutableLiveData(false)
@@ -33,7 +38,7 @@ class MessagesManager(
 
     suspend fun loadMore(isInitial: Boolean = false) {
         if (isEndReached.value == true) return
-        val response = messagesRepository.fetchMessages(
+       messagesRepository.fetchMessages(
             request = FetchMessagesRequest(
                 channelId = channelId,
                 limit = LIMIT,
@@ -41,17 +46,23 @@ class MessagesManager(
                 sort = "Latest",
                 includeUsers = true
             )
-        )
-        lastMessageId = if (response.messages.size < LIMIT) {
-            isEndReached.postValue(true)
-            null
-        } else response.messages.last().id
+        ).onSuccess {
+           lastMessageId = if (it.messages.size < LIMIT) {
+               isEndReached.postValue(true)
+               null
+           } else it.messages.last().id
 
-        database.withTransaction {
-            if (isInitial) messagesRepository.clear(channelId)
-            userRepository.addUsers(response.users)
-            messagesRepository.addMessages(response.messages)
-        }
+           database.withTransaction {
+               if (isInitial) messagesRepository.clear(channelId)
+               userRepository.addUsers(it.users)
+               messagesRepository.addMessages(it.messages)
+           }
+       }.onError { _, error ->
+           when(error) {
+               Error.NetworkError -> {}
+               Error.NoConnection, Error.Timeout -> if(networkStateManager.isConnected()) networkStateManager.noInternet()
+           }
+       }
     }
 
     fun getMessages() = messagesRepository.getMessages(channelId)

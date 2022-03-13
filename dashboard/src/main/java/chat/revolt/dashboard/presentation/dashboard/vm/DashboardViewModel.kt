@@ -6,7 +6,8 @@
 
 package chat.revolt.dashboard.presentation.dashboard.vm
 
+import chat.revolt.core.network.NetworkStateManager
 import chat.revolt.core.view_model.BaseViewModel
 
-class DashboardViewModel: BaseViewModel() {
+class DashboardViewModel(val networkStateManager: NetworkStateManager): BaseViewModel() {
 }

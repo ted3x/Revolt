@@ -12,13 +12,16 @@ import chat.revolt.app.global_navigator.GlobalNavigatorImpl
 import chat.revolt.app.global_navigator.RVRouterImpl
 import chat.revolt.app.loading_manager.LoadingManagerImpl
 import chat.revolt.app.network.NetworkErrorHandlerImpl
+import chat.revolt.app.network.NetworkStateManagerImpl
 import chat.revolt.app.network.RevoltInterceptor
 import chat.revolt.app.resource_provider.ResourceProviderImpl
 import chat.revolt.app.revolt_config_manager.RevoltConfigManagerImpl
 import chat.revolt.auth.navigator.AuthNavigator
 import chat.revolt.auth.navigator.AuthNavigatorImpl
 import chat.revolt.core.NetworkErrorHandler
+import chat.revolt.core.NetworkState
 import chat.revolt.core.loading_manager.LoadingManager
+import chat.revolt.core.network.NetworkStateManager
 import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.core_navigation.navigator.GlobalNavigator
@@ -91,6 +94,8 @@ val networkModule = module {
             .client(get())
             .build()
     }
+
+    single<NetworkStateManager> { NetworkStateManagerImpl() }
 }
 
 val loadingManagerModule = module {

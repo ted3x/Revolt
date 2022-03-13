@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.util.Log
 import chat.revolt.app.di.appModules
 import chat.revolt.core.BaseApp
+import chat.revolt.core.network.NetworkStateManager
 import chat.revolt.socket.api.RevoltSocketListener
 import chat.revolt.socket.api.ClientSocketManager
 import kotlinx.coroutines.GlobalScope
@@ -32,6 +33,8 @@ class RVApp : BaseApp(), Application.ActivityLifecycleCallbacks {
     var currentActivity: WeakReference<Activity>? = null
         private set
 
+    private val networkStateManager: NetworkStateManager by inject()
+
     override fun onCreate() {
         super.onCreate()
         startKoin {
@@ -39,6 +42,7 @@ class RVApp : BaseApp(), Application.ActivityLifecycleCallbacks {
             modules(appModules)
         }
         registerActivityLifecycleCallbacks(this)
+        networkStateManager.initialize(applicationContext)
     }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {}

@@ -47,7 +47,8 @@ val chatModule = module {
             MessagesManager(
                 messagesRepository = get(),
                 userRepository = get(),
-                database = get()
+                database = get(),
+                networkStateManager = get()
             )
         }
         viewModel {
