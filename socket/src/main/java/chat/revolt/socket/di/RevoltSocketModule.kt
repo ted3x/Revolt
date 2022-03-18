@@ -48,6 +48,7 @@ val revoltSocketModule = module {
     single<ServerDataSource> {
         ServerDataSourceImpl(
             socket = get(),
+            userRepository = get(),
             messageMapper = get(),
             channelActionMapper = get(),
             channelMapper = get()

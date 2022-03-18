@@ -11,6 +11,7 @@ import chat.revolt.data.remote.mappers.channel.ChannelMapper
 import chat.revolt.data.remote.mappers.message.MessageMapper
 import chat.revolt.data.remote.type.EventType
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.repository.UserRepository
 import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.data.channel.mapper.ChannelActionMapper
 import chat.revolt.socket.domain.channel.ChannelEvents
@@ -28,13 +29,17 @@ interface ServerDataSource {
 
 class ServerDataSourceImpl(
     private val socket: SocketAPI,
+    private val userRepository: UserRepository,
     private val messageMapper: MessageMapper,
     private val channelActionMapper: ChannelActionMapper,
     private val channelMapper: ChannelMapper
 ) : ServerDataSource {
     override suspend fun onMessage(channelId: String): Flow<Message> {
         return socket.onMessage().filter { it.channel == channelId }
-            .map { messageMapper.mapToDomain(it, null) }
+            .map {
+                val author = userRepository.getUser(it.author)
+                messageMapper.mapToDomain(it, listOf(author))
+            }
     }
 
     override suspend fun onChannelStartTyping(channelId: String): Flow<ChannelEvents.ChannelStartTyping> {
