@@ -12,20 +12,20 @@ import chat.revolt.domain.models.User
 import chat.revolt.domain.models.server.Server
 
 sealed class Channel(open val id: String) {
-    data class SavedMessages(override val id: String, val user: User) : Channel(id)
+    data class SavedMessages(override val id: String, val userId: String) : Channel(id)
 
     data class DirectMessage(
         override val id: String,
         val active: Boolean,
-        val recipients: List<User>,
+        val recipients: List<String>,
         val lastMessageId: String?
     ) : Channel(id)
 
     data class Group(
         override val id: String,
-        val recipients: List<User>,
+        val recipients: List<String>,
         val name: String,
-        val owner: User,
+        val ownerId: String,
         val description: String?,
         val lastMessageId: String?,
         val icon: Attachment?,
@@ -35,7 +35,7 @@ sealed class Channel(open val id: String) {
 
     data class TextChannel(
         override val id: String,
-        val server: Server,
+        val serverId: String,
         val name: String,
         val description: String?,
         val icon: Attachment?,
@@ -47,7 +47,7 @@ sealed class Channel(open val id: String) {
 
     data class VoiceChannel(
         override val id: String,
-        val server: Server,
+        val serverId: String,
         val name: String,
         val description: String?,
         val icon: Attachment?,

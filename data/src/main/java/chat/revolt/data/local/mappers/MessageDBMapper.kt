@@ -16,121 +16,145 @@ class MessageDBMapper(
     private val userRepository: UserRepository,
     private val attachmentEntityMapper: AttachmentEntityMapper
 ): EntityDomainMapper<MessageEntity, Message> {
-    override suspend fun mapToDomain(from: MessageEntity): Message {
+    override fun mapToDomain(from: MessageEntity): Message {
         return Message(
             id = from.id,
             channel = from.channel,
-            author = userRepository.getUser(from.author),
+            authorId = from.author,
+            authorName = from.authorName,
+            authorAvatarUrl = from.authorAvatarUrl,
             content = from.content.map(),
             attachments = from.attachments?.let { attachmentEntityMapper.mapToDomain(it) },
             edited = from.edited,
-            mentions = from.mentions?.let { userRepository.getUsers(it) },
+            mentions = from.mentions,
             replies = from.replies,
             masquerade = null
         )
     }
 
-    private suspend fun MessageEntity.ContentEntity.map(): Message.Content {
+    private fun MessageEntity.ContentEntity.map(): Message.Content {
         return when (this) {
             is MessageEntity.ContentEntity.ChannelDescriptionChanged -> Message.Content.ChannelDescriptionChanged(
-                changedBy = userDBMapper.mapToDomain(this.changedBy)
+                changedById = this.changedById,
+                changedByUsername = this.changedByUsername,
+                changedByAvatarUrl = this.changedByAvatarUrl
             )
             is MessageEntity.ContentEntity.ChannelIconChanged -> Message.Content.ChannelIconChanged(
-                changedBy = userDBMapper.mapToDomain(this.changedBy)
+                changedById = this.changedById,
+                changedByUsername = this.changedByUsername,
+                changedByAvatarUrl = this.changedByAvatarUrl,
             )
             is MessageEntity.ContentEntity.ChannelRenamed -> Message.Content.ChannelRenamed(
                 name = this.name,
-                renamedBy = userDBMapper.mapToDomain(this.renamedBy)
+                renamedById = this.renamedById,
+                renamedByUsername = this.renamedByUsername,
+                renamedByAvatarUrl = this.renamedByAvatarUrl,
             )
             is MessageEntity.ContentEntity.Message -> Message.Content.Message(content = this.content)
             is MessageEntity.ContentEntity.Text -> Message.Content.Text(content = this.content)
             is MessageEntity.ContentEntity.UserAdded -> Message.Content.UserAdded(
-                addedUser = userDBMapper.mapToDomain(this.addedUser),
-                addedBy = userDBMapper.mapToDomain(this.addedBy)
+                addedUserId = this.addedUserId,
+                addedUsername = this.addedUsername,
+                addedBy = this.addedById,
+                addedByUsername = this.addedByUsername
             )
             is MessageEntity.ContentEntity.UserBanned -> Message.Content.UserBanned(
-                user = userDBMapper.mapToDomain(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is MessageEntity.ContentEntity.UserJoined -> Message.Content.UserJoined(
-                user = userDBMapper.mapToDomain(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is MessageEntity.ContentEntity.UserKicked -> Message.Content.UserKicked(
-                user = userDBMapper.mapToDomain(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is MessageEntity.ContentEntity.UserLeft -> Message.Content.UserLeft(
-                user = userDBMapper.mapToDomain(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is MessageEntity.ContentEntity.UserRemove -> Message.Content.UserRemove(
-                removedUser = userDBMapper.mapToDomain(this.removedUser),
-                removedBy = userDBMapper.mapToDomain(this.removedBy)
+                removedUserId = this.removedUserId,
+                removedUsername = this.removedUsername,
+                removedById = this.removedById,
+                removedByUsername = this.removedByUsername,
             )
         }
     }
 
-    override suspend fun mapToEntity(from: Message): MessageEntity {
+    override fun mapToEntity(from: Message): MessageEntity {
         return MessageEntity(
             id = from.id,
             channel = from.channel,
-            author = from.author.id,
+            author = from.authorId,
+            authorName = from.authorName,
+            authorAvatarUrl = from.authorAvatarUrl,
             content = from.content.map(),
             createdAt = UlidTimeDecoder.getTimestamp(from.id),
             attachments = from.attachments?.map { attachmentEntityMapper.mapToEntity(it) },
             edited = from.edited,
-            mentions = from.mentions?.map { it.id },
+            mentions = from.mentions,
             replies = from.replies,
             synchronizedAt = System.currentTimeMillis()
         )
     }
 
-    private suspend fun Message.Content.map(): MessageEntity.ContentEntity {
+    private fun Message.Content.map(): MessageEntity.ContentEntity {
         return when (this) {
             is Message.Content.ChannelDescriptionChanged -> MessageEntity.ContentEntity.ChannelDescriptionChanged(
-                changedBy = userDBMapper.mapToEntity(this.changedBy)
+                changedById = this.changedById,
+                changedByUsername = this.changedByUsername,
+                changedByAvatarUrl = this.changedByAvatarUrl,
             )
             is Message.Content.ChannelIconChanged -> MessageEntity.ContentEntity.ChannelIconChanged(
-                changedBy = userDBMapper.mapToEntity(this.changedBy)
+                changedById = this.changedById,
+                changedByUsername = this.changedByUsername,
+                changedByAvatarUrl = this.changedByAvatarUrl,
             )
             is Message.Content.ChannelRenamed -> MessageEntity.ContentEntity.ChannelRenamed(
                 name = this.name,
-                renamedBy = userDBMapper.mapToEntity(this.renamedBy)
+                renamedById = this.renamedById,
+                renamedByUsername = this.renamedByUsername,
+                renamedByAvatarUrl = this.renamedByAvatarUrl,
             )
             is Message.Content.Message -> MessageEntity.ContentEntity.Message(content = this.content)
             is Message.Content.Text -> MessageEntity.ContentEntity.Text(content = this.content)
             is Message.Content.UserAdded -> MessageEntity.ContentEntity.UserAdded(
-                addedUser = userDBMapper.mapToEntity(this.addedUser),
-                addedBy = userDBMapper.mapToEntity(this.addedBy)
+                addedUserId = this.addedUserId,
+                addedUsername = this.addedUsername,
+                addedById = this.addedBy,
+                addedByUsername = this.addedByUsername,
             )
             is Message.Content.UserBanned -> MessageEntity.ContentEntity.UserBanned(
-                user = userDBMapper.mapToEntity(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is Message.Content.UserJoined -> MessageEntity.ContentEntity.UserJoined(
-                user = userDBMapper.mapToEntity(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is Message.Content.UserKicked -> MessageEntity.ContentEntity.UserKicked(
-                user = userDBMapper.mapToEntity(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is Message.Content.UserLeft -> MessageEntity.ContentEntity.UserLeft(
-                user = userDBMapper.mapToEntity(
-                    this.user
-                )
+                userId = this.userId,
+                username = this.username,
+                userAvatarUrl = this.userAvatarUrl,
             )
             is Message.Content.UserRemove -> MessageEntity.ContentEntity.UserRemove(
-                removedUser = userDBMapper.mapToEntity(this.removedUser),
-                removedBy = userDBMapper.mapToEntity(this.removedBy)
+                removedUserId = this.removedUserId,
+                removedUsername = this.removedUsername,
+                removedById = this.removedById,
+                removedByUsername = this.removedByUsername,
             )
         }
     }

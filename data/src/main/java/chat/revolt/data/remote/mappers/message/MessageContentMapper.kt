@@ -7,9 +7,9 @@
 package chat.revolt.data.remote.mappers.message
 
 import chat.revolt.data.remote.dto.message.MessageDto
-import chat.revolt.data.remote.mappers.user.UserMapper
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.models.User
+import chat.revolt.domain.models.getUser
 import chat.revolt.domain.repository.UserRepository
 
 class MessageContentMapper(private val userRepository: UserRepository) {
@@ -17,28 +17,28 @@ class MessageContentMapper(private val userRepository: UserRepository) {
     fun mapToDto(from: Message.Content): MessageDto.ContentDto {
         return when (from) {
             is Message.Content.ChannelDescriptionChanged -> MessageDto.ContentDto.ChannelDescriptionChanged(
-                changedBy = from.changedBy.id
+                changedBy = from.changedById
             )
             is Message.Content.ChannelIconChanged -> MessageDto.ContentDto.ChannelIconChanged(
-                changedBy = from.changedBy.id
+                changedBy = from.changedById
             )
             is Message.Content.ChannelRenamed -> MessageDto.ContentDto.ChannelRenamed(
                 name = from.name,
-                renamedBy = from.renamedBy.id
+                renamedBy = from.renamedById
             )
             is Message.Content.Message -> MessageDto.ContentDto.Message(content = from.content)
             is Message.Content.Text -> MessageDto.ContentDto.Text(content = from.content)
             is Message.Content.UserAdded -> MessageDto.ContentDto.UserAdded(
-                addedUserId = from.addedUser.id,
-                addedBy = from.addedBy.id
+                addedUserId = from.addedUserId,
+                addedBy = from.addedBy
             )
-            is Message.Content.UserBanned -> MessageDto.ContentDto.UserBanned(userId = from.user.id)
-            is Message.Content.UserJoined -> MessageDto.ContentDto.UserJoined(userId = from.user.id)
-            is Message.Content.UserKicked -> MessageDto.ContentDto.UserKicked(userId = from.user.id)
-            is Message.Content.UserLeft -> MessageDto.ContentDto.UserLeft(userId = from.user.id)
+            is Message.Content.UserBanned -> MessageDto.ContentDto.UserBanned(userId = from.userId)
+            is Message.Content.UserJoined -> MessageDto.ContentDto.UserJoined(userId = from.userId)
+            is Message.Content.UserKicked -> MessageDto.ContentDto.UserKicked(userId = from.userId)
+            is Message.Content.UserLeft -> MessageDto.ContentDto.UserLeft(userId = from.userId)
             is Message.Content.UserRemove -> MessageDto.ContentDto.UserRemove(
-                removedBy = from.removedBy.id,
-                removedUserId = from.removedUser.id
+                removedBy = from.removedById,
+                removedUserId = from.removedUserId
             )
         }
 
@@ -46,50 +46,85 @@ class MessageContentMapper(private val userRepository: UserRepository) {
 
     suspend fun mapToDomain(from: MessageDto.ContentDto, users: List<User>?): Message.Content {
         return when (from) {
-            is MessageDto.ContentDto.ChannelDescriptionChanged -> Message.Content.ChannelDescriptionChanged(
-                changedBy = userRepository.getMessageAuthor(from.changedBy, users)
-            )
-            is MessageDto.ContentDto.ChannelIconChanged -> Message.Content.ChannelIconChanged(
-                changedBy = userRepository.getMessageAuthor(from.changedBy, users)
-            )
-            is MessageDto.ContentDto.ChannelRenamed -> Message.Content.ChannelRenamed(
-                name = from.name,
-                renamedBy = userRepository.getMessageAuthor(from.renamedBy, users)
-            )
+            is MessageDto.ContentDto.ChannelDescriptionChanged -> {
+                val changedBy = users.getUser(from.changedBy, userRepository.getCurrentUser())
+                Message.Content.ChannelDescriptionChanged(
+                    changedById = changedBy.id,
+                    changedByUsername = changedBy.username,
+                    changedByAvatarUrl = changedBy.avatarUrl,
+                )
+            }
+            is MessageDto.ContentDto.ChannelIconChanged -> {
+                val changedBy = users.getUser(from.changedBy, userRepository.getCurrentUser())
+                Message.Content.ChannelIconChanged(
+                    changedById = changedBy.id,
+                    changedByUsername = changedBy.username,
+                    changedByAvatarUrl = changedBy.avatarUrl,
+                )
+            }
+            is MessageDto.ContentDto.ChannelRenamed -> {
+                val user = users.getUser(from.renamedBy, userRepository.getCurrentUser())
+                Message.Content.ChannelRenamed(
+                    name = from.name,
+                    renamedById = user.id,
+                    renamedByUsername = user.username,
+                    renamedByAvatarUrl = user.avatarUrl
+                )
+            }
             is MessageDto.ContentDto.Message -> Message.Content.Message(content = from.content)
             is MessageDto.ContentDto.Text -> Message.Content.Text(content = from.content)
-            is MessageDto.ContentDto.UserAdded -> Message.Content.UserAdded(
-                addedUser = userRepository.getMessageAuthor(from.addedUserId, users),
-                addedBy = userRepository.getMessageAuthor(from.addedBy, users)
-            )
-            is MessageDto.ContentDto.UserBanned -> Message.Content.UserBanned(
-                user = userRepository.getMessageAuthor(
-                    from.userId,
-                    users
+            is MessageDto.ContentDto.UserAdded -> {
+                val addedByUser = users.getUser(from.addedBy, userRepository.getCurrentUser())
+                val addedUser = users.getUser(from.addedUserId, userRepository.getCurrentUser())
+                Message.Content.UserAdded(
+                    addedUserId = addedUser.id,
+                    addedUsername = addedUser.username,
+                    addedBy = addedByUser.id,
+                    addedByUsername = addedByUser.username,
                 )
-            )
-            is MessageDto.ContentDto.UserJoined -> Message.Content.UserJoined(
-                user = userRepository.getMessageAuthor(
-                    from.userId,
-                    users
+            }
+            is MessageDto.ContentDto.UserBanned -> {
+                val user = users.getUser(from.userId, userRepository.getCurrentUser())
+                Message.Content.UserBanned(
+                    userId = user.id,
+                    username = user.username,
+                    userAvatarUrl = user.avatarUrl
                 )
-            )
-            is MessageDto.ContentDto.UserKicked -> Message.Content.UserKicked(
-                user = userRepository.getMessageAuthor(
-                    from.userId,
-                    users
+            }
+            is MessageDto.ContentDto.UserJoined -> {
+                val user = users.getUser(from.userId, userRepository.getCurrentUser())
+                Message.Content.UserJoined(
+                    userId = user.id,
+                    username = user.username,
+                    userAvatarUrl = user.avatarUrl,
                 )
-            )
-            is MessageDto.ContentDto.UserLeft -> Message.Content.UserLeft(
-                user = userRepository.getMessageAuthor(
-                    from.userId,
-                    users
+            }
+            is MessageDto.ContentDto.UserKicked -> {
+                val user = users.getUser(from.userId, userRepository.getCurrentUser())
+                Message.Content.UserKicked(
+                    userId = user.id,
+                    username = user.username,
+                    userAvatarUrl = user.avatarUrl
                 )
-            )
-            is MessageDto.ContentDto.UserRemove -> Message.Content.UserRemove(
-                removedBy = userRepository.getMessageAuthor(from.removedUserId, users),
-                removedUser = userRepository.getMessageAuthor(from.removedUserId, users)
-            )
+            }
+            is MessageDto.ContentDto.UserLeft -> {
+                val user = users.getUser(from.userId, userRepository.getCurrentUser())
+                Message.Content.UserLeft(
+                    userId = user.id,
+                    username = user.username,
+                    userAvatarUrl = user.avatarUrl
+                )
+            }
+            is MessageDto.ContentDto.UserRemove -> {
+                val removedByUser = users.getUser(from.removedBy, userRepository.getCurrentUser())
+                val removedUser = users.getUser(from.removedUserId, userRepository.getCurrentUser())
+                Message.Content.UserRemove(
+                    removedById = removedByUser.id,
+                    removedByUsername = removedByUser.username,
+                    removedUserId = removedUser.id,
+                    removedUsername = removedUser.username
+                )
+            }
         }
     }
 }

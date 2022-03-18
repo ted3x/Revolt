@@ -73,9 +73,7 @@ val userModule = module {
 
     single {
         ChannelMapper(
-            userRepository = get(),
-            attachmentMapper = get(),
-            serverRepository = get()
+            attachmentMapper = get()
         )
     }
 
@@ -90,13 +88,11 @@ val userModule = module {
         )
     }
 
-    single { SystemMessagesMapper(channelRepository = get()) }
-    single { ServerCategoryMapper(channelRepository = get()) }
+    single { SystemMessagesMapper() }
+    single { ServerCategoryMapper() }
     single { ServerRolesMapper() }
     single {
         ServerMapper(
-            userRepository = get(),
-            channelRepository = get(),
             serverCategoryMapper = get(),
             attachmentMapper = get(),
             systemMessagesMapper = get(),
@@ -105,7 +101,7 @@ val userModule = module {
     }
     single<ServerRepository> { ServerRepositoryImpl() }
 
-    single { ChannelEntityMapper(userRepository = get(), attachmentMapper = get(), serverRepository = get()) }
+    single { ChannelEntityMapper(attachmentMapper = get()) }
     single { AttachmentEntityMapper(metadataMapper = get()) }
     single<ChannelService> { get<Retrofit>().create(ChannelService::class.java) }
     single<ChannelDataSource> { ChannelDataSourceImpl(service = get()) }

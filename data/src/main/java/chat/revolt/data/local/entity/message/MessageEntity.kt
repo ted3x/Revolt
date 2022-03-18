@@ -23,6 +23,8 @@ data class MessageEntity(
     val id: String,
     val channel: String,
     val author: String,
+    val authorName: String,
+    val authorAvatarUrl: String?,
     val content: ContentEntity,
     val attachments: List<AttachmentEntity>?,
     val edited: String?,
@@ -42,54 +44,72 @@ data class MessageEntity(
 
         @JsonClass(generateAdapter = true)
         data class UserAdded(
-            val addedUser: UserEntity,
-            val addedBy: UserEntity
+            val addedUserId: String,
+            val addedUsername: String,
+            val addedById: String,
+            val addedByUsername: String,
         ) :
             ContentEntity(ContentType.UserAdded)
 
         @JsonClass(generateAdapter = true)
         data class UserRemove(
-            val removedUser: UserEntity,
-            val removedBy: UserEntity
+            val removedUserId: String,
+            val removedUsername: String,
+            val removedById: String,
+            val removedByUsername: String,
         ) :
             ContentEntity(ContentType.UserRemove)
 
         @JsonClass(generateAdapter = true)
         data class UserJoined(
-            val user: UserEntity
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String
         ) : ContentEntity(ContentType.UserJoined)
 
         @JsonClass(generateAdapter = true)
         data class UserLeft(
-            val user: UserEntity
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String
         ) : ContentEntity(ContentType.UserLeft)
 
         @JsonClass(generateAdapter = true)
         data class UserKicked(
-            val user: UserEntity
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String
         ) : ContentEntity(ContentType.UserKicked)
 
         @JsonClass(generateAdapter = true)
         data class UserBanned(
-            val user: UserEntity
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String,
         ) : ContentEntity(ContentType.UserBanned)
 
         @JsonClass(generateAdapter = true)
         data class ChannelRenamed(
             val name: String,
-            val renamedBy: UserEntity
+            val renamedById: String,
+            val renamedByUsername: String,
+            val renamedByAvatarUrl: String
         ) :
             ContentEntity(ContentType.ChannelRenamed)
 
         @JsonClass(generateAdapter = true)
         data class ChannelDescriptionChanged(
-            val changedBy: UserEntity
+            val changedById: String,
+            val changedByUsername: String,
+            val changedByAvatarUrl: String
         ) :
             ContentEntity(ContentType.ChannelDescriptionChanged)
 
         @JsonClass(generateAdapter = true)
         data class ChannelIconChanged(
-            val changedBy: UserEntity
+            val changedById: String,
+            val changedByUsername: String,
+            val changedByAvatarUrl: String
         ) :
             ContentEntity(ContentType.ChannelIconChanged)
     }

@@ -6,37 +6,32 @@
 
 package chat.revolt.data.local.mappers.channel
 
-import chat.revolt.core.mapper.EntityMapper
 import chat.revolt.data.local.entity.channel.ChannelEntity
 import chat.revolt.data.local.mappers.AttachmentEntityMapper
+import chat.revolt.data.local.mappers.EntityDomainMapper
 import chat.revolt.data.remote.dto.channel.ChannelType
 import chat.revolt.domain.models.channel.Channel
-import chat.revolt.domain.repository.ServerRepository
-import chat.revolt.domain.repository.UserRepository
 
-class ChannelEntityMapper(
-    private val userRepository: UserRepository,
-    private val attachmentMapper: AttachmentEntityMapper,
-    private val serverRepository: ServerRepository
-) : EntityMapper<ChannelEntity, Channel> {
+class ChannelEntityMapper(private val attachmentMapper: AttachmentEntityMapper) :
+    EntityDomainMapper<ChannelEntity, Channel> {
 
-    override suspend fun mapToDomain(from: ChannelEntity): Channel {
+    override fun mapToDomain(from: ChannelEntity): Channel {
         return when (from.channelType) {
             ChannelType.SavedMessages -> Channel.SavedMessages(
                 id = from.id,
-                user = userRepository.getUser(from.userId!!)
+                userId = from.userId!!
             )
             ChannelType.DirectMessage -> Channel.DirectMessage(
                 id = from.id,
                 active = from.active!!,
-                recipients = userRepository.getUsers(from.recipients!!),
+                recipients = from.recipients!!,
                 lastMessageId = from.lastMessageId
             )
             ChannelType.Group -> Channel.Group(
                 id = from.id,
-                recipients = userRepository.getUsers(from.recipients!!),
+                recipients = from.recipients!!,
                 name = from.name!!,
-                owner = userRepository.getUser(from.ownerId!!),
+                ownerId = from.ownerId!!,
                 description = from.description,
                 lastMessageId = from.lastMessageId,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
@@ -45,7 +40,7 @@ class ChannelEntityMapper(
             )
             ChannelType.TextChannel -> Channel.TextChannel(
                 id = from.id,
-                server = serverRepository.getServer(from.server!!),
+                serverId = from.server!!,
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
@@ -56,7 +51,7 @@ class ChannelEntityMapper(
             )
             ChannelType.VoiceChannel -> Channel.VoiceChannel(
                 id = from.id,
-                server = serverRepository.getServer(from.server!!),
+                serverId = from.server!!,
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
@@ -67,25 +62,25 @@ class ChannelEntityMapper(
         }
     }
 
-    override suspend fun mapToEntity(from: Channel): ChannelEntity {
+    override fun mapToEntity(from: Channel): ChannelEntity {
         return when (from) {
             is Channel.SavedMessages -> ChannelEntity(
                 id = from.id,
-                userId = from.user.id,
+                userId = from.userId,
                 channelType = ChannelType.SavedMessages
             )
             is Channel.DirectMessage -> ChannelEntity(
                 id = from.id,
                 active = from.active,
-                recipients = from.recipients.map { it.id },
+                recipients = from.recipients,
                 lastMessageId = from.lastMessageId,
                 channelType = ChannelType.DirectMessage
             )
             is Channel.Group -> ChannelEntity(
                 id = from.id,
-                recipients = from.recipients.map { it.id },
+                recipients = from.recipients,
                 name = from.name,
-                ownerId = from.owner.id,
+                ownerId = from.ownerId,
                 description = from.description,
                 lastMessageId = from.lastMessageId,
                 icon = from.icon?.let { attachmentMapper.mapToEntity(it) },
@@ -95,7 +90,7 @@ class ChannelEntityMapper(
             )
             is Channel.TextChannel -> ChannelEntity(
                 id = from.id,
-                server = from.server.id,
+                server = from.serverId,
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToEntity(it) },
@@ -107,7 +102,7 @@ class ChannelEntityMapper(
             )
             is Channel.VoiceChannel -> ChannelEntity(
                 id = from.id,
-                server = from.server.id,
+                server = from.serverId,
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToEntity(it) },

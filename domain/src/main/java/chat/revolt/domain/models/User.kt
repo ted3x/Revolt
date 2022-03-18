@@ -77,3 +77,8 @@ data class User(
         )
     }
 }
+
+
+fun List<User>?.getUser(userId: String, currentUser: User) =
+    if (userId == currentUser.id) currentUser else this?.firstOrNull { it.id == userId }
+        ?: throw IllegalStateException("User with $userId id not found")

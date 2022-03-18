@@ -12,16 +12,18 @@ import kotlin.math.abs
 data class Message(
     val id: String,
     val channel: String,
-    val author: User,
+    val authorId: String,
+    val authorName: String,
+    val authorAvatarUrl: String?,
     val content: Content,
     val attachments: List<Attachment>?,
     val edited: String?,
-    val mentions: List<User>?,
+    val mentions: List<String>?,
     val replies: List<String>?,
     val masquerade: Masquerade?,
 ) {
 
-    val authorName = masquerade?.name ?: author.username
+    val author = masquerade?.name ?: authorName
     val timestamp = UlidTimeDecoder.getTimestamp(id)
 
     sealed interface SystemMessage {
@@ -36,75 +38,93 @@ data class Message(
         data class Text(val content: String) : Content(ContentType.Text)
 
         data class UserAdded(
-            val addedUser: User,
-            val addedBy: User
+            val addedUserId: String,
+            val addedUsername: String,
+            val addedBy: String,
+            val addedByUsername: String
         ) :
             Content(ContentType.UserAdded), SystemMessage {
             override val authorImageUrl: String = ""
-            override val message: String = "${addedUser.username} was added by ${addedBy.username}"
+            override val message: String = "$addedUsername was added by $addedByUsername"
         }
 
         data class UserRemove(
-            val removedUser: User,
-            val removedBy: User
+            val removedUserId: String,
+            val removedUsername: String,
+            val removedById: String,
+            val removedByUsername: String,
         ) :
             Content(ContentType.UserRemove), SystemMessage {
             override val message: String =
-                "${removedUser.username} was removed by ${removedBy.username}"
+                "$removedUsername was removed by $removedByUsername"
             override val authorImageUrl: String = ""
         }
 
         data class UserJoined(
-            val user: User
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String
         ) : Content(ContentType.UserJoined), SystemMessage {
-            override val message: String = "${user.username} joined"
-            override val authorImageUrl: String = user.avatarUrl
+            override val message: String = "$username joined"
+            override val authorImageUrl: String = userAvatarUrl
         }
 
         data class UserLeft(
-            val user: User
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String
         ) : Content(ContentType.UserLeft), SystemMessage {
-            override val message: String = "${user.username} left"
-            override val authorImageUrl: String = user.avatarUrl
+            override val message: String = "$username left"
+            override val authorImageUrl: String = userAvatarUrl
         }
 
         data class UserKicked(
-            val user: User
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String
         ) : Content(ContentType.UserKicked), SystemMessage {
-            override val message: String = "${user.username} was kicked"
-            override val authorImageUrl: String = user.avatarUrl
+            override val message: String = "$username was kicked"
+            override val authorImageUrl: String = userAvatarUrl
         }
 
         data class UserBanned(
-            val user: User
+            val userId: String,
+            val username: String,
+            val userAvatarUrl: String
         ) : Content(ContentType.UserBanned), SystemMessage {
-            override val message: String = "${user.username} was banned"
-            override val authorImageUrl: String = user.avatarUrl
+            override val message: String = "$username was banned"
+            override val authorImageUrl: String = userAvatarUrl
         }
 
         data class ChannelRenamed(
             val name: String,
-            val renamedBy: User
+            val renamedById: String,
+            val renamedByUsername: String,
+            val renamedByAvatarUrl: String,
         ) :
             Content(ContentType.ChannelRenamed), SystemMessage {
-            override val message: String = "${renamedBy.username} renamed channel to $name"
-            override val authorImageUrl: String = renamedBy.avatarUrl
+            override val message: String = "$renamedByUsername renamed channel to $name"
+            override val authorImageUrl: String = renamedByAvatarUrl
         }
 
         data class ChannelDescriptionChanged(
-            val changedBy: User
+            val changedById: String,
+            val changedByUsername: String,
+            val changedByAvatarUrl: String
         ) :
             Content(ContentType.ChannelDescriptionChanged), SystemMessage {
-            override val message: String = "${changedBy.username} changed channel description"
-            override val authorImageUrl: String = changedBy.avatarUrl
+            override val message: String = "$changedByUsername changed channel description"
+            override val authorImageUrl: String = changedByAvatarUrl
         }
 
         data class ChannelIconChanged(
-            val changedBy: User
+            val changedById: String,
+            val changedByUsername: String,
+            val changedByAvatarUrl: String
         ) :
             Content(ContentType.ChannelIconChanged), SystemMessage {
-            override val message: String = "${changedBy.username} changed channel icon"
-            override val authorImageUrl: String = changedBy.avatarUrl
+            override val message: String = "$changedByUsername changed channel icon"
+            override val authorImageUrl: String = changedByAvatarUrl
         }
     }
 
@@ -114,7 +134,7 @@ data class Message(
     )
 
     fun isDivided(previousMessage: Message): Boolean {
-        return (previousMessage.author.id != author.id || (previousMessage.author.id == author.id && abs(
+        return (previousMessage.authorId != authorId || (previousMessage.authorId == authorId && abs(
             previousMessage.timestamp - timestamp
         ) > DIVIDER_MAX_TIME))
     }
@@ -125,7 +145,9 @@ data class Message(
             Message(
                 id = "",
                 channel = "",
-                author = User.EMPTY,
+                authorId = "",
+                authorName = "",
+                authorAvatarUrl = null,
                 content = Content.Message(""),
                 attachments = null,
                 edited = null,

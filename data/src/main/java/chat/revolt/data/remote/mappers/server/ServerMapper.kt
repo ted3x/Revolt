@@ -16,8 +16,6 @@ import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.UserRepository
 
 class ServerMapper(
-    private val userRepository: UserRepository,
-    private val channelRepository: ChannelRepository,
     private val serverCategoryMapper: ServerCategoryMapper,
     private val attachmentMapper: AttachmentMapper,
     private val systemMessagesMapper: SystemMessagesMapper,
@@ -27,10 +25,10 @@ class ServerMapper(
     suspend fun mapToDomain(from: ServerDto): Server {
         return Server(
             id = from.id,
-            owner = userRepository.getUser(userId = from.owner),
+            ownerId = from.owner,
             name = from.name,
             description = from.description,
-            channels = from.channels.map { channelRepository.getChannel(it) },
+            channels = from.channels,
             categories = from.categories.map { serverCategoryMapper.mapToDomain(it) },
             systemMessages = systemMessagesMapper.mapToDomain(from.systemMessages),
             roles = from.roles.map { serverRolesMapper.mapToDomain(it.key, it.value) },

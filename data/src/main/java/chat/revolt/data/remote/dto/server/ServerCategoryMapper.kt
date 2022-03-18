@@ -9,13 +9,13 @@ package chat.revolt.data.remote.dto.server
 import chat.revolt.domain.models.server.Server
 import chat.revolt.domain.repository.ChannelRepository
 
-class ServerCategoryMapper(private val channelRepository: ChannelRepository) {
+class ServerCategoryMapper {
 
-    suspend fun mapToDomain(from: ServerDto.CategoryDto): Server.Category {
+    fun mapToDomain(from: ServerDto.CategoryDto): Server.Category {
         return Server.Category(
             id = from.id,
             title = from.title,
-            channels = from.channels.map { channelRepository.getChannel(it) }
+            channels = from.channels
         )
     }
 
@@ -23,7 +23,7 @@ class ServerCategoryMapper(private val channelRepository: ChannelRepository) {
         return ServerDto.CategoryDto(
             id = from.id,
             title = from.title,
-            channels = from.channels.map { it.id }
+            channels = from.channels
         )
     }
 }

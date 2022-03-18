@@ -34,7 +34,7 @@ class DatabaseConverters {
         Types.newParameterizedType(List::class.java, AttachmentEntity::class.java)
     private val attachmentListAdapter = moshi.adapter<List<AttachmentEntity>>(attachmentType)
 
-    private val mapStringToIntAdapter: JsonAdapter<Map<String, Integer>> =
+    private val mapStringToIntAdapter: JsonAdapter<Map<String, Int>> =
         moshi.adapter(
             Types.newParameterizedType(
                 Map::class.java,
@@ -116,12 +116,12 @@ class DatabaseConverters {
     }
 
     @TypeConverter
-    fun stringToMapStringToInt(string: String): Map<String, Integer>? {
+    fun stringToMapStringToInt(string: String): Map<String, Int>? {
         return mapStringToIntAdapter.fromJson(string)
     }
 
     @TypeConverter
-    fun mapStringToIntToString(map: Map<String, Integer>?): String {
+    fun mapStringToIntToString(map: Map<String, Int>?): String {
         return mapStringToIntAdapter.toJson(map)
     }
 

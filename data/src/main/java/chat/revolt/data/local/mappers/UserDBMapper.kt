@@ -6,15 +6,13 @@
 
 package chat.revolt.data.local.mappers
 
-import chat.revolt.core.mapper.EntityMapper
-import chat.revolt.core.mapper.Mapper
 import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.User
 import chat.revolt.domain.models.User.Status.Companion.NOT_LOADED
 
-class UserDBMapper(private val avatarMapper: AvatarEntityMapper) : EntityMapper<UserEntity, User> {
+class UserDBMapper(private val avatarMapper: AvatarEntityMapper) : EntityDomainMapper<UserEntity, User> {
 
-    override suspend fun mapToDomain(from: UserEntity): User {
+    override fun mapToDomain(from: UserEntity): User {
         return User(
             id = from.id,
             username = from.username,
@@ -50,7 +48,7 @@ class UserDBMapper(private val avatarMapper: AvatarEntityMapper) : EntityMapper<
         return User.Bot(ownerId = this.ownerId)
     }
 
-    override suspend fun mapToEntity(from: User): UserEntity {
+    override fun mapToEntity(from: User): UserEntity {
         return UserEntity(
             id = from.id,
             username = from.username,

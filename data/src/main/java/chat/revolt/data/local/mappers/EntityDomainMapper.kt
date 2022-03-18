@@ -7,13 +7,13 @@
 package chat.revolt.data.local.mappers
 
 interface EntityDomainMapper<E, D> {
-    suspend fun mapToDomain(from: E): D
-    suspend fun mapToDomain(from: List<E>): List<D> {
+    fun mapToDomain(from: E): D
+    fun mapToDomain(from: List<E>): List<D> {
         return from.map { mapToDomain(it) }
     }
 
-    suspend fun mapToEntity(from: D): E
-    suspend fun mapToEntity(from: List<D>): List<E> {
+    fun mapToEntity(from: D): E
+    fun mapToEntity(from: List<D>): List<E> {
         return from.map { mapToEntity(it) }
     }
 }

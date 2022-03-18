@@ -9,23 +9,23 @@ package chat.revolt.data.remote.dto.server
 import chat.revolt.domain.models.server.Server
 import chat.revolt.domain.repository.ChannelRepository
 
-class SystemMessagesMapper(private val channelRepository: ChannelRepository) {
+class SystemMessagesMapper {
 
-    suspend fun mapToDomain(from: ServerDto.SystemMessageChannelsDto): Server.SystemMessageChannels {
+    fun mapToDomain(from: ServerDto.SystemMessageChannelsDto): Server.SystemMessageChannels {
         return Server.SystemMessageChannels(
-            userJoined = from.userJoined?.let { channelRepository.getChannel(it) },
-            userLeft = from.userLeft?.let { channelRepository.getChannel(it) },
-            userKicked = from.userKicked?.let { channelRepository.getChannel(it) },
-            userBanned = from.userBanned?.let { channelRepository.getChannel(it) },
+            userJoined = from.userJoined,
+            userLeft = from.userLeft,
+            userKicked = from.userKicked,
+            userBanned = from.userBanned,
         )
     }
 
     fun mapToDto(from: Server.SystemMessageChannels): ServerDto.SystemMessageChannelsDto {
         return ServerDto.SystemMessageChannelsDto(
-            userJoined = from.userJoined?.id,
-            userLeft = from.userLeft?.id,
-            userKicked = from.userKicked?.id,
-            userBanned = from.userBanned?.id
+            userJoined = from.userJoined,
+            userLeft = from.userLeft,
+            userKicked = from.userKicked,
+            userBanned = from.userBanned
         )
     }
 }

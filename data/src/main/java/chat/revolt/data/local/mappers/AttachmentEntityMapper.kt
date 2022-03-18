@@ -12,7 +12,7 @@ import chat.revolt.domain.models.Attachment
 class AttachmentEntityMapper(private val metadataMapper: MetadataEntityMapper) :
     EntityDomainMapper<AttachmentEntity, Attachment> {
 
-    override suspend fun mapToDomain(from: AttachmentEntity): Attachment {
+    override fun mapToDomain(from: AttachmentEntity): Attachment {
         return Attachment(
             id = from.id,
             tag = from.tag,
@@ -23,7 +23,7 @@ class AttachmentEntityMapper(private val metadataMapper: MetadataEntityMapper) :
         )
     }
 
-    override suspend fun mapToEntity(from: Attachment): AttachmentEntity {
+    override fun mapToEntity(from: Attachment): AttachmentEntity {
         return AttachmentEntity(
             id = from.id,
             tag = from.tag,

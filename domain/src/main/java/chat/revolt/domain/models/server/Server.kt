@@ -12,10 +12,10 @@ import chat.revolt.domain.models.channel.Channel
 
 data class Server(
     val id: String,
-    val owner: User,
+    val ownerId: String,
     val name: String,
     val description: String?,
-    val channels: List<Channel>,
+    val channels: List<String>,
     val categories: List<Category>?,
     val systemMessages: SystemMessageChannels?,
     val roles: List<Role>?,
@@ -30,14 +30,14 @@ data class Server(
     data class Category(
         val id: String,
         val title: String,
-        val channels: List<Channel>
+        val channels: List<String>
     )
 
     data class SystemMessageChannels(
-        val userJoined: Channel?,
-        val userLeft: Channel?,
-        val userKicked: Channel?,
-        val userBanned: Channel?,
+        val userJoined: String?,
+        val userLeft: String?,
+        val userKicked: String?,
+        val userBanned: String?,
     )
 
     data class Role(
@@ -69,7 +69,7 @@ data class Server(
 
     override fun hashCode(): Int {
         var result = id.hashCode()
-        result = 31 * result + owner.hashCode()
+        result = 31 * result + ownerId.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + channels.hashCode()
@@ -87,7 +87,7 @@ data class Server(
         other as Server
 
         if (id != other.id) return false
-        if (owner != other.owner) return false
+        if (ownerId != other.ownerId) return false
         if (name != other.name) return false
         if (description != other.description) return false
         if (channels != other.channels) return false
@@ -108,7 +108,7 @@ data class Server(
     companion object {
         val EMPTY = Server(
             id = "",
-            owner = User.EMPTY,
+            ownerId = "",
             name = "",
             description = "",
             channels = listOf(),

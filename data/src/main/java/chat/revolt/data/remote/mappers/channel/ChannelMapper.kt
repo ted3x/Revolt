@@ -13,29 +13,25 @@ import chat.revolt.domain.models.channel.Channel
 import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.domain.repository.UserRepository
 
-class ChannelMapper(
-    private val userRepository: UserRepository,
-    private val attachmentMapper: AttachmentMapper,
-    private val serverRepository: ServerRepository
-) {
+class ChannelMapper(private val attachmentMapper: AttachmentMapper) {
 
-    suspend fun mapToDomain(from: ChannelDto): Channel {
+    fun mapToDomain(from: ChannelDto): Channel {
         return when (from.channelType) {
             ChannelType.SavedMessages -> Channel.SavedMessages(
                 id = from.id,
-                user = userRepository.getUser(from.userId!!)
+                userId = from.userId!!
             )
             ChannelType.DirectMessage -> Channel.DirectMessage(
                 id = from.id,
                 active = from.active!!,
-                recipients = userRepository.getUsers(from.recipients!!),
+                recipients = from.recipients!!,
                 lastMessageId = from.lastMessageId
             )
             ChannelType.Group -> Channel.Group(
                 id = from.id,
-                recipients = userRepository.getUsers(from.recipients!!),
+                recipients = from.recipients!!,
                 name = from.name!!,
-                owner = userRepository.getUser(from.ownerId!!),
+                ownerId = from.ownerId!!,
                 description = from.description,
                 lastMessageId = from.lastMessageId,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
@@ -44,7 +40,7 @@ class ChannelMapper(
             )
             ChannelType.TextChannel -> Channel.TextChannel(
                 id = from.id,
-                server = serverRepository.getServer(from.server!!),
+                serverId = from.server!!,
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
@@ -55,7 +51,7 @@ class ChannelMapper(
             )
             ChannelType.VoiceChannel -> Channel.VoiceChannel(
                 id = from.id,
-                server = serverRepository.getServer(from.server!!),
+                serverId = from.server!!,
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
@@ -70,21 +66,21 @@ class ChannelMapper(
         return when (from) {
             is Channel.SavedMessages -> ChannelDto(
                 id = from.id,
-                userId = from.user.id,
+                userId = from.userId,
                 channelType = ChannelType.SavedMessages
             )
             is Channel.DirectMessage -> ChannelDto(
                 id = from.id,
                 active = from.active,
-                recipients = from.recipients.map { it.id },
+                recipients = from.recipients,
                 lastMessageId = from.lastMessageId,
                 channelType = ChannelType.DirectMessage
             )
             is Channel.Group -> ChannelDto(
                 id = from.id,
-                recipients = from.recipients.map { it.id },
+                recipients = from.recipients,
                 name = from.name,
-                ownerId = from.owner.id,
+                ownerId = from.ownerId,
                 description = from.description,
                 lastMessageId = from.lastMessageId,
                 icon = from.icon?.let { attachmentMapper.mapToDto(it) },
@@ -94,7 +90,7 @@ class ChannelMapper(
             )
             is Channel.TextChannel -> ChannelDto(
                 id = from.id,
-                server = from.server.id,
+                server = from.serverId,
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDto(it) },
@@ -106,7 +102,7 @@ class ChannelMapper(
             )
             is Channel.VoiceChannel -> ChannelDto(
                 id = from.id,
-                server = from.server.id,
+                server = from.serverId,
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDto(it) },
