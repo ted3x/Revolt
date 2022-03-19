@@ -27,6 +27,7 @@ class ServersViewModel(
     val servers = serversRepository.getServers()
 
     fun changeServer(serverId: String) {
+        if(currentServer.value?.id == serverId) return
         viewModelScope.launch { currentServer.value = serversRepository.getServer(serverId) }
     }
 }
