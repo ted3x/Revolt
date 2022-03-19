@@ -19,6 +19,7 @@ import chat.revolt.dashboard.databinding.DashboardFragmentBinding
 import chat.revolt.dashboard.presentation.chat_fragment.ui.ChatFragment
 import chat.revolt.dashboard.presentation.dashboard.di.dashboardModule
 import chat.revolt.dashboard.presentation.dashboard.vm.DashboardViewModel
+import chat.revolt.dashboard.presentation.servers.ui.ServersFragment
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
@@ -34,6 +35,7 @@ class DashboardFragment :
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        childFragmentManager.beginTransaction().add(binding.startPanel.id, ServersFragment()).commit()
         childFragmentManager.beginTransaction().add(binding.centerPanel.id, ChatFragment()).commit()
         return super.onCreateView(inflater, container, savedInstanceState)
     }

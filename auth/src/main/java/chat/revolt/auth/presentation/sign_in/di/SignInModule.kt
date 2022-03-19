@@ -33,7 +33,9 @@ internal val signInViewModelModule = module {
                 captchaManager = get(),
                 signInUseCase = get(),
                 revoltConfigManager = get(),
-                authenticateDataSource = get()
+                authenticateDataSource = get(),
+                serverRepository = get(),
+                channelRepository = get()
             )
         }
         scoped { PasswordValidation(resourceProvider = get()) }

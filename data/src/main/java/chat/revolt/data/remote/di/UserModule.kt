@@ -6,11 +6,16 @@
 
 package chat.revolt.data.remote.di
 
+import chat.revolt.data.local.entity.server.ServerEntity
 import chat.revolt.data.local.mappers.AttachmentEntityMapper
 import chat.revolt.data.local.mappers.AvatarEntityMapper
 import chat.revolt.data.local.mappers.MetadataEntityMapper
 import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.data.local.mappers.channel.ChannelEntityMapper
+import chat.revolt.data.local.mappers.server.ServerCategoryEntityMapper
+import chat.revolt.data.local.mappers.server.ServerEntityMapper
+import chat.revolt.data.local.mappers.server.ServerRolesEntityMapper
+import chat.revolt.data.local.mappers.server.SystemMessagesEntityMapper
 import chat.revolt.data.remote.data_source.UserDataSource
 import chat.revolt.data.remote.data_source.UserDataSourceImpl
 import chat.revolt.data.remote.data_source.channel.ChannelDataSource
@@ -99,7 +104,19 @@ val userModule = module {
             serverRolesMapper = get()
         )
     }
-    single<ServerRepository> { ServerRepositoryImpl() }
+
+    single {
+        ServerEntityMapper(
+            categoriesMapper = get(),
+            systemMessagesMapper = get(),
+            serverRolesMapper = get(),
+            attachmentEntityMapper = get()
+        )
+    }
+    single { ServerCategoryEntityMapper() }
+    single { SystemMessagesEntityMapper() }
+    single { ServerRolesEntityMapper() }
+    single<ServerRepository> { ServerRepositoryImpl(serverDao = get(), serverEntityMapper = get()) }
 
     single { ChannelEntityMapper(attachmentMapper = get()) }
     single { AttachmentEntityMapper(metadataMapper = get()) }

@@ -22,7 +22,7 @@ class ServerMapper(
     private val serverRolesMapper: ServerRolesMapper
 ) {
 
-    suspend fun mapToDomain(from: ServerDto): Server {
+    fun mapToDomain(from: ServerDto): Server {
         return Server(
             id = from.id,
             ownerId = from.owner,

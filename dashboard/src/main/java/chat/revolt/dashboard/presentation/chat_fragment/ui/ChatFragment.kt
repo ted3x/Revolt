@@ -53,7 +53,7 @@ class ChatFragment :
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
                 if (isInitial || lm.findFirstCompletelyVisibleItemPosition() < 5) {
-                    binding.chatRecyclerView.scrollToPosition(0)
+                     binding.chatRecyclerView.scrollToPosition(0)
                     isInitial = false
                 }
             }

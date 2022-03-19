@@ -12,6 +12,9 @@ import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.data.remote.mappers.user.UserMapper
 import chat.revolt.domain.models.User
 import chat.revolt.domain.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.mapLatest
 import java.lang.IllegalStateException
 import java.lang.RuntimeException
 
@@ -39,6 +42,10 @@ class UserRepositoryImpl(
 
     override suspend fun getCurrentUser(): User {
         return userDao.getCurrentUser()?.let { userEntityMapper.mapToDomain(it) } ?: throw RuntimeException("User isn't logged in yet!")
+    }
+
+    override fun getCurrentUserAsFlow(): Flow<User> {
+        return userDao.getCurrentUserAsFlow()?.let { it.mapLatest { userEntityMapper.mapToDomain(it) }} ?: throw RuntimeException("User isn't logged in yet!")
     }
 
     override suspend fun getMessageAuthor(authorId: String, users: List<User>?): User {

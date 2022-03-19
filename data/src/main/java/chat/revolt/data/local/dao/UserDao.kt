@@ -11,6 +11,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import chat.revolt.data.local.entity.user.UserEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
@@ -20,6 +21,9 @@ interface UserDao {
 
     @Query("SELECT * FROM user WHERE relationship LIKE :relationship")
     suspend fun getCurrentUser(relationship: UserEntity.RelationshipStatus = UserEntity.RelationshipStatus.User): UserEntity?
+
+    @Query("SELECT * FROM user WHERE relationship LIKE :relationship")
+    fun getCurrentUserAsFlow(relationship: UserEntity.RelationshipStatus = UserEntity.RelationshipStatus.User): Flow<UserEntity>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addUser(user: UserEntity)

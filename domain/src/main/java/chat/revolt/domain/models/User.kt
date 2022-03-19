@@ -6,6 +6,8 @@
 
 package chat.revolt.domain.models
 
+import chat.revolt.domain.R
+
 data class User(
     val id: String,
     val username: String,
@@ -54,11 +56,11 @@ data class User(
         }
     }
 
-    enum class Presence {
-        Busy,
-        Idle,
-        Invisible,
-        Online
+    enum class Presence(val color: String) {
+        Busy(color = "#FF0000"),
+        Idle(color = "#FF0000"),
+        Invisible(color = "#FF0000"),
+        Online(color = "#FF0000")
     }
 
     data class Bot(val ownerId: String)

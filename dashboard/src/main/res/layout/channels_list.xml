@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 3/19/22, 2:45 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 3/19/22, 2:45 PM
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/serverBanner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_p_120"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@color/accent" />
+
+    <ImageView
+        android:id="@+id/serverBadge"
+        android:layout_width="@dimen/dimen_p_20"
+        android:layout_height="@dimen/dimen_p_20"
+        app:layout_constraintBottom_toBottomOf="@id/serverName"
+        app:layout_constraintEnd_toStartOf="@id/serverName"
+        android:layout_marginHorizontal="@dimen/dimen_p_10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/serverName"
+        tools:src="@drawable/ic_revolt_badge" />
+
+    <TextView
+        android:id="@+id/serverName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@id/serverBanner"
+        android:layout_marginBottom="@dimen/dimen_p_10"
+        android:textSize="@dimen/dimen_sp_18"
+        app:layout_constraintStart_toEndOf="@id/serverBadge"
+        tools:text="Tedex's server" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingHorizontal="@dimen/dimen_p_10"
+        app:layout_constraintTop_toBottomOf="@id/serverBanner"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

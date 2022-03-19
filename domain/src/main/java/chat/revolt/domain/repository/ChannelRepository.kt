@@ -11,4 +11,5 @@ import chat.revolt.domain.models.channel.Channel
 interface ChannelRepository {
     suspend fun getChannel(channelId: String): Channel
     suspend fun fetchChannel(channelId: String): Channel?
+    suspend fun addChannels(channels: List<Channel>)
 }

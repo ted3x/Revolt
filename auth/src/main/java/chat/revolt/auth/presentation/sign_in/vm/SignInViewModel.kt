@@ -25,6 +25,8 @@ import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.core_navigation.features.Feature
 import chat.revolt.core_navigation.features.dashboard.DashboardStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
+import chat.revolt.domain.repository.ChannelRepository
+import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.socket.client.data.AuthenticateEvent
 import chat.revolt.socket.server.authenticate.AuthenticateDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +41,9 @@ class SignInViewModel(
     private val emailValidation: EmailValidation,
     private val captchaManager: CaptchaManager,
     private val signInUseCase: SignInUseCase,
-    private val authenticateDataSource: AuthenticateDataSource
+    private val authenticateDataSource: AuthenticateDataSource,
+    private val serverRepository: ServerRepository,
+    private val channelRepository: ChannelRepository
 ) :
     BaseViewModel() {
 
@@ -118,13 +122,13 @@ class SignInViewModel(
 
     private fun authenticateWebSocket() {
         authenticateDataSource.authenticate(AuthenticateEvent(token = "-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE"))
-//        viewModelScope.launch {
-//            authenticateDataSource.onReady().collectLatest {
-//                println(it)
-//                navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
-//            }
-//        }
-        navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+        viewModelScope.launch {
+            authenticateDataSource.onReady().collectLatest {
+                channelRepository.addChannels(it.channels)
+                serverRepository.addServers(it.servers)
+                navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+            }
+        }
 
     }
 

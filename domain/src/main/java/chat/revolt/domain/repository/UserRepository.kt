@@ -7,11 +7,13 @@
 package chat.revolt.domain.repository
 
 import chat.revolt.domain.models.User
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
     suspend fun getUser(userId: String): User
     suspend fun getCurrentUser(): User
+    fun getCurrentUserAsFlow(): Flow<User>
     suspend fun getMessageAuthor(authorId: String, users: List<User>?): User
     suspend fun getUsers(userIds: List<String>): List<User>
     suspend fun addUser(user: User)

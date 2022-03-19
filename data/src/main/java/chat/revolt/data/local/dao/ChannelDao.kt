@@ -8,14 +8,18 @@ package chat.revolt.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import chat.revolt.data.local.entity.channel.ChannelEntity
 
 @Dao
 interface ChannelDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addChannel(channelEntity: ChannelEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addChannels(channels: List<ChannelEntity>)
 
     @Query("SELECT * FROM channel WHERE id LIKE :channelId")
     suspend fun getChannel(channelId: String): ChannelEntity?

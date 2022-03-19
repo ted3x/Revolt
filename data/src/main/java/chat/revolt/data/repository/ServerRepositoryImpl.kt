@@ -6,11 +6,23 @@
 
 package chat.revolt.data.repository
 
+import chat.revolt.data.local.dao.ServerDao
+import chat.revolt.data.local.mappers.server.ServerEntityMapper
 import chat.revolt.domain.models.server.Server
 import chat.revolt.domain.repository.ServerRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapLatest
 
-class ServerRepositoryImpl: ServerRepository {
-    override suspend fun getServer(serverId: String): Server {
-        return Server.EMPTY
+class ServerRepositoryImpl(private val serverDao: ServerDao, private val serverEntityMapper: ServerEntityMapper): ServerRepository {
+    override suspend fun getServer(serverId: String): Server? {
+        return serverDao.getServer(serverId)?.let { serverEntityMapper.mapToDomain(it) }
+    }
+
+    override suspend fun addServers(servers: List<Server>) {
+        serverDao.addServers(servers.map { serverEntityMapper.mapToEntity(it) })
+    }
+
+    override fun getServers(): Flow<List<Server>> {
+        return serverDao.getServers().mapLatest { serverEntityMapper.mapToDomain(it) }
     }
 }

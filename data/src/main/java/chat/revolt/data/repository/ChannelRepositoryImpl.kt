@@ -33,4 +33,8 @@ class ChannelRepositoryImpl(
             ?.let { channelMapper.mapToDomain(it) }
         return channel?.also { channelDao.addChannel(channelEntityMapper.mapToEntity(it)) }
     }
+
+    override suspend fun addChannels(channels: List<Channel>) {
+        channelDao.addChannels(channels.map { channelEntityMapper.mapToEntity(it) })
+    }
 }

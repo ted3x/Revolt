@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 3/18/22, 11:11 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 3/18/22, 11:11 PM
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <include
+        android:id="@+id/profile"
+        layout="@layout/profile_item"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="@dimen/dimen_p_30"
+        android:layout_height="@dimen/dimen_p_3"
+        android:layout_marginVertical="@dimen/dimen_p_10"
+        android:background="@color/tertiary_foreground"
+        android:paddingHorizontal="@dimen/dimen_p_10"
+        app:layout_constraintBottom_toTopOf="@id/serversRv"
+        app:layout_constraintEnd_toEndOf="@id/serversRv"
+        app:layout_constraintStart_toStartOf="@id/serversRv"
+        app:layout_constraintTop_toBottomOf="@id/profile" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/serversRv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:itemCount="20"
+        tools:listitem="@layout/server_item" />
+
+    <include
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        layout="@layout/channels_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/serversRv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

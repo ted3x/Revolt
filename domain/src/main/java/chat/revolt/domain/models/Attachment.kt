@@ -13,4 +13,10 @@ data class Attachment(
     val filename: String,
     val metadata: Metadata,
     val contentType: String?
-)
+) {
+    val url get() = ATTACHMENT_BASE_URL + id
+
+    companion object {
+        private const val ATTACHMENT_BASE_URL = "https://autumn.revolt.chat/icons/"
+    }
+}

@@ -7,8 +7,11 @@
 package chat.revolt.domain.repository
 
 import chat.revolt.domain.models.server.Server
+import kotlinx.coroutines.flow.Flow
 
 interface ServerRepository {
 
-    suspend fun getServer(serverId: String): Server
+    suspend fun addServers(servers: List<Server>)
+    suspend fun getServer(serverId: String): Server?
+    fun getServers(): Flow<List<Server>>
 }

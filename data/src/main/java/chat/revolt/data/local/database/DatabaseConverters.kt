@@ -9,6 +9,7 @@ package chat.revolt.data.local.database
 import androidx.room.TypeConverter
 import chat.revolt.data.local.entity.AttachmentEntity
 import chat.revolt.data.local.entity.message.MessageEntity
+import chat.revolt.data.local.entity.server.ServerEntity
 import chat.revolt.data.local.entity.user.UserEntity
 import chat.revolt.domain.models.ContentType
 import com.squareup.moshi.JsonAdapter
@@ -42,6 +43,20 @@ class DatabaseConverters {
                 Integer::class.java
             )
         )
+
+    private val serverCategoryType =
+        Types.newParameterizedType(List::class.java, ServerEntity.Category::class.java)
+    private val serverCategoriesAdapter = moshi.adapter<List<ServerEntity.Category>>(serverCategoryType)
+    private val systemMessagesAdapter =
+        moshi.adapter(ServerEntity.SystemMessageChannels::class.java)
+    private val rolesType = Types.newParameterizedType(
+        Map::class.java,
+        String::class.java,
+        ServerEntity.Role::class.java
+    )
+    private val rolesAdapter = moshi.adapter<Map<String, ServerEntity.Role>>(rolesType)
+    private val intArrayAdapter = moshi.adapter(IntArray::class.java)
+
     @TypeConverter
     fun stringToRelationships(string: String): List<UserEntity.Relationship> {
         return relationshipAdapter.fromJson(string).orEmpty()
@@ -126,6 +141,46 @@ class DatabaseConverters {
     }
 
     @TypeConverter
+    fun stringToServerCategory(string: String): List<ServerEntity.Category> {
+        return serverCategoriesAdapter.fromJson(string)!!
+    }
+
+    @TypeConverter
+    fun serverCategoryToString(serverCategory: List<ServerEntity.Category>): String {
+        return serverCategoriesAdapter.toJson(serverCategory)
+    }
+
+    @TypeConverter
+    fun stringToSystemMessages(string: String): ServerEntity.SystemMessageChannels {
+        return systemMessagesAdapter.fromJson(string)!!
+    }
+
+    @TypeConverter
+    fun systemMessagesToString(systemMessages: ServerEntity.SystemMessageChannels): String {
+        return systemMessagesAdapter.toJson(systemMessages)
+    }
+
+    @TypeConverter
+    fun stringToRoles(string: String): Map<String, ServerEntity.Role> {
+        return rolesAdapter.fromJson(string)!!
+    }
+
+    @TypeConverter
+    fun rolesToString(roles: Map<String, ServerEntity.Role>): String {
+        return rolesAdapter.toJson(roles)
+    }
+
+    @TypeConverter
+    fun stringToIntArray(string: String): IntArray {
+        return intArrayAdapter.fromJson(string)!!
+    }
+
+    @TypeConverter
+    fun intArrayToString(array: IntArray): String {
+        return intArrayAdapter.toJson(array)
+    }
+
+    @TypeConverter
     fun contentToString(content: MessageEntity.ContentEntity): String {
         return when (content) {
             is MessageEntity.ContentEntity.ChannelDescriptionChanged -> channelDescriptionChangedToString(
@@ -147,7 +202,8 @@ class DatabaseConverters {
     @TypeConverter
     fun stringToContent(string: String): MessageEntity.ContentEntity {
         val mapValues = mapAdapter.fromJson(string)
-        val type = mapValues?.get("type") as? String ?: throw NullPointerException("type can't be null")
+        val type =
+            mapValues?.get("type") as? String ?: throw NullPointerException("type can't be null")
         return when (ContentType.valueOf(type)) {
             ContentType.Text -> stringToText(string)
             ContentType.UserAdded -> stringToUserAdded(string)
