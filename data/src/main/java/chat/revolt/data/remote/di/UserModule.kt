@@ -12,10 +12,7 @@ import chat.revolt.data.local.mappers.AvatarEntityMapper
 import chat.revolt.data.local.mappers.MetadataEntityMapper
 import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.data.local.mappers.channel.ChannelEntityMapper
-import chat.revolt.data.local.mappers.server.ServerCategoryEntityMapper
-import chat.revolt.data.local.mappers.server.ServerEntityMapper
-import chat.revolt.data.local.mappers.server.ServerRolesEntityMapper
-import chat.revolt.data.local.mappers.server.SystemMessagesEntityMapper
+import chat.revolt.data.local.mappers.server.*
 import chat.revolt.data.remote.data_source.UserDataSource
 import chat.revolt.data.remote.data_source.UserDataSourceImpl
 import chat.revolt.data.remote.data_source.channel.ChannelDataSource
@@ -29,6 +26,7 @@ import chat.revolt.data.remote.mappers.message.AttachmentMapper
 import chat.revolt.data.remote.mappers.message.MasqueradeMapper
 import chat.revolt.data.remote.mappers.message.MessageContentMapper
 import chat.revolt.data.remote.mappers.message.MessageMapper
+import chat.revolt.data.remote.mappers.server.ServerFlagsMapper
 import chat.revolt.data.remote.mappers.server.ServerMapper
 import chat.revolt.data.remote.mappers.user.*
 import chat.revolt.data.remote.service.UserService
@@ -96,12 +94,14 @@ val userModule = module {
     single { SystemMessagesMapper() }
     single { ServerCategoryMapper() }
     single { ServerRolesMapper() }
+    single { ServerFlagsMapper() }
     single {
         ServerMapper(
             serverCategoryMapper = get(),
             attachmentMapper = get(),
             systemMessagesMapper = get(),
-            serverRolesMapper = get()
+            serverRolesMapper = get(),
+            serverFlagsMapper = get()
         )
     }
 
@@ -110,12 +110,14 @@ val userModule = module {
             categoriesMapper = get(),
             systemMessagesMapper = get(),
             serverRolesMapper = get(),
-            attachmentEntityMapper = get()
+            attachmentEntityMapper = get(),
+            serverFlagsMapper = get()
         )
     }
     single { ServerCategoryEntityMapper() }
     single { SystemMessagesEntityMapper() }
     single { ServerRolesEntityMapper() }
+    single { ServerFlagsEntityMapper() }
     single<ServerRepository> { ServerRepositoryImpl(serverDao = get(), serverEntityMapper = get()) }
 
     single { ChannelEntityMapper(attachmentMapper = get()) }

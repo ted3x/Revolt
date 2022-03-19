@@ -19,7 +19,8 @@ class ServerMapper(
     private val serverCategoryMapper: ServerCategoryMapper,
     private val attachmentMapper: AttachmentMapper,
     private val systemMessagesMapper: SystemMessagesMapper,
-    private val serverRolesMapper: ServerRolesMapper
+    private val serverRolesMapper: ServerRolesMapper,
+    private val serverFlagsMapper: ServerFlagsMapper
 ) {
 
     fun mapToDomain(from: ServerDto): Server {
@@ -36,7 +37,7 @@ class ServerMapper(
             icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
             banner = from.banner?.let { attachmentMapper.mapToDomain(it) },
             nsfw = from.nsfw,
-            flags = from.flags,
+            flags = from.flags?.let { serverFlagsMapper.map(it) },
             analytics = from.analytics,
             discoverable = from.discoverable
         )

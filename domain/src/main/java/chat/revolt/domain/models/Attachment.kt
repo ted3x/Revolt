@@ -14,9 +14,9 @@ data class Attachment(
     val metadata: Metadata,
     val contentType: String?
 ) {
-    val url get() = ATTACHMENT_BASE_URL + id
+    val url get() = "$ATTACHMENT_BASE_URL/$tag/$id?width=${metadata.width}&height=${metadata.height}"
 
     companion object {
-        private const val ATTACHMENT_BASE_URL = "https://autumn.revolt.chat/icons/"
+        private const val ATTACHMENT_BASE_URL = "https://autumn.revolt.chat"
     }
 }

@@ -41,6 +41,7 @@
         tools:listitem="@layout/server_item" />
 
     <include
+        android:id="@+id/server"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         layout="@layout/channels_list"

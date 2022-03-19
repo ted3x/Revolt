@@ -9,13 +9,15 @@ package chat.revolt.data.local.mappers.server
 import chat.revolt.data.local.entity.server.ServerEntity
 import chat.revolt.data.local.mappers.AttachmentEntityMapper
 import chat.revolt.data.local.mappers.EntityDomainMapper
+import chat.revolt.data.remote.mappers.server.ServerFlagsMapper
 import chat.revolt.domain.models.server.Server
 
 class ServerEntityMapper(
     private val categoriesMapper: ServerCategoryEntityMapper,
     private val systemMessagesMapper: SystemMessagesEntityMapper,
     private val serverRolesMapper: ServerRolesEntityMapper,
-    private val attachmentEntityMapper: AttachmentEntityMapper
+    private val attachmentEntityMapper: AttachmentEntityMapper,
+    private val serverFlagsMapper: ServerFlagsEntityMapper
 ) : EntityDomainMapper<ServerEntity, Server> {
     override fun mapToDomain(from: ServerEntity): Server {
         return Server(
@@ -31,7 +33,7 @@ class ServerEntityMapper(
             icon = from.icon?.let { attachmentEntityMapper.mapToDomain(it) },
             banner = from.banner?.let { attachmentEntityMapper.mapToDomain(it) },
             nsfw = from.nsfw,
-            flags = from.flags,
+            flags = from.flags?.let { serverFlagsMapper.mapToDomain(it) },
             analytics = from.analytics,
             discoverable = from.discoverable
         )
@@ -51,7 +53,7 @@ class ServerEntityMapper(
             icon = from.icon?.let { attachmentEntityMapper.mapToEntity(it) },
             banner = from.banner?.let { attachmentEntityMapper.mapToEntity(it) },
             nsfw = from.nsfw,
-            flags = from.flags,
+            flags = from.flags?.let { serverFlagsMapper.mapToEntity(it) },
             analytics = from.analytics,
             discoverable = from.discoverable
         )

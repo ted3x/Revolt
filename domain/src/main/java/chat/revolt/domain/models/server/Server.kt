@@ -23,7 +23,7 @@ data class Server(
     val icon: Attachment?,
     val banner: Attachment?,
     val nsfw: Boolean?,
-    val flags: Int?,
+    val flags: Flags?,
     val analytics: Boolean?,
     val discoverable: Boolean?
 ) {
@@ -65,6 +65,12 @@ data class Server(
             result = 31 * result + permissions.contentHashCode()
             return result
         }
+    }
+
+    enum class Flags {
+        None,
+        Official,
+        Verified
     }
 
     override fun hashCode(): Int {

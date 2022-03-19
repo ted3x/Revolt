@@ -1,7 +1,7 @@
 /*
- * Created by Tedo Manvelidze(ted3x) on 2/10/22, 7:48 PM
+ * Created by Tedo Manvelidze(ted3x) on 3/19/22, 3:39 PM
  * Copyright (c) 2022 . All rights reserved.
- * Last modified 2/10/22, 7:48 PM
+ * Last modified 3/19/22, 3:38 PM
  */
 
 package chat.revolt.core.mapper

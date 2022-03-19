@@ -10,12 +10,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/serverBanner"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bannerBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_p_120"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dimen_p_48"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@color/accent" />
+        app:layout_constraintBottom_toTopOf="@id/channels"
+        android:background="@color/header_background">
+
+        <ImageView
+            android:id="@+id/serverBanner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_p_120"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@android:color/white" />
+
+        <View
+            android:id="@+id/bannerShadow"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_p_40"
+            android:background="@drawable/server_name_bkg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bannerBackground"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/serverBadge"
@@ -34,16 +53,17 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="@id/serverBanner"
+        app:layout_constraintBottom_toTopOf="@id/channels"
         android:layout_marginBottom="@dimen/dimen_p_10"
         android:textSize="@dimen/dimen_sp_18"
         app:layout_constraintStart_toEndOf="@id/serverBadge"
         tools:text="Tedex's server" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/channels"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingHorizontal="@dimen/dimen_p_10"
-        app:layout_constraintTop_toBottomOf="@id/serverBanner"/>
+        app:layout_constraintTop_toBottomOf="@id/bannerBackground"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
