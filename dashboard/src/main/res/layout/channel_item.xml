@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Tedo Manvelidze(ted3x) on 3/19/22, 4:29 PM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 3/19/22, 4:29 PM
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_p_50"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background">
+
+    <ImageView
+        android:id="@+id/channelIcon"
+        android:layout_width="@dimen/dimen_p_24"
+        android:layout_height="@dimen/dimen_p_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/channelName"
+        android:layout_marginStart="@dimen/dimen_p_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/channelName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dimen_p_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/channelIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/dimen_sp_18"
+        android:textColor="@android:color/white"
+        tools:text="Information &amp; Rules"
+        android:ellipsize="end"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

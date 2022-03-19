@@ -7,9 +7,11 @@
 package chat.revolt.domain.repository
 
 import chat.revolt.domain.models.channel.Channel
+import kotlinx.coroutines.flow.Flow
 
 interface ChannelRepository {
     suspend fun getChannel(channelId: String): Channel
+    fun getChannels(serverId: String): Flow<List<Channel>>
     suspend fun fetchChannel(channelId: String): Channel?
     suspend fun addChannels(channels: List<Channel>)
 }

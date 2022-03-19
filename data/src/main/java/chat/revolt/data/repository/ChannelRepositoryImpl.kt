@@ -12,6 +12,8 @@ import chat.revolt.data.remote.data_source.channel.ChannelDataSource
 import chat.revolt.data.remote.mappers.channel.ChannelMapper
 import chat.revolt.domain.models.channel.Channel
 import chat.revolt.domain.repository.ChannelRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapLatest
 import java.lang.IllegalStateException
 
 class ChannelRepositoryImpl(
@@ -26,6 +28,10 @@ class ChannelRepositoryImpl(
         ?: throw IllegalStateException(
             "Channel with $channelId not found"
         )
+    }
+
+    override fun getChannels(serverId: String): Flow<List<Channel>> {
+        return channelDao.getChannels(serverId).mapLatest { channelEntityMapper.mapToDomain(it) }
     }
 
     override suspend fun fetchChannel(channelId: String): Channel? {

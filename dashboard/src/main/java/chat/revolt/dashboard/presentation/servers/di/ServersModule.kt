@@ -13,6 +13,12 @@ import org.koin.dsl.module
 
 val serversModule = module {
     scope<ServersFragment> {
-        viewModel { ServersViewModel(userRepository = get(), serversRepository = get()) }
+        viewModel {
+            ServersViewModel(
+                userRepository = get(),
+                serversRepository = get(),
+                channelRepository = get()
+            )
+        }
     }
 }

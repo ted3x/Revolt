@@ -11,6 +11,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import chat.revolt.data.local.entity.channel.ChannelEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChannelDao {
@@ -23,4 +24,7 @@ interface ChannelDao {
 
     @Query("SELECT * FROM channel WHERE id LIKE :channelId")
     suspend fun getChannel(channelId: String): ChannelEntity?
+
+    @Query("SELECT * FROM channel WHERE server LIKE :serverId")
+    fun getChannels(serverId: String): Flow<List<ChannelEntity>>
 }
