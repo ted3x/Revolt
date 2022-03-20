@@ -18,11 +18,13 @@ import chat.revolt.dashboard.domain.repository.MessagesRepository
 import chat.revolt.data.local.database.RevoltDatabase
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.repository.UserRepository
+import chat.revolt.domain.repository.member.MemberRepository
 
 class MessagesManager(
     private val database: RevoltDatabase,
     private val messagesRepository: MessagesRepository,
     private val userRepository: UserRepository,
+    private val memberRepository: MemberRepository,
     private val networkStateManager: NetworkStateManager
 ) {
 
@@ -56,6 +58,7 @@ class MessagesManager(
                if (isInitial) messagesRepository.clear(channelId)
                userRepository.addUsers(it.users)
                messagesRepository.addMessages(it.messages)
+               it.members?.let { members -> memberRepository.addMembers(members) }
            }
        }.onError { _, error ->
            when(error) {

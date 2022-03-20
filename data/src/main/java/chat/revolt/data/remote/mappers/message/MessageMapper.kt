@@ -25,8 +25,6 @@ class MessageMapper(
             id = from.id,
             channel = from.channel,
             authorId = from.author,
-            authorName = author.username,
-            authorAvatarUrl = author.avatarUrl,
             content = messageContentMapper.mapToDomain(from.content, users),
             attachments = from.attachments?.map { attachmentMapper.mapToDomain(it) },
             edited = from.edited?.date,

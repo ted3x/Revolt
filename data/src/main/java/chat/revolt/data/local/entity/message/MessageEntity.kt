@@ -6,13 +6,9 @@
 
 package chat.revolt.data.local.entity.message
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import chat.revolt.data.local.entity.AttachmentEntity
-import chat.revolt.data.local.entity.user.UserEntity
-import chat.revolt.data.remote.dto.AttachmentDto
-import chat.revolt.data.remote.dto.message.MessageDto
 import chat.revolt.domain.models.ContentType
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -23,8 +19,6 @@ data class MessageEntity(
     val id: String,
     val channel: String,
     val author: String,
-    val authorName: String,
-    val authorAvatarUrl: String?,
     val content: ContentEntity,
     val attachments: List<AttachmentEntity>?,
     val edited: String?,

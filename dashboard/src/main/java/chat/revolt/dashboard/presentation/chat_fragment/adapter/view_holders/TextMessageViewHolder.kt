@@ -23,9 +23,9 @@ class TextMessageViewHolder(val parent: ViewGroup) : MessageViewHolder<TextAdapt
 ) {
 
     override fun onBind(item: Message) {
-        binding.authorName.text = item.authorName
-        binding.date.text = UlidTimeDecoder.getTimestamp(item.id).toDate(binding.root.context)
-        Glide.with(binding.root.context).load(item.authorAvatarUrl).into(binding.authorImage)
+        //binding.authorName.text = item.authorName
+        binding.date.text = item.timestamp.toDate(binding.root.context)
+        //Glide.with(binding.root.context).load(item.authorAvatarUrl).into(binding.authorImage)
         binding.text.text = (item.content as? Message.Content.Message)?.content
             ?: (item.content as? Message.Content.Text)?.content
     }

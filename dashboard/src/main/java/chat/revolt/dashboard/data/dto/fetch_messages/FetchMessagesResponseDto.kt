@@ -6,6 +6,7 @@
 
 package chat.revolt.dashboard.data.dto.fetch_messages
 
+import chat.revolt.data.remote.dto.member.MemberDto
 import chat.revolt.data.remote.dto.message.MessageDto
 import chat.revolt.data.remote.dto.user.UserDto
 import com.squareup.moshi.Json
@@ -14,5 +15,6 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FetchMessagesResponseDto(
     val messages: List<MessageDto>,
-    val users: List<UserDto>
+    val users: List<UserDto>,
+    val members: List<MemberDto>?
 )

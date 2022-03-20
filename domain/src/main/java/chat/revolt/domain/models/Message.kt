@@ -13,17 +13,14 @@ data class Message(
     val id: String,
     val channel: String,
     val authorId: String,
-    val authorName: String,
-    val authorAvatarUrl: String?,
     val content: Content,
     val attachments: List<Attachment>?,
     val edited: String?,
     val mentions: List<String>?,
     val replies: List<String>?,
-    val masquerade: Masquerade?,
+    val masquerade: Masquerade?
 ) {
 
-    val author = masquerade?.name ?: authorName
     val timestamp = UlidTimeDecoder.getTimestamp(id)
 
     sealed interface SystemMessage {
@@ -146,8 +143,6 @@ data class Message(
                 id = "",
                 channel = "",
                 authorId = "",
-                authorName = "",
-                authorAvatarUrl = null,
                 content = Content.Message(""),
                 attachments = null,
                 edited = null,

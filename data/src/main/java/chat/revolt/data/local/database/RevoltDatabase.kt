@@ -12,6 +12,7 @@ import androidx.room.TypeConverters
 import chat.revolt.data.local.dao.*
 import chat.revolt.data.local.entity.account.AccountEntity
 import chat.revolt.data.local.entity.channel.ChannelEntity
+import chat.revolt.data.local.entity.member.MemberEntity
 import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.entity.server.ServerEntity
 import chat.revolt.data.local.entity.user.UserEntity
@@ -19,7 +20,7 @@ import chat.revolt.data.local.entity.user.UserEntity
 @Database(
     version = 1,
     exportSchema = false,
-    entities = [UserEntity::class, AccountEntity::class, ChannelEntity::class, MessageEntity::class, ServerEntity::class]
+    entities = [UserEntity::class, AccountEntity::class, ChannelEntity::class, MessageEntity::class, ServerEntity::class, MemberEntity::class]
 )
 @TypeConverters(DatabaseConverters::class)
 abstract class RevoltDatabase : RoomDatabase() {
@@ -28,4 +29,5 @@ abstract class RevoltDatabase : RoomDatabase() {
     abstract fun channelDao(): ChannelDao
     abstract fun messageDao(): MessageDao
     abstract fun serverDao(): ServerDao
+    abstract fun membersDao(): MemberDao
 }

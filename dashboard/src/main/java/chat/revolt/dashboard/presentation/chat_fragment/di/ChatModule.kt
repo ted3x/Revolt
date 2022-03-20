@@ -25,7 +25,7 @@ val chatModule = module {
     scope<ChatFragment> {
         scoped<ChannelService> { get<Retrofit>().create(ChannelService::class.java) }
         scoped<ChannelDataSource> { ChannelDataSourceImpl(service = get()) }
-        scoped { FetchMessageMapper(userMapper = get(), messageMapper = get()) }
+        scoped { FetchMessageMapper(userMapper = get(), messageMapper = get(), memberMapper = get()) }
         scoped { MessageDBMapper(userDBMapper = get(), userRepository = get(), attachmentEntityMapper = get()) }
         scoped {
             SendMessageMapper(
@@ -48,7 +48,8 @@ val chatModule = module {
                 messagesRepository = get(),
                 userRepository = get(),
                 database = get(),
-                networkStateManager = get()
+                networkStateManager = get(),
+                memberRepository = get()
             )
         }
         viewModel {

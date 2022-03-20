@@ -18,4 +18,5 @@ val databaseModule = module {
     single { get<RevoltDatabase>().channelDao() }
     single { get<RevoltDatabase>().messageDao() }
     single { get<RevoltDatabase>().serverDao() }
+    single { get<RevoltDatabase>().membersDao() }
 }

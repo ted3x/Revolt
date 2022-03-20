@@ -12,6 +12,7 @@ import chat.revolt.data.local.mappers.AvatarEntityMapper
 import chat.revolt.data.local.mappers.MetadataEntityMapper
 import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.data.local.mappers.channel.ChannelEntityMapper
+import chat.revolt.data.local.mappers.member.MemberEntityMapper
 import chat.revolt.data.local.mappers.server.*
 import chat.revolt.data.remote.data_source.UserDataSource
 import chat.revolt.data.remote.data_source.UserDataSourceImpl
@@ -22,6 +23,7 @@ import chat.revolt.data.remote.dto.server.ServerRolesMapper
 import chat.revolt.data.remote.dto.server.SystemMessagesMapper
 import chat.revolt.data.remote.mappers.MetadataMapper
 import chat.revolt.data.remote.mappers.channel.ChannelMapper
+import chat.revolt.data.remote.mappers.member.MemberMapper
 import chat.revolt.data.remote.mappers.message.AttachmentMapper
 import chat.revolt.data.remote.mappers.message.MasqueradeMapper
 import chat.revolt.data.remote.mappers.message.MessageContentMapper
@@ -34,11 +36,13 @@ import chat.revolt.data.remote.service.channel.ChannelService
 import chat.revolt.data.repository.ChannelRepositoryImpl
 import chat.revolt.data.repository.ServerRepositoryImpl
 import chat.revolt.data.repository.UserRepositoryImpl
+import chat.revolt.data.repository.member.MemberRepositoryImpl
 import chat.revolt.domain.interactors.AddUserInDbUseCase
 import chat.revolt.domain.interactors.GetUserUseCase
 import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.domain.repository.UserRepository
+import chat.revolt.domain.repository.member.MemberRepository
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -142,4 +146,8 @@ val userModule = module {
 
     single { GetUserUseCase(repository = get()) }
     single { AddUserInDbUseCase(repository = get()) }
+
+    single { MemberMapper(attachmentMapper = get()) }
+    single { MemberEntityMapper(attachmentEntityMapper = get()) }
+    single<MemberRepository> { MemberRepositoryImpl(memberDao = get(), memberEntityMapper = get()) }
 }
