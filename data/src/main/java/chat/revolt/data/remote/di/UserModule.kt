@@ -118,7 +118,13 @@ val userModule = module {
     single { SystemMessagesEntityMapper() }
     single { ServerRolesEntityMapper() }
     single { ServerFlagsEntityMapper() }
-    single<ServerRepository> { ServerRepositoryImpl(serverDao = get(), serverEntityMapper = get()) }
+    single<ServerRepository> {
+        ServerRepositoryImpl(
+            serverDao = get(),
+            serverEntityMapper = get(),
+            serverCategoryMapper = get()
+        )
+    }
 
     single { ChannelEntityMapper(attachmentMapper = get()) }
     single { AttachmentEntityMapper(metadataMapper = get()) }

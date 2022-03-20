@@ -30,7 +30,7 @@ class ServersAdapter(private val onServerClick: (serverId: String) -> Unit): Lis
             }
 
             override fun areContentsTheSame(oldItem: Server, newItem: Server): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id && oldItem.icon == newItem.icon
             }
         }
     }

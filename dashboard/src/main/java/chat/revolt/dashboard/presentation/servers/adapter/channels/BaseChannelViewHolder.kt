@@ -9,11 +9,10 @@ package chat.revolt.dashboard.presentation.servers.adapter.channels
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import chat.revolt.domain.models.channel.Channel
-import chat.revolt.domain.models.server.Server
+import chat.revolt.dashboard.presentation.servers.adapter.ChannelUiItem
 
-abstract class BaseChannelViewHolder<VB: ViewBinding, T: Channel>(protected val binding: VB): RecyclerView.ViewHolder(binding.root) {
+abstract class BaseChannelViewHolder<VB: ViewBinding, T: ChannelUiItem>(protected val binding: VB): RecyclerView.ViewHolder(binding.root) {
 
     val context: Context = binding.root.context
-    abstract fun onBind(channel: T)
+    abstract fun onBind(item: T)
 }

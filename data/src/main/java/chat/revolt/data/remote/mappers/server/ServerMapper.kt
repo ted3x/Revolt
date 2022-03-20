@@ -30,7 +30,7 @@ class ServerMapper(
             name = from.name,
             description = from.description,
             channels = from.channels,
-            categories = from.categories.map { serverCategoryMapper.mapToDomain(it) },
+            categories = from.categories.map { serverCategoryMapper.mapToDomain(it.copy(channels = it.channels.filter { it in from.channels })) },
             systemMessages = systemMessagesMapper.mapToDomain(from.systemMessages),
             roles = from.roles.map { serverRolesMapper.mapToDomain(it.key, it.value) },
             defaultPermissions = from.defaultPermissions,
@@ -39,7 +39,8 @@ class ServerMapper(
             nsfw = from.nsfw,
             flags = from.flags?.let { serverFlagsMapper.map(it) },
             analytics = from.analytics,
-            discoverable = from.discoverable
+            discoverable = from.discoverable,
+            selectedChannelId = null
         )
     }
 }

@@ -61,7 +61,7 @@ class ChatFragment :
         binding.chatRecyclerView.addItemDecoration(MessagesDecorator())
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
-        viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
+        //viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
         lifecycleScope.launchWhenCreated {
             viewModel.initialMessages.collectLatest(adapter::setList)
         }

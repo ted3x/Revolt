@@ -1,0 +1,15 @@
+<!--
+  ~ Created by Tedo Manvelidze(ted3x) on 3/20/22, 12:52 AM
+  ~ Copyright (c) 2022 . All rights reserved.
+  ~ Last modified 3/20/22, 12:51 AM
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+  <path
+      android:pathData="M13.5775,7.7442L10,11.3217L6.4225,7.7442L5.2442,8.9225L10,13.6783L14.7558,8.9225L13.5775,7.7442Z"
+      android:fillColor="@android:color/white"/>
+</vector>

@@ -13,5 +13,8 @@ interface ServerRepository {
 
     suspend fun addServers(servers: List<Server>)
     suspend fun getServer(serverId: String): Server?
+    fun getServerAsFlow(serverId: String): Flow<Server>
     fun getServers(): Flow<List<Server>>
+    suspend fun updateCategory(serverId: String, categories: List<Server.Category>)
+    suspend fun updateSelectedChannel(serverId: String, channelId: String)
 }

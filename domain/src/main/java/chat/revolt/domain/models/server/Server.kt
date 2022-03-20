@@ -25,12 +25,14 @@ data class Server(
     val nsfw: Boolean?,
     val flags: Flags?,
     val analytics: Boolean?,
-    val discoverable: Boolean?
+    val discoverable: Boolean?,
+    val selectedChannelId: String?
 ) {
     data class Category(
         val id: String,
         val title: String,
-        val channels: List<String>
+        val channels: List<String>,
+        var isVisible: Boolean?
     )
 
     data class SystemMessageChannels(
@@ -73,19 +75,6 @@ data class Server(
         Verified
     }
 
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + ownerId.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + channels.hashCode()
-        result = 31 * result + categories.hashCode()
-        result = 31 * result + systemMessages.hashCode()
-        result = 31 * result + roles.hashCode()
-        result = 31 * result + defaultPermissions.contentHashCode()
-        return result
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -107,8 +96,29 @@ data class Server(
         if (flags != other.flags) return false
         if (analytics != other.analytics) return false
         if (discoverable != other.discoverable) return false
+        if (selectedChannelId != other.selectedChannelId) return false
 
         return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + ownerId.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + (description?.hashCode() ?: 0)
+        result = 31 * result + channels.hashCode()
+        result = 31 * result + (categories?.hashCode() ?: 0)
+        result = 31 * result + (systemMessages?.hashCode() ?: 0)
+        result = 31 * result + (roles?.hashCode() ?: 0)
+        result = 31 * result + defaultPermissions.contentHashCode()
+        result = 31 * result + (icon?.hashCode() ?: 0)
+        result = 31 * result + (banner?.hashCode() ?: 0)
+        result = 31 * result + (nsfw?.hashCode() ?: 0)
+        result = 31 * result + (flags?.hashCode() ?: 0)
+        result = 31 * result + (analytics?.hashCode() ?: 0)
+        result = 31 * result + (discoverable?.hashCode() ?: 0)
+        result = 31 * result + (selectedChannelId?.hashCode() ?: 0)
+        return result
     }
 
     companion object {
@@ -127,7 +137,8 @@ data class Server(
             nsfw = null,
             flags = null,
             analytics = null,
-            discoverable = null
+            discoverable = null,
+            selectedChannelId = null
         )
     }
 }

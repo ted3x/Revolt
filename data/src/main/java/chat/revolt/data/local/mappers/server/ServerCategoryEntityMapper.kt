@@ -15,7 +15,8 @@ class ServerCategoryEntityMapper: EntityDomainMapper<ServerEntity.Category, Serv
         return Server.Category(
             id = from.id,
             title = from.title,
-            channels = from.channels
+            channels = from.channels,
+            isVisible = from.isVisible
         )
     }
 
@@ -23,7 +24,8 @@ class ServerCategoryEntityMapper: EntityDomainMapper<ServerEntity.Category, Serv
         return ServerEntity.Category(
             id = from.id,
             title = from.title,
-            channels = from.channels
+            channels = from.channels,
+            isVisible = from.isVisible ?: true
         )
     }
 }

@@ -35,7 +35,8 @@ class ServerEntityMapper(
             nsfw = from.nsfw,
             flags = from.flags?.let { serverFlagsMapper.mapToDomain(it) },
             analytics = from.analytics,
-            discoverable = from.discoverable
+            discoverable = from.discoverable,
+            selectedChannelId = from.selectedChannelId
         )
     }
 
@@ -55,7 +56,8 @@ class ServerEntityMapper(
             nsfw = from.nsfw,
             flags = from.flags?.let { serverFlagsMapper.mapToEntity(it) },
             analytics = from.analytics,
-            discoverable = from.discoverable
+            discoverable = from.discoverable,
+            selectedChannelId = from.selectedChannelId
         )
     }
 }

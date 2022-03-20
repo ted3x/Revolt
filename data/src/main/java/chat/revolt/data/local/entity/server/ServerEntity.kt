@@ -6,6 +6,7 @@
 
 package chat.revolt.data.local.entity.server
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import chat.revolt.data.local.entity.AttachmentEntity
@@ -29,14 +30,16 @@ data class ServerEntity(
     val nsfw: Boolean?,
     val flags: Int?,
     val analytics: Boolean?,
-    val discoverable: Boolean?
+    val discoverable: Boolean?,
+    val selectedChannelId: String?
 ) {
 
     @JsonClass(generateAdapter = true)
     data class Category(
         val id: String,
         val title: String,
-        val channels: List<String>
+        val channels: List<String>,
+        val isVisible: Boolean
     )
 
     @JsonClass(generateAdapter = true)

@@ -22,6 +22,15 @@ interface ServerDao {
     @Query("SELECT * FROM server where id LIKE :serverId LIMIT 1")
     suspend fun getServer(serverId: String): ServerEntity?
 
+    @Query("SELECT * FROM server where id LIKE :serverId LIMIT 1")
+    fun getServerAsFlow(serverId: String): Flow<ServerEntity>
+
     @Query("SELECT * FROM server")
     fun getServers(): Flow<List<ServerEntity>>
+
+    @Query("UPDATE server SET categories = :categories WHERE id LIKE :serverId")
+    suspend fun updateCategory(serverId: String, categories: List<ServerEntity.Category>)
+
+    @Query("UPDATE server SET selectedChannelId = :chanenlId WHERE id LIKE :serverId")
+    suspend fun updateSelectedChannel(serverId: String, chanenlId: String)
 }

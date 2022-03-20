@@ -9,39 +9,55 @@ package chat.revolt.dashboard.presentation.servers.adapter.channels
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import chat.revolt.domain.models.channel.Channel
+import chat.revolt.dashboard.presentation.servers.adapter.ChannelUiItem
 
-class ChannelsAdapter : ListAdapter<Channel, BaseChannelViewHolder<*, in Channel>>(COMPARATOR) {
+class ChannelsAdapter(
+    private val onCategoryVisibilityChange: (categoryId: String, isVisible: Boolean) -> Unit,
+    private val onChannelClick: (channelId: String) -> Unit
+) :
+    ListAdapter<ChannelUiItem, BaseChannelViewHolder<*, in ChannelUiItem>>(COMPARATOR) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseChannelViewHolder<*, in Channel> {
+    ): BaseChannelViewHolder<*, in ChannelUiItem> {
         return when (viewType) {
-            TEXT -> TextChannelViewHolder(parent) as BaseChannelViewHolder<*, in Channel>
-            else -> VoiceChannelViewHolder(parent) as BaseChannelViewHolder<*, in Channel>
+            CHANNEL -> ChannelViewHolder(
+                parent,
+                onChannelClick
+            ) as BaseChannelViewHolder<*, in ChannelUiItem>
+            else -> CategoryViewHolder(
+                parent,
+                onCategoryVisibilityChange
+            ) as BaseChannelViewHolder<*, in ChannelUiItem>
         }
     }
 
-    override fun onBindViewHolder(holder: BaseChannelViewHolder<*, in Channel>, position: Int) {
+    override fun onBindViewHolder(
+        holder: BaseChannelViewHolder<*, in ChannelUiItem>,
+        position: Int
+    ) {
         holder.onBind(getItem(position))
     }
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
-        return if (item is Channel.VoiceChannel) VOICE else TEXT
+        return if (item is ChannelUiItem.Channel) 4 else 3
     }
 
     companion object {
 
-        private const val TEXT = 4
-        private const val VOICE = 5
-        private val COMPARATOR = object : DiffUtil.ItemCallback<Channel>() {
-            override fun areItemsTheSame(oldItem: Channel, newItem: Channel): Boolean {
+        private const val CATEGORY = 3
+        private const val CHANNEL = 4
+        private val COMPARATOR = object : DiffUtil.ItemCallback<ChannelUiItem>() {
+            override fun areItemsTheSame(oldItem: ChannelUiItem, newItem: ChannelUiItem): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Channel, newItem: Channel): Boolean {
-                return oldItem == newItem
+            override fun areContentsTheSame(
+                oldItem: ChannelUiItem,
+                newItem: ChannelUiItem
+            ): Boolean {
+                return oldItem == newItem //&& (oldItem is ChannelUiItem.Channel && newItem is ChannelUiItem.Channel && oldItem.isSelected == newItem.isSelected)
             }
         }
     }

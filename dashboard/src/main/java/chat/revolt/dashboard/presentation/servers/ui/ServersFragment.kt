@@ -9,6 +9,7 @@ package chat.revolt.dashboard.presentation.servers.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import chat.revolt.core.extensions.load
 import chat.revolt.core.fragment.BaseFragment
 import chat.revolt.dashboard.R
 import chat.revolt.dashboard.databinding.ServersFragmentBinding
@@ -30,6 +31,14 @@ class ServersFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initializeServers()
+        initializeServerObservers()
+        initializeChannels()
+        initializeUserObserver()
+    }
+
+    private fun initializeServers() {
         adapter = ServersAdapter(onServerClick = {
             viewModel.changeServer(it)
         })
@@ -39,33 +48,47 @@ class ServersFragment :
                 adapter.submitList(it)
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+    }
 
-            viewModel.currentUser.collectLatest {
-                Glide.with(requireContext()).load(it.avatarUrl).into(binding.profile.avatar)
-            }
+    private fun initializeServerObservers() {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.serverName.collectLatest(binding.server.serverName::setText)
         }
 
-        viewModel.currentServer.observe { server ->
-            binding.server.serverName.text = server.name
-            updateBadge(server)
-            updateBanner(server)
-            val channelsAdapter = ChannelsAdapter()
-            binding.server.channels.adapter = channelsAdapter
-            viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-                viewModel.serverChannels.collectLatest {
-                    channelsAdapter.submitList(it)
-                }
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.serverBadgeRes.collectLatest(::updateBadge)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.serverBanner.collectLatest(::updateBanner)
+        }
+    }
+
+    private fun initializeChannels() {
+        val channelsAdapter =
+            ChannelsAdapter(onCategoryVisibilityChange = { categoryId, isVisible ->
+                viewModel.onCategoryVisibilityChange(categoryId, isVisible)
+            }, onChannelClick = {
+                viewModel.onChannelClick(it)
+            })
+        binding.server.channels.adapter = channelsAdapter
+        binding.server.channels.itemAnimator = null
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.channels.collectLatest {
+                channelsAdapter.submitList(it)
             }
         }
     }
 
-    private fun updateBadge(server: Server){
-        val badge = when(server.flags){
-            Server.Flags.Official -> R.drawable.ic_revolt_badge
-            Server.Flags.Verified -> R.drawable.ic_verified_badge
-            else -> null
+    private fun initializeUserObserver() {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.currentUserImageUrl.collectLatest { url ->
+                url?.let { binding.profile.avatar.load(it) }
+            }
         }
+    }
+
+    private fun updateBadge(badge: Int?){
         if(badge == null) {
             binding.server.serverBadge.visibility = View.GONE
         }
@@ -74,15 +97,15 @@ class ServersFragment :
             binding.server.serverBadge.visibility = View.VISIBLE
         }
     }
-    private fun updateBanner(server: Server){
-        if(server.banner == null) {
+
+    private fun updateBanner(banner: String?) {
+        if (banner == null) {
             binding.server.serverBanner.visibility = View.GONE
             binding.server.bannerShadow.visibility = View.GONE
-        }
-        else {
+        } else {
             binding.server.serverBanner.visibility = View.VISIBLE
             binding.server.bannerShadow.visibility = View.VISIBLE
-            Glide.with(requireContext()).load(server.banner!!.url).into(binding.server.serverBanner)
+            Glide.with(requireContext()).load(banner).into(binding.server.serverBanner)
         }
     }
 }

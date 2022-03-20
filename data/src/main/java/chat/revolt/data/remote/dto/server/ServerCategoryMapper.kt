@@ -15,7 +15,8 @@ class ServerCategoryMapper {
         return Server.Category(
             id = from.id,
             title = from.title,
-            channels = from.channels
+            channels = from.channels,
+            isVisible = null
         )
     }
 
