@@ -67,7 +67,8 @@ class SignInViewModel(
     }
 
     init {
-        if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
+        authenticateWebSocket("-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE")
+        //if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
     }
 
     fun solveCaptcha(ctx: WeakReference<Context>) {

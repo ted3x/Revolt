@@ -29,12 +29,16 @@ class ServersViewModel(
     val servers = serverManager.servers
     val channels = channelManager.channels
     val currentUserImageUrl: MutableStateFlow<String?> = MutableStateFlow(null)
+    val onServerChange: MutableStateFlow<String?> = MutableStateFlow(null)
 
     init {
         viewModelScope.launch {
             currentUser.collectLatest {
                 currentUserImageUrl.emit(it.avatarUrl)
             }
+        }
+        serverManager.setOnServerChangeListener { _, _, selectedChannelId ->
+            viewModelScope.launch { onServerChange.emit(selectedChannelId) }
         }
     }
 
@@ -51,5 +55,9 @@ class ServersViewModel(
         viewModelScope.launch { serverManager.updateSelectedChannel(channelId) }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        serverManager.destroy()
+    }
 
 }

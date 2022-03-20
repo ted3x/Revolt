@@ -13,6 +13,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
+import java.util.*
 
 class ServerManager(private val serversRepository: ServerRepository) {
 
@@ -28,8 +29,8 @@ class ServerManager(private val serversRepository: ServerRepository) {
     val serverBanner: MutableStateFlow<String?> = MutableStateFlow(null)
     val serverName: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    var onServerChange: ((serverId: String, categories: List<Server.Category>?, selectedChannelId: String) -> Unit)? =
-        null
+    private var onServerChangeListeners: MutableMap<Int, ((serverId: String, categories: List<Server.Category>?, selectedChannelId: String) -> Unit)?> =
+        mutableMapOf()
 
     fun initServer(serverId: String) {
         currentServerJob?.cancel()
@@ -48,13 +49,15 @@ class ServerManager(private val serversRepository: ServerRepository) {
                         updateSelectedChannel(selectedChannelId!!)
                     }
 
-                    onServerChange?.invoke(server.id, categories, selectedChannelId!!)
+                    onServerChangeListeners.forEach {
+                        it.value?.invoke(server.id, categories, selectedChannelId!!)
+                    }
                 }
         }
     }
 
     fun setOnServerChangeListener(listener: (serverId: String, categories: List<Server.Category>?, selectedChannelId: String) -> Unit) {
-        this.onServerChange = listener
+        onServerChangeListeners[onServerChangeListeners.size] = listener
     }
 
     suspend fun updateSelectedChannel(channelId: String) {
@@ -77,5 +80,12 @@ class ServerManager(private val serversRepository: ServerRepository) {
             Server.Flags.Verified -> R.drawable.ic_verified_badge
             else -> null
         }
+    }
+
+    fun destroy() {
+        for(i in 0..onServerChangeListeners.size) {
+            onServerChangeListeners[i] = null
+        }
+        onServerChangeListeners.clear()
     }
 }

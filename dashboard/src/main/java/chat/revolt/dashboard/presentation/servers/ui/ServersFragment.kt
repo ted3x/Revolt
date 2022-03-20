@@ -61,6 +61,10 @@ class ServersFragment :
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.serverBanner.collectLatest(::updateBanner)
         }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.onServerChange.collectLatest { channelId -> if(channelId != null) changeChannel(channelId) }
+        }
     }
 
     private fun initializeChannels() {
@@ -69,7 +73,7 @@ class ServersFragment :
                 viewModel.onCategoryVisibilityChange(categoryId)
             }, onChannelClick = {
                 viewModel.onChannelClick(it)
-                (parentFragment as ChannelChangeListener).onChannelChange(it)
+                changeChannel(it)
             })
         binding.server.channels.adapter = channelsAdapter
         binding.server.channels.itemAnimator = null
@@ -107,5 +111,9 @@ class ServersFragment :
             binding.server.bannerShadow.visibility = View.VISIBLE
             Glide.with(requireContext()).load(banner).into(binding.server.serverBanner)
         }
+    }
+
+    private fun changeChannel(channelId: String) {
+        (parentFragment as ChannelChangeListener).onChannelChange(channelId)
     }
 }

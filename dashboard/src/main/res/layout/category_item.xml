@@ -16,7 +16,6 @@
         android:layout_width="@dimen/dimen_p_20"
         android:layout_height="@dimen/dimen_p_20"
         android:layout_marginStart="@dimen/dimen_p_10"
-        android:interpolator="@android:anim/linear_interpolator"
         android:src="@drawable/ic_arrow_down"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/categoryName"
