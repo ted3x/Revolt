@@ -12,15 +12,16 @@ import chat.revolt.core.paging_manager.LoadingAdapter
 import chat.revolt.core.paging_manager.LoadingAdapterListener
 import chat.revolt.dashboard.presentation.chat_fragment.adapter.view_holders.GroupedTextMessageViewHolder
 import chat.revolt.dashboard.presentation.chat_fragment.adapter.view_holders.MessageViewHolder
-import chat.revolt.dashboard.presentation.chat_fragment.adapter.view_holders.SystemTextMessageViewHolder
 import chat.revolt.dashboard.presentation.chat_fragment.adapter.view_holders.TextMessageViewHolder
-import chat.revolt.domain.models.Message
 
 class MessagesAdapter(listener: LoadingAdapterListener) :
-    LoadingAdapter<Message, LoadingAdapter.BaseLoadingAdapterViewHolder>(Comparator, listener) {
+    LoadingAdapter<MessageUiModel, LoadingAdapter.BaseLoadingAdapterViewHolder>(
+        Comparator,
+        listener
+    ) {
 
-    override val emptyItem: Message
-        get() = Message.EMPTY
+    override val emptyItem: MessageUiModel
+        get() = MessageUiModel.EMPTY
 
     override val loadOffset: Int = 10
 
@@ -28,7 +29,7 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
         return when (viewType) {
             MESSAGE -> TextMessageViewHolder(parent)
             GROUPED_MESSAGE -> GroupedTextMessageViewHolder(parent)
-            SYSTEM_MESSAGE -> SystemTextMessageViewHolder(parent)
+            //SYSTEM_MESSAGE -> SystemTextMessageViewHolder(parent)
             else -> throw IllegalStateException("")
         }
     }
@@ -40,22 +41,25 @@ class MessagesAdapter(listener: LoadingAdapterListener) :
 
     override fun getViewType(position: Int): Int {
         val item = getItem(position)
-        return if (item?.content is Message.Content.Text || item?.content is Message.Content.Message) {
-            if (position == itemCount - 1) MESSAGE else {
-                val previousItem = getItem(position + 1)
-                if (previousItem == null || item.isDivided(previousItem)) MESSAGE else GROUPED_MESSAGE
-            }
-        } else if (item?.content is Message.SystemMessage) SYSTEM_MESSAGE
-        else -1
+        return if (position == itemCount - 1) MESSAGE else {
+            val previousItem = getItem(position + 1)
+            if (previousItem == null || item.isDivided(previousItem)) MESSAGE else GROUPED_MESSAGE
+        }
     }
 
     companion object {
-        object Comparator : DiffUtil.ItemCallback<Message>() {
-            override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
+        object Comparator : DiffUtil.ItemCallback<MessageUiModel>() {
+            override fun areItemsTheSame(
+                oldItem: MessageUiModel,
+                newItem: MessageUiModel
+            ): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
+            override fun areContentsTheSame(
+                oldItem: MessageUiModel,
+                newItem: MessageUiModel
+            ): Boolean {
                 return oldItem == newItem
             }
         }

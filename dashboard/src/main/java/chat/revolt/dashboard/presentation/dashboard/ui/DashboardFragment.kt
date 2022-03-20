@@ -68,11 +68,11 @@ class DashboardFragment :
         super.onDestroy()
     }
 
-    override fun onChannelChange(channelId: String) {
-        chatFragment?.onChannelChange(channelId)
+    override fun onChannelChange(serverId: String, channelId: String) {
+        chatFragment?.onChannelChange(serverId, channelId)
     }
 }
 
 interface ChannelChangeListener {
-    fun onChannelChange(channelId: String)
+    fun onChannelChange(serverId: String, channelId: String)
 }

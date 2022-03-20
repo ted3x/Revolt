@@ -103,8 +103,8 @@ class ChatFragment :
         binding.input.hint = "Message $channelName"
     }
 
-    override fun onChannelChange(channelId: String) {
+    override fun onChannelChange(serverId: String, channelId: String) {
         if(viewModel.currentChannel.value?.id != channelId)
-            viewModel.changeChannel(channelId)
+            viewModel.changeChannel(serverId, channelId)
     }
 }

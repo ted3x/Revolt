@@ -11,22 +11,26 @@ import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.MessagesRepository
 import chat.revolt.dashboard.presentation.chat_fragment.MessagesManager
+import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessageUiModel
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.models.User
 import chat.revolt.domain.models.channel.Channel
+import chat.revolt.domain.models.member.Member
 import chat.revolt.domain.repository.ChannelRepository
+import chat.revolt.domain.repository.UserRepository
+import chat.revolt.domain.repository.member.MemberRepository
 import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.cancellable
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
     private val dataSource: ServerDataSource,
     private val manager: MessagesManager,
     private val messagesRepository: MessagesRepository,
-    private val channelRepository: ChannelRepository
+    private val channelRepository: ChannelRepository,
+    private val userRepository: UserRepository,
+    private val memberRepository: MemberRepository
 ) : BaseViewModel() {
 
     val typers: MutableLiveData<String?> = MutableLiveData()
@@ -35,25 +39,43 @@ class ChatViewModel(
     private lateinit var channelStartTypingListener: Job
     private lateinit var channelStopTypingListener: Job
     val currentChannel = MutableLiveData<Channel>()
-    val flow get() = manager.getMessages()
-    val initialMessages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
+    val flow get() = manager.getMessages().mapLatest { it.map { mapToUiModel(it) } }
+    val initialMessages: MutableStateFlow<List<MessageUiModel>> = MutableStateFlow(emptyList())
     val isEndReached = manager.isEndReached
     val initialPhaseFinished = MutableLiveData(false)
 
+    var currentServer: String? = null
     private var loadingJob: Job? = null
+
+    private suspend fun mapToUiModel(message: Message): MessageUiModel {
+        val user = memberRepository.getMember(currentServer!!, message.authorId)
+            ?: userRepository.getUser(message.authorId)
+        return MessageUiModel(
+            id = message.id,
+            authorId = message.authorId,
+            authorName = if(user is Member) user.nickname ?: "" else if(user is User) user.username else "",
+            authorAvatarUrl = if(user is Member) user.avatar?.url ?: "" else if(user is User) user.avatarUrl else "",
+            content = if(message.content is Message.Content.Message) (message.content as Message.Content.Message).content else "",
+            attachments = message.attachments,
+            edited = message.edited,
+            mentions = message.mentions,
+            replies = message.replies
+        )
+    }
 
     fun loadMore(isInitial: Boolean = false) {
         loadingJob = viewModelScope.launch {
             manager.loadMore(isInitial)
-            if(isInitial)
+            if (isInitial)
                 initialPhaseFinished.postValue(true)
         }
     }
 
-    fun changeChannel(channelId: String) {
+    fun changeChannel(serverId: String, channelId: String) {
+        currentServer = serverId
         loadingJob?.cancel()
         manager.initChannel(channelId)
-        viewModelScope.launch { initialMessages.emit(manager.getInitialMessages()) }
+        viewModelScope.launch { initialMessages.emit(manager.getInitialMessages().map { mapToUiModel(it) }) }
         stopEventListeners()
         typersList.clear()
         typers.value = null

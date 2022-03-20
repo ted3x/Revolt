@@ -23,5 +23,5 @@ interface MemberDao {
     fun getMembers(serverId: String): Flow<List<MemberEntity>>
 
     @Query("SELECT * FROM members WHERE serverId LIKE :serverId AND userId LIKE :userId LIMIT 1")
-    fun getMember(serverId: String, userId: String): MemberEntity?
+    suspend fun getMember(serverId: String, userId: String): MemberEntity?
 }

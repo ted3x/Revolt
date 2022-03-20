@@ -55,6 +55,8 @@ class ServersViewModel(
         viewModelScope.launch { serverManager.updateSelectedChannel(channelId) }
     }
 
+    fun getCurrentServerId() = serverManager.currentServerId
+
     override fun onCleared() {
         super.onCleared()
         serverManager.destroy()

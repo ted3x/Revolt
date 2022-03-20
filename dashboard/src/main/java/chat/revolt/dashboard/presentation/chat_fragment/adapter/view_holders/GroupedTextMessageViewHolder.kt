@@ -9,6 +9,7 @@ package chat.revolt.dashboard.presentation.chat_fragment.adapter.view_holders
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import chat.revolt.dashboard.databinding.GroupedTextAdapterItemBinding
+import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessageUiModel
 import chat.revolt.domain.models.Message
 
 class GroupedTextMessageViewHolder(val parent: ViewGroup) :
@@ -20,8 +21,7 @@ class GroupedTextMessageViewHolder(val parent: ViewGroup) :
         )
     ) {
 
-    override fun onBind(item: Message) {
-        binding.text.text = (item.content as? Message.Content.Message)?.content
-            ?: (item.content as? Message.Content.Text)?.content
+    override fun onBind(item: MessageUiModel) {
+        binding.text.text = item.content
     }
 }

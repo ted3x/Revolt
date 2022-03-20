@@ -63,7 +63,12 @@ class ServersFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.onServerChange.collectLatest { channelId -> if(channelId != null) changeChannel(channelId) }
+            viewModel.onServerChange.collectLatest { channelId ->
+                if (channelId != null) changeChannel(
+                    viewModel.getCurrentServerId()!!,
+                    channelId
+                )
+            }
         }
     }
 
@@ -73,7 +78,7 @@ class ServersFragment :
                 viewModel.onCategoryVisibilityChange(categoryId)
             }, onChannelClick = {
                 viewModel.onChannelClick(it)
-                changeChannel(it)
+                changeChannel(viewModel.getCurrentServerId()!!, it)
             })
         binding.server.channels.adapter = channelsAdapter
         binding.server.channels.itemAnimator = null
@@ -92,11 +97,10 @@ class ServersFragment :
         }
     }
 
-    private fun updateBadge(badge: Int?){
-        if(badge == null) {
+    private fun updateBadge(badge: Int?) {
+        if (badge == null) {
             binding.server.serverBadge.visibility = View.GONE
-        }
-        else {
+        } else {
             binding.server.serverBadge.setBackgroundResource(badge)
             binding.server.serverBadge.visibility = View.VISIBLE
         }
@@ -113,7 +117,7 @@ class ServersFragment :
         }
     }
 
-    private fun changeChannel(channelId: String) {
-        (parentFragment as ChannelChangeListener).onChannelChange(channelId)
+    private fun changeChannel(serverId: String, channelId: String) {
+        (parentFragment as ChannelChangeListener).onChannelChange(serverId, channelId)
     }
 }

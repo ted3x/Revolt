@@ -57,7 +57,9 @@ val chatModule = module {
                 dataSource = get(),
                 manager = get(),
                 messagesRepository = get(),
-                channelRepository = get()
+                channelRepository = get(),
+                userRepository = get(),
+                memberRepository = get()
             )
         }
     }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import chat.revolt.core.extensions.toDate
 import chat.revolt.dashboard.databinding.TextAdapterItemBinding
+import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessageUiModel
 import chat.revolt.domain.UlidTimeDecoder
 import chat.revolt.domain.models.Message
 import com.bumptech.glide.Glide
@@ -22,10 +23,10 @@ class TextMessageViewHolder(val parent: ViewGroup) : MessageViewHolder<TextAdapt
     )
 ) {
 
-    override fun onBind(item: Message) {
-        //binding.authorName.text = item.authorName
+    override fun onBind(item: MessageUiModel) {
+        binding.authorName.text = item.authorName
         binding.date.text = item.timestamp.toDate(binding.root.context)
-        //Glide.with(binding.root.context).load(item.authorAvatarUrl).into(binding.authorImage)
+        Glide.with(binding.root.context).load(item.authorAvatarUrl).into(binding.authorImage)
         binding.text.text = (item.content as? Message.Content.Message)?.content
             ?: (item.content as? Message.Content.Text)?.content
     }
