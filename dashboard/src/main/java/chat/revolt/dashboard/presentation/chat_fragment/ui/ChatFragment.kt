@@ -22,6 +22,7 @@ import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessagesAdapter
 import chat.revolt.dashboard.presentation.chat_fragment.adapter.decorator.MessagesDecorator
 import chat.revolt.dashboard.presentation.chat_fragment.di.chatModule
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
+import chat.revolt.dashboard.presentation.dashboard.ui.ChannelChangeListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
 
 class ChatFragment :
-    BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragmentBinding::inflate) {
+    BaseFragment<ChatViewModel, ChatFragmentBinding>(ChatFragmentBinding::inflate), ChannelChangeListener {
 
     override val viewModel: ChatViewModel by viewModel()
     override val module: List<Module>
@@ -61,7 +62,6 @@ class ChatFragment :
         binding.chatRecyclerView.addItemDecoration(MessagesDecorator())
         binding.chatRecyclerView.layoutManager = lm
         binding.chatRecyclerView.adapter = adapter
-        //viewModel.changeChannel("01FVSDSHJ6QSH0DZJYEBTZ2FES")
         lifecycleScope.launchWhenCreated {
             viewModel.initialMessages.collectLatest(adapter::setList)
         }
@@ -77,8 +77,7 @@ class ChatFragment :
             }
         }
         viewModel.currentChannel.observe {
-            //TODO
-            setChannelName("General")
+            setChannelName(it.name)
             job?.cancel()
             isInitial = true
         }
@@ -93,9 +92,6 @@ class ChatFragment :
             viewModel.sendMessage(binding.input.text.toString())
             binding.input.editableText.clear()
         }
-        binding.plus.setOnClickListener {
-            viewModel.changeChannel("01F7ZSBSFHCAAJQ92ZGTY67HMN")
-        }
         binding.input.doOnTextChanged { _, _, _, _ ->
             binding.send.visibleIf { !binding.input.text.isNullOrBlank() }
         }
@@ -103,7 +99,10 @@ class ChatFragment :
 
     private fun setChannelName(channelName: String) {
         binding.header.channelName.text = channelName
-        //TODO
         binding.input.hint = "Message $channelName"
+    }
+
+    override fun onChannelChange(channelId: String) {
+        viewModel.changeChannel(channelId)
     }
 }

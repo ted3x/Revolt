@@ -25,9 +25,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.module.Module
 
 class DashboardFragment :
-    BaseFragment<DashboardViewModel, DashboardFragmentBinding>(DashboardFragmentBinding::inflate) {
+    BaseFragment<DashboardViewModel, DashboardFragmentBinding>(DashboardFragmentBinding::inflate), ChannelChangeListener {
     override val viewModel: DashboardViewModel by viewModel()
     override val module: List<Module> = listOf(dashboardModule)
+
+    private var serverFragment: ServersFragment? = ServersFragment()
+    private var chatFragment: ChatFragment? = ChatFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +38,8 @@ class DashboardFragment :
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        childFragmentManager.beginTransaction().add(binding.startPanel.id, ServersFragment()).commit()
-        childFragmentManager.beginTransaction().add(binding.centerPanel.id, ChatFragment()).commit()
+        childFragmentManager.beginTransaction().add(binding.startPanel.id, serverFragment!!).commit()
+        childFragmentManager.beginTransaction().add(binding.centerPanel.id, chatFragment!!).commit()
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -58,4 +61,18 @@ class DashboardFragment :
             }
         }
     }
+
+    override fun onDestroy() {
+        serverFragment = null
+        chatFragment = null
+        super.onDestroy()
+    }
+
+    override fun onChannelChange(channelId: String) {
+        chatFragment?.onChannelChange(channelId)
+    }
+}
+
+interface ChannelChangeListener {
+    fun onChannelChange(channelId: String)
 }

@@ -12,6 +12,8 @@ import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.MessagesRepository
 import chat.revolt.dashboard.presentation.chat_fragment.MessagesManager
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.models.channel.Channel
+import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,8 @@ import kotlinx.coroutines.launch
 class ChatViewModel(
     private val dataSource: ServerDataSource,
     private val manager: MessagesManager,
-    private val messagesRepository: MessagesRepository
+    private val messagesRepository: MessagesRepository,
+    private val channelRepository: ChannelRepository
 ) : BaseViewModel() {
 
     val typers: MutableLiveData<String?> = MutableLiveData()
@@ -31,7 +34,7 @@ class ChatViewModel(
     private lateinit var messageListener: Job
     private lateinit var channelStartTypingListener: Job
     private lateinit var channelStopTypingListener: Job
-    val currentChannel = MutableLiveData<String>()
+    val currentChannel = MutableLiveData<Channel>()
     val flow get() = manager.getMessages()
     val initialMessages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val isEndReached = manager.isEndReached
@@ -51,19 +54,21 @@ class ChatViewModel(
         stopEventListeners()
         typersList.clear()
         typers.value = null
-        currentChannel.value = channelId
-        startEventListeners()
+        viewModelScope.launch {
+            currentChannel.postValue(channelRepository.getChannel(channelId))
+            startEventListeners(channelId)
+        }
         loadMore(isInitial = true)
     }
 
-    private fun startEventListeners() {
+    private fun startEventListeners(channelId: String) {
         messageListener = viewModelScope.launch {
-            dataSource.onMessage(channelId = currentChannel.value!!).cancellable().collect {
+            dataSource.onMessage(channelId = channelId).cancellable().collect {
                 messagesRepository.addMessage(it)
             }
         }
         channelStartTypingListener = viewModelScope.launch {
-            dataSource.onChannelStartTyping(currentChannel.value!!).cancellable().collect {
+            dataSource.onChannelStartTyping(channelId).cancellable().collect {
                 if (it.user.username !in typersList) {
                     typersList.add(it.user.username)
                     typers.postValue(getTypersMessage(typersList))
@@ -71,7 +76,7 @@ class ChatViewModel(
             }
         }
         channelStopTypingListener = viewModelScope.launch {
-            dataSource.onChannelStopTyping(currentChannel.value!!).cancellable().collect {
+            dataSource.onChannelStopTyping(channelId).cancellable().collect {
                 if (it.user.username in typersList) {
                     typersList.remove(it.user.username)
                     typers.postValue(getTypersMessage(typersList))
@@ -94,7 +99,7 @@ class ChatViewModel(
             channelStopTypingListener.cancel()
     }
 
-    fun getTypersMessage(typersList: MutableList<String>): String? {
+    private fun getTypersMessage(typersList: MutableList<String>): String? {
         val typers = typersList.size
         return when {
             typers == 1 -> "${typersList.first()} is typing..."

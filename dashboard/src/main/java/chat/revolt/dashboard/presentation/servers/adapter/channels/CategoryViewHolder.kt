@@ -13,7 +13,7 @@ import chat.revolt.dashboard.presentation.servers.adapter.ChannelUiItem
 
 class CategoryViewHolder(
     parent: ViewGroup,
-    onCategoryVisibilityChange: (categoryId: String, isVisible: Boolean) -> Unit
+    onCategoryVisibilityChange: (categoryId: String) -> Unit
 ) :
     BaseChannelViewHolder<CategoryItemBinding, ChannelUiItem.Category>(
         CategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,8 +24,7 @@ class CategoryViewHolder(
         binding.root.setOnClickListener {
             if(category == null) return@setOnClickListener
             else {
-                category!!.isVisible = category!!.isVisible.not()
-                onCategoryVisibilityChange.invoke(category!!.id, category!!.isVisible)
+                onCategoryVisibilityChange.invoke(category!!.id)
             }
         }
     }

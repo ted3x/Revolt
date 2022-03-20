@@ -13,9 +13,9 @@ import chat.revolt.domain.models.channel.Channel
 import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.domain.repository.UserRepository
 
-class ChannelMapper(private val attachmentMapper: AttachmentMapper) {
+class ChannelMapper(private val attachmentMapper: AttachmentMapper, private val userRepository: UserRepository) {
 
-    fun mapToDomain(from: ChannelDto): Channel {
+    suspend fun mapToDomain(from: ChannelDto): Channel {
         return when (from.channelType) {
             ChannelType.SavedMessages -> Channel.SavedMessages(
                 id = from.id,
@@ -24,6 +24,7 @@ class ChannelMapper(private val attachmentMapper: AttachmentMapper) {
             ChannelType.DirectMessage -> Channel.DirectMessage(
                 id = from.id,
                 active = from.active!!,
+                name = userRepository.getUser(from.recipients!!.last()).username,
                 recipients = from.recipients!!,
                 lastMessageId = from.lastMessageId
             )

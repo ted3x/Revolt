@@ -6,6 +6,8 @@
 
 package chat.revolt.dashboard.presentation.servers.di
 
+import chat.revolt.dashboard.presentation.servers.ChannelManager
+import chat.revolt.dashboard.presentation.servers.ServerManager
 import chat.revolt.dashboard.presentation.servers.ui.ServersFragment
 import chat.revolt.dashboard.presentation.servers.vm.ServersViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,9 +18,12 @@ val serversModule = module {
         viewModel {
             ServersViewModel(
                 userRepository = get(),
-                serversRepository = get(),
-                channelRepository = get()
+                channelManager = get(),
+                serverManager = get()
             )
         }
+
+        scoped { ServerManager(serversRepository = get()) }
+        scoped { ChannelManager(userRepository = get(), serverManager = get(), channelRepository = get()) }
     }
 }

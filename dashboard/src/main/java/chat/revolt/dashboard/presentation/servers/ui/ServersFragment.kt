@@ -11,13 +11,12 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import chat.revolt.core.extensions.load
 import chat.revolt.core.fragment.BaseFragment
-import chat.revolt.dashboard.R
 import chat.revolt.dashboard.databinding.ServersFragmentBinding
+import chat.revolt.dashboard.presentation.dashboard.ui.ChannelChangeListener
 import chat.revolt.dashboard.presentation.servers.adapter.ServersAdapter
 import chat.revolt.dashboard.presentation.servers.adapter.channels.ChannelsAdapter
 import chat.revolt.dashboard.presentation.servers.di.serversModule
 import chat.revolt.dashboard.presentation.servers.vm.ServersViewModel
-import chat.revolt.domain.models.server.Server
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -66,10 +65,11 @@ class ServersFragment :
 
     private fun initializeChannels() {
         val channelsAdapter =
-            ChannelsAdapter(onCategoryVisibilityChange = { categoryId, isVisible ->
-                viewModel.onCategoryVisibilityChange(categoryId, isVisible)
+            ChannelsAdapter(onCategoryVisibilityChange = { categoryId ->
+                viewModel.onCategoryVisibilityChange(categoryId)
             }, onChannelClick = {
                 viewModel.onChannelClick(it)
+                (parentFragment as ChannelChangeListener).onChannelChange(it)
             })
         binding.server.channels.adapter = channelsAdapter
         binding.server.channels.itemAnimator = null

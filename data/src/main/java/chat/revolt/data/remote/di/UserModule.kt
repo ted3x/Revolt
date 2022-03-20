@@ -76,7 +76,8 @@ val userModule = module {
 
     single {
         ChannelMapper(
-            attachmentMapper = get()
+            attachmentMapper = get(),
+            userRepository = get()
         )
     }
 

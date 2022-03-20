@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import chat.revolt.dashboard.presentation.servers.adapter.ChannelUiItem
 
 class ChannelsAdapter(
-    private val onCategoryVisibilityChange: (categoryId: String, isVisible: Boolean) -> Unit,
+    private val onCategoryVisibilityChange: (categoryId: String) -> Unit,
     private val onChannelClick: (channelId: String) -> Unit
 ) :
     ListAdapter<ChannelUiItem, BaseChannelViewHolder<*, in ChannelUiItem>>(COMPARATOR) {

@@ -23,6 +23,7 @@ class ChannelEntityMapper(private val attachmentMapper: AttachmentEntityMapper) 
             )
             ChannelType.DirectMessage -> Channel.DirectMessage(
                 id = from.id,
+                name = from.name!!,
                 active = from.active!!,
                 recipients = from.recipients!!,
                 lastMessageId = from.lastMessageId
