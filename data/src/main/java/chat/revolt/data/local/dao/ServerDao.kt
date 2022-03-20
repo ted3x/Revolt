@@ -33,4 +33,7 @@ interface ServerDao {
 
     @Query("UPDATE server SET selectedChannelId = :chanenlId WHERE id LIKE :serverId")
     suspend fun updateSelectedChannel(serverId: String, chanenlId: String)
+
+    @Query("DELETE FROM server WHERE id NOT IN (:servers)")
+    suspend fun syncServers(servers: List<String>)
 }

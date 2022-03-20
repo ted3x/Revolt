@@ -25,6 +25,8 @@ import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.core_navigation.features.Feature
 import chat.revolt.core_navigation.features.dashboard.DashboardStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
+import chat.revolt.domain.models.channel.Channel
+import chat.revolt.domain.models.server.Server
 import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.socket.client.data.AuthenticateEvent
@@ -124,12 +126,21 @@ class SignInViewModel(
         authenticateDataSource.authenticate(AuthenticateEvent(token = token))
         viewModelScope.launch {
             authenticateDataSource.onReady().collectLatest {
-                channelRepository.addChannels(it.channels)
-                serverRepository.addServers(it.servers)
+                syncAndAddChannels(it.channels)
+                syncAndAddServers(it.servers)
                 navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
             }
         }
+    }
 
+    private suspend fun syncAndAddChannels(channels: List<Channel>){
+        channelRepository.syncChannels(channels.map { it.id })
+        channelRepository.addChannels(channels)
+    }
+
+    private suspend fun syncAndAddServers(servers: List<Server>){
+        serverRepository.syncServers(servers.map { it.id })
+        serverRepository.addServers(servers)
     }
 
     override fun onCleared() {

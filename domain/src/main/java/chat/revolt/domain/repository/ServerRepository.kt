@@ -17,4 +17,5 @@ interface ServerRepository {
     fun getServers(): Flow<List<Server>>
     suspend fun updateCategory(serverId: String, categories: List<Server.Category>)
     suspend fun updateSelectedChannel(serverId: String, channelId: String)
+    suspend fun syncServers(servers: List<String>)
 }

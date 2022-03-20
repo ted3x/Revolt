@@ -33,13 +33,13 @@ class ServerRepositoryImpl(
             val server = serverEntityMapper.mapToEntity(it)
             val categories = server.categories?.map { category ->
                 category.copy(
-                    isVisible = serverEntity?.categories?.first { it.id == category.id }?.isVisible
+                    isVisible = serverEntity?.categories?.firstOrNull{ it.id == category.id }?.isVisible
                         ?: true
                 )
             }
             server.copy(
                 categories = categories,
-                selectedChannelId = serverEntity?.selectedChannelId
+                selectedChannelId = if(serverEntity?.selectedChannelId in server.channels) serverEntity?.selectedChannelId else server.channels.first()
             )
         })
     }
@@ -54,5 +54,9 @@ class ServerRepositoryImpl(
 
     override suspend fun updateSelectedChannel(serverId: String, channelId: String) {
         serverDao.updateSelectedChannel(serverId, channelId)
+    }
+
+    override suspend fun syncServers(servers: List<String>) {
+        serverDao.syncServers(servers)
     }
 }

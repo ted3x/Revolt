@@ -27,4 +27,7 @@ interface ChannelDao {
 
     @Query("SELECT * FROM channel WHERE server LIKE :serverId")
     fun getChannels(serverId: String): Flow<List<ChannelEntity>>
+
+    @Query("DELETE FROM channel WHERE id NOT IN (:channels)")
+    suspend fun syncChannels(channels: List<String>)
 }

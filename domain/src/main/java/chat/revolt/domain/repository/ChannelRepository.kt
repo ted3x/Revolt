@@ -14,4 +14,5 @@ interface ChannelRepository {
     fun getChannels(serverId: String): Flow<List<Channel>>
     suspend fun fetchChannel(channelId: String): Channel?
     suspend fun addChannels(channels: List<Channel>)
+    suspend fun syncChannels(channels: List<String>)
 }

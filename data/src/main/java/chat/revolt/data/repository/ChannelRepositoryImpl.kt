@@ -43,4 +43,8 @@ class ChannelRepositoryImpl(
     override suspend fun addChannels(channels: List<Channel>) {
         channelDao.addChannels(channels.map { channelEntityMapper.mapToEntity(it) })
     }
+
+    override suspend fun syncChannels(channels: List<String>) {
+        channelDao.syncChannels(channels)
+    }
 }
