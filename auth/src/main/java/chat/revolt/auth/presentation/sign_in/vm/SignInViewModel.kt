@@ -67,8 +67,7 @@ class SignInViewModel(
     }
 
     init {
-        authenticateWebSocket()
-        //if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
+        if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
     }
 
     fun solveCaptcha(ctx: WeakReference<Context>) {
@@ -114,14 +113,14 @@ class SignInViewModel(
             signInUseCase.execute(params = request,
                 onLoading = { loadingManager.toggleLoading(it) },
                 onSuccess = {
-                    authenticateWebSocket()
+                    authenticateWebSocket(it.token)
                 }
             )
         }
     }
 
-    private fun authenticateWebSocket() {
-        authenticateDataSource.authenticate(AuthenticateEvent(token = "-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE"))
+    private fun authenticateWebSocket(token: String) {
+        authenticateDataSource.authenticate(AuthenticateEvent(token = token))
         viewModelScope.launch {
             authenticateDataSource.onReady().collectLatest {
                 channelRepository.addChannels(it.channels)

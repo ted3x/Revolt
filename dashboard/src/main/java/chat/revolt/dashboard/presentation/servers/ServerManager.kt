@@ -43,9 +43,10 @@ class ServerManager(private val serversRepository: ServerRepository) {
                     serverBanner.emit(server.banner?.url)
                     serverBadgeRes.emit(getServerBadge(server))
 
-                    if (selectedChannelId != server.selectedChannelId || server.selectedChannelId == null)
+                    if (selectedChannelId != server.selectedChannelId || server.selectedChannelId == null) {
                         selectedChannelId = server.selectedChannelId ?: server.channels.first()
-                            .also { updateSelectedChannel(selectedChannelId!!) }
+                        updateSelectedChannel(selectedChannelId!!)
+                    }
 
                     onServerChange?.invoke(server.id, categories, selectedChannelId!!)
                 }
