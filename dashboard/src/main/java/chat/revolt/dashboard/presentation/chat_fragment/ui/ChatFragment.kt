@@ -24,6 +24,7 @@ import chat.revolt.dashboard.presentation.chat_fragment.di.chatModule
 import chat.revolt.dashboard.presentation.chat_fragment.vm.ChatViewModel
 import chat.revolt.dashboard.presentation.dashboard.ui.ChannelChangeListener
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -67,7 +68,7 @@ class ChatFragment :
         }
         viewModel.initialPhaseFinished.observe { finished ->
             if (finished) {
-                job = lifecycleScope.launchWhenCreated {
+                job = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
                     viewModel.flow.cancellable().collectLatest {
                         adapter.setList(it)
                         if (isWaitingForFetch == true) viewModel.loadMore()
@@ -78,7 +79,7 @@ class ChatFragment :
         }
         viewModel.currentChannel.observe {
             setChannelName(it.name)
-            job?.cancel()
+            job?.cancelChildren()
             isInitial = true
         }
         viewModel.typers.observe {
@@ -103,6 +104,7 @@ class ChatFragment :
     }
 
     override fun onChannelChange(channelId: String) {
-        viewModel.changeChannel(channelId)
+        if(viewModel.currentChannel.value?.id != channelId)
+            viewModel.changeChannel(channelId)
     }
 }

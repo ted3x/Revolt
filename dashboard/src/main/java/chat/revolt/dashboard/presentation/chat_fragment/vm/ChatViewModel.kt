@@ -40,8 +40,10 @@ class ChatViewModel(
     val isEndReached = manager.isEndReached
     val initialPhaseFinished = MutableLiveData(false)
 
+    private var loadingJob: Job? = null
+
     fun loadMore(isInitial: Boolean = false) {
-        viewModelScope.launch {
+        loadingJob = viewModelScope.launch {
             manager.loadMore(isInitial)
             if(isInitial)
                 initialPhaseFinished.postValue(true)
@@ -49,6 +51,7 @@ class ChatViewModel(
     }
 
     fun changeChannel(channelId: String) {
+        loadingJob?.cancel()
         manager.initChannel(channelId)
         viewModelScope.launch { initialMessages.emit(manager.getInitialMessages()) }
         stopEventListeners()
