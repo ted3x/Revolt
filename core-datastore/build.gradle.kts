@@ -5,6 +5,8 @@ plugins {
 }
 
 android {
+    compileSdk = 31
+
     defaultConfig {
         minSdk = 23
     }
@@ -22,6 +24,9 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.moshi.core)
+    implementation(libs.androidx.dataStore.core)
+    implementation(libs.androidx.dataStore.preferences)
+    implementation(libs.kotlinx.serialization)
     ksp(libs.moshi.ksp)
     implementation(libs.glide.glide)
     annotationProcessor(libs.glide.kapt)
