@@ -8,7 +8,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
-object SecurityUtil {
+class SecurityUtil {
     private val provider = "AndroidKeyStore"
     private val cipher by lazy {
         Cipher.getInstance("AES/GCM/NoPadding")
