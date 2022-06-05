@@ -8,7 +8,5 @@ interface UserPreferences {
 
     suspend fun setUserStatus()
 
-    fun encrypt(text: String): String
-
-    fun decrypt(text: String): String?
+    suspend fun clearDataStore()
 }
