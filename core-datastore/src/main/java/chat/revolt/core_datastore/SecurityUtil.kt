@@ -1,4 +1,4 @@
-package com.example.core_datastore
+package chat.revolt.core_datastore
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties.*

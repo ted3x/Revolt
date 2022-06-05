@@ -1,9 +1,8 @@
-package com.example.core_datastore
+package chat.revolt.core_datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import kotlinx.coroutines.flow.Flow
 
 class UserPreferencesImpl(
     private val dataStore: DataStore<Preferences>,
