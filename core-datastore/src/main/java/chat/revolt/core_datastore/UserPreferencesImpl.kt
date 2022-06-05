@@ -8,6 +8,7 @@ import chat.revolt.core_datastore.UserPreferencesImpl.DataStoreConst.SECURED_DAT
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class UserPreferencesImpl(

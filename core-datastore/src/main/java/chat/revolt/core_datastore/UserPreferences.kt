@@ -4,9 +4,9 @@ interface UserPreferences {
 
     suspend fun changeTheme(lightTheme: Boolean)
 
-    suspend fun getUserStatus()
-
-    suspend fun setUserStatus()
+//    suspend fun getUserStatus()
+//
+//    suspend fun setUserStatus()
 
     suspend fun clearDataStore()
 }
