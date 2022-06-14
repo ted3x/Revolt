@@ -14,17 +14,13 @@ class PasswordValidation(private val resourceProvider: ResourceProvider) {
 
     fun invoke(password: String?): PasswordStates {
         return when {
-            password == null || password.length < 8 -> PasswordStates.Short(
-                message = resourceProvider.getString(
+            password.isNullOrBlank() -> PasswordStates.Empty
+            password.length < 8 -> PasswordStates.Short(message = resourceProvider.getString(
                     R.string.sign_in_too_short
-                )
-            )
-            password.length > 1024 ->
-                PasswordStates.Short(
-                    message = resourceProvider.getString(
+                ))
+            password.length > 1024 -> PasswordStates.Short(message = resourceProvider.getString(
                         R.string.sign_in_too_long
-                    )
-                )
+                    ))
             else -> PasswordStates.Valid
         }
     }

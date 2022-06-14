@@ -54,14 +54,14 @@ class SignInFragment :
 
     private fun onEmailStateChange(emailStates: EmailStates) {
         when (emailStates) {
-            is EmailStates.Valid -> binding.textField.error = null
+            is EmailStates.Valid, EmailStates.Empty -> binding.textField.error = null
             is EmailStates.Invalid -> binding.textField.error = emailStates.message
         }
     }
 
     private fun onPasswordStateChange(passwordStates: PasswordStates) {
         when (passwordStates) {
-            is PasswordStates.Valid -> binding.passwordTextField.error = null
+            is PasswordStates.Valid, PasswordStates.Empty -> binding.passwordTextField.error = null
             is PasswordStates.Short -> binding.passwordTextField.error = passwordStates.message
             is PasswordStates.Long -> binding.passwordTextField.error = passwordStates.message
         }

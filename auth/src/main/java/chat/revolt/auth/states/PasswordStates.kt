@@ -7,6 +7,7 @@
 package chat.revolt.auth.states
 
 sealed class PasswordStates {
+    object Empty : PasswordStates()
     object Valid: PasswordStates()
     data class Short(val message: String): PasswordStates()
     data class Long(val message: String): PasswordStates()

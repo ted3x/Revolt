@@ -14,7 +14,10 @@ import chat.revolt.core.resource_provider.ResourceProvider
 class EmailValidation(private val resourceProvider: ResourceProvider) {
 
     operator fun invoke(email: String?): EmailStates {
-        return if (email.isValidEmail()) EmailStates.Valid
-        else EmailStates.Invalid(message = resourceProvider.getString(R.string.sign_in_invalid_email))
+        return when{
+            email.isNullOrBlank() -> EmailStates.Empty
+            email.isValidEmail() -> EmailStates.Valid
+            else -> EmailStates.Invalid(message = resourceProvider.getString(R.string.sign_in_invalid_email))
+        }
     }
 }

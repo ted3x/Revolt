@@ -7,8 +7,9 @@
 package chat.revolt.auth.states
 
 sealed class EmailStates {
-    object Valid: EmailStates()
-    data class Invalid(val message: String): EmailStates()
+    object Empty : EmailStates()
+    object Valid : EmailStates()
+    data class Invalid(val message: String) : EmailStates()
 
     val isValid get() = this is Valid
 }
