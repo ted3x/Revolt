@@ -13,14 +13,15 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import chat.revolt.core.NetworkState
 import chat.revolt.core.network.NetworkStateManager
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class NetworkStateManagerImpl : NetworkStateManager,
     ConnectivityManager.NetworkCallback() {
+
+    val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     private val networkStateFlow: MutableStateFlow<NetworkState> =
         MutableStateFlow(NetworkState.Connected)
@@ -65,12 +66,12 @@ class NetworkStateManagerImpl : NetworkStateManager,
 
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
-        GlobalScope.launch { setState(NetworkState.Connected) }
+        scope.launch { setState(NetworkState.Connected) }
     }
 
     override fun onLost(network: Network) {
         super.onLost(network)
-        GlobalScope.launch { setState(NetworkState.Disconnected) }
+        scope.launch { setState(NetworkState.Disconnected) }
     }
 
     private fun getNetworkRequest(): NetworkRequest = NetworkRequest.Builder()
