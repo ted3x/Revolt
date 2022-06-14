@@ -12,22 +12,16 @@ import chat.revolt.app.MainActivity
 import chat.revolt.app.global_navigator.GlobalNavigatorImpl
 import chat.revolt.app.global_navigator.RVRouterImpl
 import chat.revolt.app.loading_manager.LoadingManagerImpl
-import chat.revolt.app.network.NetworkErrorHandlerImpl
-import chat.revolt.app.network.NetworkStateManagerImpl
-import chat.revolt.app.network.RevoltInterceptor
+import chat.revolt.app.network.*
 import chat.revolt.app.resource_provider.ResourceProviderImpl
 import chat.revolt.app.revolt_config_manager.RevoltConfigManagerImpl
 import chat.revolt.auth.navigator.AuthNavigator
 import chat.revolt.auth.navigator.AuthNavigatorImpl
 import chat.revolt.core.NetworkErrorHandler
-import chat.revolt.core.NetworkState
 import chat.revolt.core.loading_manager.LoadingManager
 import chat.revolt.core.network.NetworkStateManager
 import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core.server_config.RevoltConfigManager
-import chat.revolt.core_datastore.SecurityUtil
-import chat.revolt.core_datastore.UserPreferences
-import chat.revolt.core_datastore.UserPreferencesImpl
 import chat.revolt.core_datastore.di.dataStoreModule
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
@@ -46,10 +40,7 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.squareup.moshi.Moshi
-import okhttp3.Authenticator
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.binds
 import org.koin.dsl.module
@@ -87,10 +78,12 @@ val networkModule = module {
     single { MoshiConverterFactory.create(get()) }
     single<AccountRepository> { AccountRepositoryImpl(accountDao = get()) }
     single { RevoltInterceptor(accountRepository = get()) }
-    single { HttpLoggingInterceptor().also { it.level = HttpLoggingInterceptor.Level.BODY } }
+    single<HttpLogger> { HttpLoggerImpl(BuildConfig.DEBUG) }
+    single { HttpLoggingInterceptor(get()).also { it.setLevel(HttpLoggingInterceptor.Level.BODY) } }
     single {
         OkHttpClient.Builder()
             .addInterceptor(get<RevoltInterceptor>())
+            .addInterceptor(get<HttpLoggingInterceptor>())
             .build()
     }
     single {
