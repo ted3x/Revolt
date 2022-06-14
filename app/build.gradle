@@ -17,7 +17,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "APP_BASE_URL", "\"https://api.revolt.chat/\""
+        }
+
         release {
+            buildConfigField "String", "APP_BASE_URL", "\"https://api.revolt.chat/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -52,6 +57,7 @@ dependencies {
     implementation project(':styles')
     implementation project(':splash')
     implementation project(':socket')
+    implementation project(':core-datastore')
     implementation libs.scarlet.scarlet
     implementation libs.scarlet.lifecycle
     implementation libs.scarlet.okhttp

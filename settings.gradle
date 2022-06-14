@@ -4,7 +4,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "Revolt"
@@ -20,3 +19,4 @@ include ':domain'
 include ':splash'
 include ':dashboard'
 include ':socket'
+include ':core-datastore'
