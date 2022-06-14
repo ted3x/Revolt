@@ -11,7 +11,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "account")
 data class AccountEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val token: String
+    @PrimaryKey
+    val userId: String,
+    val token: String,
+    val name: String
 )

@@ -6,14 +6,18 @@
 
 package chat.revolt.auth.domain.models.response
 
-import com.squareup.moshi.Json
+import chat.revolt.domain.models.Account
 
 data class SignInResponse(
-    @Json(name = "_id")
-    val id: String?,
-    @Json(name = "user_id")
+    val id: String,
     val userId: String,
     val token: String,
     val name: String,
     val subscription: String?
-)
+) {
+    fun mapToAccount() = Account(
+        userId = userId,
+        token = token,
+        name = name
+    )
+}

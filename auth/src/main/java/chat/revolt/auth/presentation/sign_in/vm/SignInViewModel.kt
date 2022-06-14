@@ -27,8 +27,10 @@ import chat.revolt.core_navigation.features.dashboard.DashboardStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.domain.models.channel.Channel
 import chat.revolt.domain.models.server.Server
+import chat.revolt.domain.repository.AccountRepository
 import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.ServerRepository
+import chat.revolt.domain.repository.UserRepository
 import chat.revolt.socket.client.data.AuthenticateEvent
 import chat.revolt.socket.server.authenticate.AuthenticateDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +47,9 @@ class SignInViewModel(
     private val signInUseCase: SignInUseCase,
     private val authenticateDataSource: AuthenticateDataSource,
     private val serverRepository: ServerRepository,
-    private val channelRepository: ChannelRepository
+    private val channelRepository: ChannelRepository,
+    private val userRepository: UserRepository,
+    private val accountRepository: AccountRepository
 ) :
     BaseViewModel() {
 
@@ -69,8 +73,15 @@ class SignInViewModel(
     }
 
     init {
-        authenticateWebSocket("-RMd3HjT0-PhSZY7tGwKFy8lSx6KtnZHTyLo5wdR8sPOXE_4y7qol0JdrKZOWmwE")
-        //if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
+        if (isCaptchaEnabled) captchaManager.setListener(captchaListener)
+        viewModelScope.launch {
+            authenticateDataSource.onReady().collectLatest {
+                userRepository.addUsers(it.users)
+                syncAndAddChannels(it.channels)
+                syncAndAddServers(it.servers)
+                navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+            }
+        }
     }
 
     fun solveCaptcha(ctx: WeakReference<Context>) {
@@ -116,6 +127,7 @@ class SignInViewModel(
             signInUseCase.execute(params = request,
                 onLoading = { loadingManager.toggleLoading(it) },
                 onSuccess = {
+                    accountRepository.addAccount(it.mapToAccount())
                     authenticateWebSocket(it.token)
                 }
             )
@@ -124,13 +136,6 @@ class SignInViewModel(
 
     private fun authenticateWebSocket(token: String) {
         authenticateDataSource.authenticate(AuthenticateEvent(token = token))
-        viewModelScope.launch {
-            authenticateDataSource.onReady().collectLatest {
-                syncAndAddChannels(it.channels)
-                syncAndAddServers(it.servers)
-                navigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
-            }
-        }
     }
 
     private suspend fun syncAndAddChannels(channels: List<Channel>){

@@ -15,10 +15,10 @@ class RevoltInterceptor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val accessToken = "qUL5nTUE0PR6XOI7V2URjhA8A25y0FVmMYfmdeNwFH8OZG4W6ftJJAiYAAAS8PR1" ?: runBlocking { accountRepository.getToken()  }
+        val accessToken = runBlocking { accountRepository.getToken() }
         val newRequest = chain.request().newBuilder()
             .addHeader("Content-Type", "application/json")
-            .addHeader("x-session-token", accessToken!!)
+            .addHeader("x-session-token", accessToken ?: "")
             .build();
         return chain.proceed(newRequest);
     }

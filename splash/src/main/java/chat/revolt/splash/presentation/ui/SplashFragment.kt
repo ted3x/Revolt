@@ -21,13 +21,8 @@ class SplashFragment :
     override val viewModel: SplashViewModel by viewModel()
     override val module = splashModules
 
-    private val socket: ClientSocketManager by inject()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.fetchRevoltConfig()
-        viewModel.onUserFetch.observe {
-            if(it)
-                viewModel.initializeSocket(socket)
-        }
     }
 }

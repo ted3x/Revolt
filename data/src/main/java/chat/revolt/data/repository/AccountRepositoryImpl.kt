@@ -7,9 +7,22 @@
 package chat.revolt.data.repository
 
 import chat.revolt.data.local.dao.AccountDao
+import chat.revolt.data.local.mappers.AccountEntityMapper
+import chat.revolt.domain.models.Account
 import chat.revolt.domain.repository.AccountRepository
 
-class AccountRepositoryImpl(private val accountDao: AccountDao) : AccountRepository {
+class AccountRepositoryImpl(
+    private val accountDao: AccountDao,
+    private val accountMapper: AccountEntityMapper
+) : AccountRepository {
+    override suspend fun addAccount(account: Account) {
+        accountDao.insertAccount(accountMapper.mapToEntity(account))
+    }
+
+    override suspend fun getUserId(): String? {
+        return accountDao.getUserId()
+    }
+
     override suspend fun getToken(): String? {
         return accountDao.getToken()
     }

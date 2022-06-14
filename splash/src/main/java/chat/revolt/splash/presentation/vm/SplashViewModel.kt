@@ -17,6 +17,7 @@ import chat.revolt.core_navigation.features.auth.AuthStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.domain.interactors.AddUserInDbUseCase
 import chat.revolt.domain.interactors.GetUserUseCase
+import chat.revolt.domain.repository.AccountRepository
 import chat.revolt.socket.api.ClientSocketManager
 import chat.revolt.socket.api.RevoltSocketListener
 import chat.revolt.splash.domain.interactors.GetRevoltConfigUseCase
@@ -28,30 +29,30 @@ class SplashViewModel(
     private val revoltConfigManager: RevoltConfigManager,
     private val getUserUseCase: GetUserUseCase,
     private val addUserInDbUseCase: AddUserInDbUseCase,
+    private val accountRepository: AccountRepository,
+    private val socketManager: ClientSocketManager
 ) : BaseViewModel(), RevoltSocketListener {
 
-    val onUserFetch = MutableLiveData(false)
     fun fetchRevoltConfig() {
         viewModelScope.launch {
             getRevoltConfigUseCase.execute(params = Unit,
                 onSuccess = { revoltConfig ->
                     revoltConfigManager.setConfig(revoltConfig)
-                    fetchUser()
+                    accountRepository.getUserId()?.let { fetchUser(it) } ?: initializeSocket()
                 }
             )
         }
     }
 
-    private suspend fun fetchUser() {
-        getUserUseCase.execute(params = "01FVDATAJD2V5XTSZQ2B9DA876", onSuccess = {
+    private suspend fun fetchUser(userId: String) {
+        getUserUseCase.execute(params = userId, onSuccess = {
             addUserInDbUseCase.execute(params = it!!,
-                onSuccess = {
-                    onUserFetch.postValue(true)
-                })
+                onSuccess = { initializeSocket() }
+            )
         })
     }
 
-    fun initializeSocket(socketManager: ClientSocketManager) {
+    private fun initializeSocket() {
         viewModelScope.launch { socketManager.initialize(this@SplashViewModel) }
     }
     override fun onConnectionOpened() {

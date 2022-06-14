@@ -36,7 +36,8 @@ internal val signInViewModelModule = module {
                 authenticateDataSource = get(),
                 serverRepository = get(),
                 channelRepository = get(),
-                userRepository = get()
+                userRepository = get(),
+                accountRepository = get()
             )
         }
         scoped { PasswordValidation(resourceProvider = get()) }

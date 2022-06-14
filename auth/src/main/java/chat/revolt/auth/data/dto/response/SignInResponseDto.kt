@@ -12,7 +12,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SignInResponseDto(
     @Json(name = "_id")
-    val id: String?,
+    val id: String,
     @Json(name = "user_id")
     val userId: String,
     val token: String,

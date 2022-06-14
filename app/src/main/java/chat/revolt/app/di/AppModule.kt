@@ -76,7 +76,6 @@ val networkModule = module {
     single<NetworkErrorHandler> { NetworkErrorHandlerImpl(context = androidContext()) }
     single { Moshi.Builder().add(MessageContentAdapter()).build() }
     single { MoshiConverterFactory.create(get()) }
-    single<AccountRepository> { AccountRepositoryImpl(accountDao = get()) }
     single { RevoltInterceptor(accountRepository = get()) }
     single<HttpLogger> { HttpLoggerImpl(BuildConfig.DEBUG) }
     single { HttpLoggingInterceptor(get()).also { it.setLevel(HttpLoggingInterceptor.Level.BODY) } }

@@ -6,10 +6,7 @@
 
 package chat.revolt.data.remote.di
 
-import chat.revolt.data.local.mappers.AttachmentEntityMapper
-import chat.revolt.data.local.mappers.AvatarEntityMapper
-import chat.revolt.data.local.mappers.MetadataEntityMapper
-import chat.revolt.data.local.mappers.UserDBMapper
+import chat.revolt.data.local.mappers.*
 import chat.revolt.data.local.mappers.channel.ChannelEntityMapper
 import chat.revolt.data.local.mappers.server.*
 import chat.revolt.data.remote.data_source.UserDataSource
@@ -31,11 +28,13 @@ import chat.revolt.data.remote.mappers.server.ServerMapper
 import chat.revolt.data.remote.mappers.user.*
 import chat.revolt.data.remote.service.UserService
 import chat.revolt.data.remote.service.channel.ChannelService
+import chat.revolt.data.repository.AccountRepositoryImpl
 import chat.revolt.data.repository.ChannelRepositoryImpl
 import chat.revolt.data.repository.ServerRepositoryImpl
 import chat.revolt.data.repository.UserRepositoryImpl
 import chat.revolt.domain.interactors.AddUserInDbUseCase
 import chat.revolt.domain.interactors.GetUserUseCase
+import chat.revolt.domain.repository.AccountRepository
 import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.domain.repository.UserRepository
@@ -89,7 +88,8 @@ val userModule = module {
             userDao = get(),
             userDataSource = get(),
             userEntityMapper = get(),
-            userDtoMapper = get()
+            userDtoMapper = get(),
+            accountRepository = get()
         )
     }
 
@@ -146,5 +146,7 @@ val userModule = module {
     single { GetUserUseCase(repository = get()) }
     single { AddUserInDbUseCase(repository = get()) }
 
+    single<AccountRepository> { AccountRepositoryImpl(accountDao = get(), accountMapper = get()) }
+    single { AccountEntityMapper() }
 
 }

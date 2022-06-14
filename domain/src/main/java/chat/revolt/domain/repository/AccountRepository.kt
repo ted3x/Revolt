@@ -6,7 +6,11 @@
 
 package chat.revolt.domain.repository
 
+import chat.revolt.domain.models.Account
+
 interface AccountRepository {
 
+    suspend fun addAccount(account: Account)
+    suspend fun getUserId(): String?
     suspend fun getToken(): String?
 }

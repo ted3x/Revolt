@@ -19,11 +19,11 @@ interface UserDao {
     @Query("SELECT * FROM `user` WHERE `id` LIKE :userId LIMIT 1")
     suspend fun getUser(userId: String): UserEntity?
 
-    @Query("SELECT * FROM user WHERE relationship LIKE :relationship")
-    suspend fun getCurrentUser(relationship: UserEntity.RelationshipStatus = UserEntity.RelationshipStatus.User): UserEntity?
+    @Query("SELECT * FROM user WHERE id LIKE :userId")
+    suspend fun getCurrentUser(userId: String): UserEntity?
 
-    @Query("SELECT * FROM user WHERE relationship LIMIT 1")
-    fun getCurrentUserAsFlow(): Flow<UserEntity>?
+    @Query("SELECT * FROM user WHERE id LIKE :userId LIMIT 1")
+    fun getCurrentUserAsFlow(userId: String): Flow<UserEntity>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addUser(user: UserEntity)

@@ -21,8 +21,6 @@ class ServersViewModel(
     private val serverManager: ServerManager,
 ) : BaseViewModel() {
 
-    private val currentUser = userRepository.getCurrentUserAsFlow()
-
     val serverBadgeRes = serverManager.serverBadgeRes
     val serverBanner = serverManager.serverBanner
     val serverName = serverManager.serverName
@@ -33,7 +31,7 @@ class ServersViewModel(
 
     init {
         viewModelScope.launch {
-            currentUser.collectLatest {
+            userRepository.getCurrentUserAsFlow().collectLatest {
                 currentUserImageUrl.emit(it.avatarUrl)
             }
         }
