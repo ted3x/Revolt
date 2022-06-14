@@ -6,16 +6,25 @@
 
 package chat.revolt.dashboard.presentation.servers
 
+import chat.revolt.core.extensions.ResultWrapper.Companion.onError
+import chat.revolt.core.extensions.ResultWrapper.Companion.onSuccess
 import chat.revolt.dashboard.R
+import chat.revolt.dashboard.domain.models.fetch_members.FetchMembersRequest
+import chat.revolt.dashboard.domain.repository.members.MembersRepository
 import chat.revolt.domain.models.server.Server
 import chat.revolt.domain.repository.ServerRepository
+import chat.revolt.domain.repository.UserRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
 import java.util.*
 
-class ServerManager(private val serversRepository: ServerRepository) {
+class ServerManager(
+    private val serversRepository: ServerRepository,
+    private val membersRepository: MembersRepository,
+    private val userRepository: UserRepository
+) {
 
     private var coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private var currentServerJob: Job? = null
@@ -29,6 +38,8 @@ class ServerManager(private val serversRepository: ServerRepository) {
     val serverBanner: MutableStateFlow<String?> = MutableStateFlow(null)
     val serverName: MutableStateFlow<String?> = MutableStateFlow(null)
 
+    private val serversWithFetchedMembers = mutableMapOf<String, Boolean>()
+
     private var onServerChangeListeners: MutableMap<Int, ((serverId: String, categories: List<Server.Category>?, selectedChannelId: String) -> Unit)?> =
         mutableMapOf()
 
@@ -39,7 +50,10 @@ class ServerManager(private val serversRepository: ServerRepository) {
             serversRepository.getServerAsFlow(currentServerId!!).cancellable()
                 .collectLatest { server ->
                     categories = server.categories
-
+                    if(serversWithFetchedMembers[server.id] == null || serversWithFetchedMembers[server.id] == false) {
+                        fetchMembers(server.id)
+                        serversWithFetchedMembers[server.id] = true
+                    }
                     serverName.emit(server.name)
                     serverBanner.emit(server.banner?.url)
                     serverBadgeRes.emit(getServerBadge(server))
@@ -53,6 +67,15 @@ class ServerManager(private val serversRepository: ServerRepository) {
                         it.value?.invoke(server.id, categories, selectedChannelId!!)
                     }
                 }
+        }
+    }
+
+    private suspend fun fetchMembers(serverId: String) {
+        membersRepository.fetchMembers(request = FetchMembersRequest(serverId)).onSuccess {
+            membersRepository.addMembers(it.members)
+            userRepository.addUsers(it.users)
+        }.onError{ _, _ ->
+            serversWithFetchedMembers[serverId] = false
         }
     }
 
@@ -83,7 +106,7 @@ class ServerManager(private val serversRepository: ServerRepository) {
     }
 
     fun destroy() {
-        for(i in 0..onServerChangeListeners.size) {
+        for (i in 0..onServerChangeListeners.size) {
             onServerChangeListeners[i] = null
         }
         onServerChangeListeners.clear()

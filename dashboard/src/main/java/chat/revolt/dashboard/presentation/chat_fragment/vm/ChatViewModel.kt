@@ -10,15 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.dashboard.domain.repository.MessagesRepository
+import chat.revolt.dashboard.domain.repository.members.MembersRepository
 import chat.revolt.dashboard.presentation.chat_fragment.MessagesManager
 import chat.revolt.dashboard.presentation.chat_fragment.adapter.MessageUiModel
 import chat.revolt.domain.models.Message
-import chat.revolt.domain.models.User
 import chat.revolt.domain.models.channel.Channel
-import chat.revolt.domain.models.member.Member
 import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.UserRepository
-import chat.revolt.domain.repository.member.MemberRepository
 import chat.revolt.socket.server.ServerDataSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -30,7 +28,7 @@ class ChatViewModel(
     private val messagesRepository: MessagesRepository,
     private val channelRepository: ChannelRepository,
     private val userRepository: UserRepository,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MembersRepository
 ) : BaseViewModel() {
 
     val typers: MutableLiveData<String?> = MutableLiveData()
@@ -48,14 +46,14 @@ class ChatViewModel(
     private var loadingJob: Job? = null
 
     private suspend fun mapToUiModel(message: Message): MessageUiModel {
-        val user = memberRepository.getMember(currentServer!!, message.authorId)
-            ?: userRepository.getUser(message.authorId)
+        val member = memberRepository.getMember(currentServer!!, message.authorId)
+        val user = userRepository.getUser(message.authorId)
         return MessageUiModel(
             id = message.id,
             authorId = message.authorId,
-            authorName = if(user is Member) user.nickname ?: "" else if(user is User) user.username else "",
-            authorAvatarUrl = if(user is Member) user.avatar?.url ?: "" else if(user is User) user.avatarUrl else "",
-            content = if(message.content is Message.Content.Message) (message.content as Message.Content.Message).content else "",
+            authorName = member?.nickname?.replace(" ", "") ?: user.username,
+            authorAvatarUrl = member?.avatar?.url ?: user.avatarUrl,
+            content = if (message.content is Message.Content.Message) (message.content as Message.Content.Message).content else "",
             attachments = message.attachments,
             edited = message.edited,
             mentions = message.mentions,
@@ -75,7 +73,10 @@ class ChatViewModel(
         currentServer = serverId
         loadingJob?.cancel()
         manager.initChannel(channelId)
-        viewModelScope.launch { initialMessages.emit(manager.getInitialMessages().map { mapToUiModel(it) }) }
+        viewModelScope.launch {
+            initialMessages.emit(
+                manager.getInitialMessages().map { mapToUiModel(it) })
+        }
         stopEventListeners()
         typersList.clear()
         typers.value = null

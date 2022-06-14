@@ -6,7 +6,6 @@
 
 package chat.revolt.data.remote.di
 
-import chat.revolt.data.local.entity.server.ServerEntity
 import chat.revolt.data.local.mappers.AttachmentEntityMapper
 import chat.revolt.data.local.mappers.AvatarEntityMapper
 import chat.revolt.data.local.mappers.MetadataEntityMapper
@@ -36,13 +35,11 @@ import chat.revolt.data.remote.service.channel.ChannelService
 import chat.revolt.data.repository.ChannelRepositoryImpl
 import chat.revolt.data.repository.ServerRepositoryImpl
 import chat.revolt.data.repository.UserRepositoryImpl
-import chat.revolt.data.repository.member.MemberRepositoryImpl
 import chat.revolt.domain.interactors.AddUserInDbUseCase
 import chat.revolt.domain.interactors.GetUserUseCase
 import chat.revolt.domain.repository.ChannelRepository
 import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.domain.repository.UserRepository
-import chat.revolt.domain.repository.member.MemberRepository
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -147,7 +144,5 @@ val userModule = module {
     single { GetUserUseCase(repository = get()) }
     single { AddUserInDbUseCase(repository = get()) }
 
-    single { MemberMapper(attachmentMapper = get()) }
-    single { MemberEntityMapper(attachmentEntityMapper = get()) }
-    single<MemberRepository> { MemberRepositoryImpl(memberDao = get(), memberEntityMapper = get()) }
+
 }

@@ -15,16 +15,16 @@ import chat.revolt.core.network.NetworkStateManager
 import chat.revolt.dashboard.domain.models.fetch_messages.FetchMessagesRequest
 import chat.revolt.dashboard.domain.models.send_message.SendMessageRequest
 import chat.revolt.dashboard.domain.repository.MessagesRepository
+import chat.revolt.dashboard.domain.repository.members.MembersRepository
 import chat.revolt.data.local.database.RevoltDatabase
 import chat.revolt.domain.models.Message
 import chat.revolt.domain.repository.UserRepository
-import chat.revolt.domain.repository.member.MemberRepository
 
 class MessagesManager(
     private val database: RevoltDatabase,
     private val messagesRepository: MessagesRepository,
     private val userRepository: UserRepository,
-    private val memberRepository: MemberRepository,
+    private val memberRepository: MembersRepository,
     private val networkStateManager: NetworkStateManager
 ) {
 

@@ -23,7 +23,7 @@ val serversModule = module {
             )
         }
 
-        scoped { ServerManager(serversRepository = get()) }
+        scoped { ServerManager(serversRepository = get(), userRepository = get(), membersRepository = get()) }
         scoped { ChannelManager(userRepository = get(), serverManager = get(), channelRepository = get()) }
     }
 }
