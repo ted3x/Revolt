@@ -7,6 +7,7 @@
 package chat.revolt.app.di
 
 import androidx.fragment.app.FragmentActivity
+import chat.revolt.app.BuildConfig
 import chat.revolt.app.MainActivity
 import chat.revolt.app.global_navigator.GlobalNavigatorImpl
 import chat.revolt.app.global_navigator.RVRouterImpl
@@ -24,6 +25,9 @@ import chat.revolt.core.loading_manager.LoadingManager
 import chat.revolt.core.network.NetworkStateManager
 import chat.revolt.core.resource_provider.ResourceProvider
 import chat.revolt.core.server_config.RevoltConfigManager
+import chat.revolt.core_datastore.SecurityUtil
+import chat.revolt.core_datastore.UserPreferences
+import chat.revolt.core_datastore.UserPreferencesImpl
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
 import chat.revolt.dashboard.navigator.DashboardNavigator
@@ -89,7 +93,7 @@ val networkModule = module {
             .build()
     }
     single {
-        Retrofit.Builder().baseUrl(BASE_URL)
+        Retrofit.Builder().baseUrl(BuildConfig.APP_BASE_URL)
             .addConverterFactory(get<MoshiConverterFactory>())
             .client(get())
             .build()
@@ -105,6 +109,12 @@ val loadingManagerModule = module {
 val revoltConfigModule = module {
     single<RevoltConfigManager> { RevoltConfigManagerImpl() }
 }
+
+val dataStoreModule = module {
+    // missing inject datastore
+    single { SecurityUtil() }
+    single<UserPreferences> { UserPreferencesImpl(dataStore = get(), security = get())}
+}
 val appModules =
     listOf(
         globalNavigatorModule,
@@ -115,7 +125,6 @@ val appModules =
         loadingManagerModule,
         revoltConfigModule,
         revoltSocketModule,
-        userModule
+        userModule,
+        dataStoreModule
     )
-
-const val BASE_URL = "https://api.revolt.chat/"
