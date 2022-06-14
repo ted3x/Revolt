@@ -28,6 +28,7 @@ import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.core_datastore.SecurityUtil
 import chat.revolt.core_datastore.UserPreferences
 import chat.revolt.core_datastore.UserPreferencesImpl
+import chat.revolt.core_datastore.di.dataStoreModule
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.core_navigation.router.RVRouter
 import chat.revolt.dashboard.navigator.DashboardNavigator
@@ -110,11 +111,6 @@ val revoltConfigModule = module {
     single<RevoltConfigManager> { RevoltConfigManagerImpl() }
 }
 
-val dataStoreModule = module {
-    // missing inject datastore
-    single { SecurityUtil() }
-    single<UserPreferences> { UserPreferencesImpl(dataStore = get(), security = get())}
-}
 val appModules =
     listOf(
         globalNavigatorModule,
