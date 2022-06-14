@@ -35,7 +35,8 @@ internal val signInViewModelModule = module {
                 revoltConfigManager = get(),
                 authenticateDataSource = get(),
                 serverRepository = get(),
-                channelRepository = get()
+                channelRepository = get(),
+                userRepository = get()
             )
         }
         scoped { PasswordValidation(resourceProvider = get()) }

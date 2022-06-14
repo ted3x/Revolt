@@ -8,12 +8,16 @@ package chat.revolt.data.remote.mappers.channel
 
 import chat.revolt.data.remote.dto.channel.ChannelDto
 import chat.revolt.data.remote.dto.channel.ChannelType
+import chat.revolt.data.remote.dto.server.RolePermissionsMapper
 import chat.revolt.data.remote.mappers.message.AttachmentMapper
 import chat.revolt.domain.models.channel.Channel
-import chat.revolt.domain.repository.ServerRepository
 import chat.revolt.domain.repository.UserRepository
 
-class ChannelMapper(private val attachmentMapper: AttachmentMapper, private val userRepository: UserRepository) {
+class ChannelMapper(
+    private val attachmentMapper: AttachmentMapper,
+    private val userRepository: UserRepository,
+    private val permissionsMapper: RolePermissionsMapper
+) {
 
     suspend fun mapToDomain(from: ChannelDto): Channel {
         return when (from.channelType) {
@@ -25,7 +29,7 @@ class ChannelMapper(private val attachmentMapper: AttachmentMapper, private val 
                 id = from.id,
                 active = from.active!!,
                 name = userRepository.getUser(from.recipients!!.last()).username,
-                recipients = from.recipients!!,
+                recipients = from.recipients,
                 lastMessageId = from.lastMessageId
             )
             ChannelType.Group -> Channel.Group(
@@ -45,8 +49,8 @@ class ChannelMapper(private val attachmentMapper: AttachmentMapper, private val 
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToDomain(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToDomain(it.value) },
                 nsfw = from.nsfw,
                 lastMessageId = from.lastMessageId
             )
@@ -56,8 +60,8 @@ class ChannelMapper(private val attachmentMapper: AttachmentMapper, private val 
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToDomain(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToDomain(it.value) },
                 nsfw = from.nsfw,
             )
         }
@@ -95,8 +99,8 @@ class ChannelMapper(private val attachmentMapper: AttachmentMapper, private val 
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDto(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToDto(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToDto(it.value) },
                 nsfw = from.nsfw,
                 lastMessageId = from.lastMessageId,
                 channelType = ChannelType.TextChannel
@@ -107,8 +111,8 @@ class ChannelMapper(private val attachmentMapper: AttachmentMapper, private val 
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDto(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToDto(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToDto(it.value) },
                 nsfw = from.nsfw,
                 channelType = ChannelType.VoiceChannel
             )

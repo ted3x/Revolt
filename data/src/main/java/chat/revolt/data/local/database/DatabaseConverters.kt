@@ -8,6 +8,7 @@ package chat.revolt.data.local.database
 
 import androidx.room.TypeConverter
 import chat.revolt.data.local.entity.AttachmentEntity
+import chat.revolt.data.local.entity.RolePermissionsEntity
 import chat.revolt.data.local.entity.message.MessageEntity
 import chat.revolt.data.local.entity.server.ServerEntity
 import chat.revolt.data.local.entity.user.UserEntity
@@ -55,7 +56,13 @@ class DatabaseConverters {
         ServerEntity.Role::class.java
     )
     private val rolesAdapter = moshi.adapter<Map<String, ServerEntity.Role>>(rolesType)
-    private val intArrayAdapter = moshi.adapter(IntArray::class.java)
+    private val rolePermissionsType = Types.newParameterizedType(
+        Map::class.java,
+        String::class.java,
+        RolePermissionsEntity::class.java
+    )
+    private val rolePermissionsAdapter = moshi.adapter<Map<String, RolePermissionsEntity>>(rolePermissionsType)
+    private val defaultRolePermissionsAdapter = moshi.adapter(RolePermissionsEntity::class.java)
 
     @TypeConverter
     fun stringToRelationships(string: String): List<UserEntity.Relationship> {
@@ -171,13 +178,23 @@ class DatabaseConverters {
     }
 
     @TypeConverter
-    fun stringToIntArray(string: String): IntArray {
-        return intArrayAdapter.fromJson(string)!!
+    fun stringToRolePermissions(string: String): Map<String, RolePermissionsEntity>? {
+        return rolePermissionsAdapter.fromJson(string)
     }
 
     @TypeConverter
-    fun intArrayToString(array: IntArray): String {
-        return intArrayAdapter.toJson(array)
+    fun rolePermissionsToString(permissions: Map<String, RolePermissionsEntity>?): String {
+        return rolePermissionsAdapter.toJson(permissions)
+    }
+
+    @TypeConverter
+    fun stringToDefaultRolePermissions(string: String): RolePermissionsEntity? {
+        return defaultRolePermissionsAdapter.fromJson(string)
+    }
+
+    @TypeConverter
+    fun defaultRolePermissionsToString(permissions: RolePermissionsEntity?): String {
+        return defaultRolePermissionsAdapter.toJson(permissions)
     }
 
     @TypeConverter

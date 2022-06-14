@@ -9,6 +9,7 @@ package chat.revolt.data.local.entity.channel
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import chat.revolt.data.local.entity.AttachmentEntity
+import chat.revolt.data.local.entity.RolePermissionsEntity
 import chat.revolt.data.remote.dto.channel.ChannelType
 import chat.revolt.data.remote.dto.message.MessageDto
 import chat.revolt.data.remote.type.EventType
@@ -30,9 +31,9 @@ data class ChannelEntity(
     val ownerId: String? = null,
     val description: String? = null,
     val icon: AttachmentEntity? = null,
-    val permissions: Int? = null,
+    val permissions: Long? = null,
     val nsfw: Boolean? = null,
-    val defaultPermissions: Int? = null,
-    val rolePermissions: Map<String, Int>? = null,
+    val defaultPermissions: RolePermissionsEntity? = null,
+    val rolePermissions: Map<String, RolePermissionsEntity>? = null,
     val server: String? = null,
 )

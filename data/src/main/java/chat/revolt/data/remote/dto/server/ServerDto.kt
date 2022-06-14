@@ -7,6 +7,7 @@
 package chat.revolt.data.remote.dto.server
 
 import chat.revolt.data.remote.dto.AttachmentDto
+import chat.revolt.data.remote.dto.RolePermissionsDto
 import chat.revolt.data.remote.dto.message.MessageDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -24,7 +25,7 @@ data class ServerDto(
     val systemMessages: SystemMessageChannelsDto,
     val roles: Map<String, RoleDto>,
     @Json(name = "default_permissions")
-    val defaultPermissions: IntArray,
+    val defaultPermissions: Long,
     val icon: AttachmentDto?,
     val banner: AttachmentDto?,
     val nsfw: Boolean?,
@@ -55,60 +56,10 @@ data class ServerDto(
     @JsonClass(generateAdapter = true)
     data class RoleDto(
         val name: String,
-        val permissions: IntArray,
+        val permissions: RolePermissionsDto,
         @Json(name = "colour")
         val color: String?,
         val hoist: Boolean?,
         val rank: Int
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as RoleDto
-
-            if (name != other.name) return false
-            if (!permissions.contentEquals(other.permissions)) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = name.hashCode()
-            result = 31 * result + permissions.contentHashCode()
-            return result
-        }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ServerDto
-
-        if (id != other.id) return false
-        if (owner != other.owner) return false
-        if (name != other.name) return false
-        if (description != other.description) return false
-        if (channels != other.channels) return false
-        if (categories != other.categories) return false
-        if (systemMessages != other.systemMessages) return false
-        if (roles != other.roles) return false
-        if (!defaultPermissions.contentEquals(other.defaultPermissions)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + owner.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + channels.hashCode()
-        result = 31 * result + categories.hashCode()
-        result = 31 * result + systemMessages.hashCode()
-        result = 31 * result + roles.hashCode()
-        result = 31 * result + defaultPermissions.contentHashCode()
-        return result
-    }
+    )
 }

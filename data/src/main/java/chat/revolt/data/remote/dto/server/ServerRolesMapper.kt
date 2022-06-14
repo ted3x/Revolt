@@ -7,15 +7,14 @@
 package chat.revolt.data.remote.dto.server
 
 import chat.revolt.domain.models.server.Server
-import chat.revolt.domain.repository.ChannelRepository
 
-class ServerRolesMapper {
+class ServerRolesMapper(private val permissionsMapper: RolePermissionsMapper) {
 
     fun mapToDomain(id: String, from: ServerDto.RoleDto): Server.Role {
         return Server.Role(
             id = id,
             name = from.name,
-            permissions = from.permissions,
+            permissions = permissionsMapper.mapToDomain(from.permissions),
             color = from.color,
             hoist = from.hoist,
             rank = from.rank
@@ -26,7 +25,7 @@ class ServerRolesMapper {
         return from.associate {
             it.id to ServerDto.RoleDto(
                 name = it.name,
-                permissions = it.permissions,
+                permissions = permissionsMapper.mapToDto(it.permissions),
                 color = it.color,
                 hoist = it.hoist,
                 rank = it.rank

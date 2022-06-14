@@ -9,10 +9,14 @@ package chat.revolt.data.local.mappers.channel
 import chat.revolt.data.local.entity.channel.ChannelEntity
 import chat.revolt.data.local.mappers.AttachmentEntityMapper
 import chat.revolt.data.local.mappers.EntityDomainMapper
+import chat.revolt.data.local.mappers.server.RolePermissionsEntityMapper
 import chat.revolt.data.remote.dto.channel.ChannelType
 import chat.revolt.domain.models.channel.Channel
 
-class ChannelEntityMapper(private val attachmentMapper: AttachmentEntityMapper) :
+class ChannelEntityMapper(
+    private val attachmentMapper: AttachmentEntityMapper,
+    private val permissionsMapper: RolePermissionsEntityMapper
+) :
     EntityDomainMapper<ChannelEntity, Channel> {
 
     override fun mapToDomain(from: ChannelEntity): Channel {
@@ -45,8 +49,8 @@ class ChannelEntityMapper(private val attachmentMapper: AttachmentEntityMapper) 
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToDomain(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToDomain(it.value) },
                 nsfw = from.nsfw,
                 lastMessageId = from.lastMessageId
             )
@@ -56,8 +60,8 @@ class ChannelEntityMapper(private val attachmentMapper: AttachmentEntityMapper) 
                 name = from.name!!,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToDomain(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToDomain(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToDomain(it.value) },
                 nsfw = from.nsfw,
             )
         }
@@ -95,8 +99,8 @@ class ChannelEntityMapper(private val attachmentMapper: AttachmentEntityMapper) 
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToEntity(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToEntity(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToEntity(it.value) },
                 nsfw = from.nsfw,
                 lastMessageId = from.lastMessageId,
                 channelType = ChannelType.TextChannel
@@ -107,8 +111,8 @@ class ChannelEntityMapper(private val attachmentMapper: AttachmentEntityMapper) 
                 name = from.name,
                 description = from.description,
                 icon = from.icon?.let { attachmentMapper.mapToEntity(it) },
-                defaultPermissions = from.defaultPermissions,
-                rolePermissions = from.rolePermissions,
+                defaultPermissions = from.defaultPermissions?.let { permissionsMapper.mapToEntity(it) },
+                rolePermissions = from.rolePermissions?.mapValues { permissionsMapper.mapToEntity(it.value) },
                 nsfw = from.nsfw,
                 channelType = ChannelType.VoiceChannel
             )

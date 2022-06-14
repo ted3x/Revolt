@@ -8,6 +8,7 @@ package chat.revolt.domain.models.channel
 
 import chat.revolt.domain.models.Attachment
 import chat.revolt.domain.models.Message
+import chat.revolt.domain.models.RolePermissions
 import chat.revolt.domain.models.User
 import chat.revolt.domain.models.server.Server
 
@@ -31,7 +32,7 @@ sealed class Channel(open val id: String, open val name: String) {
         val description: String?,
         val lastMessageId: String?,
         val icon: Attachment?,
-        val permissions: Int?,
+        val permissions: Long?,
         val nsfw: Boolean?,
     ) : Channel(id, name)
 
@@ -41,8 +42,8 @@ sealed class Channel(open val id: String, open val name: String) {
         override val name: String,
         val description: String?,
         val icon: Attachment?,
-        val defaultPermissions: Int?,
-        val rolePermissions: Map<String, Int>?,
+        val defaultPermissions: RolePermissions?,
+        val rolePermissions: Map<String, RolePermissions>?,
         val nsfw: Boolean?,
         val lastMessageId: String?
     ) : Channel(id, name)
@@ -53,8 +54,8 @@ sealed class Channel(open val id: String, open val name: String) {
         override val name: String,
         val description: String?,
         val icon: Attachment?,
-        val defaultPermissions: Int?,
-        val rolePermissions: Map<String, Int>?,
+        val defaultPermissions: RolePermissions?,
+        val rolePermissions: Map<String, RolePermissions>?,
         val nsfw: Boolean?,
     ) : Channel(id, name)
 }

@@ -22,8 +22,8 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE relationship LIKE :relationship")
     suspend fun getCurrentUser(relationship: UserEntity.RelationshipStatus = UserEntity.RelationshipStatus.User): UserEntity?
 
-    @Query("SELECT * FROM user WHERE relationship LIKE :relationship")
-    fun getCurrentUserAsFlow(relationship: UserEntity.RelationshipStatus = UserEntity.RelationshipStatus.User): Flow<UserEntity>?
+    @Query("SELECT * FROM user WHERE relationship LIMIT 1")
+    fun getCurrentUserAsFlow(): Flow<UserEntity>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addUser(user: UserEntity)

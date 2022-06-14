@@ -11,18 +11,17 @@ import chat.revolt.data.local.mappers.AvatarEntityMapper
 import chat.revolt.data.local.mappers.MetadataEntityMapper
 import chat.revolt.data.local.mappers.UserDBMapper
 import chat.revolt.data.local.mappers.channel.ChannelEntityMapper
-import chat.revolt.data.local.mappers.member.MemberEntityMapper
 import chat.revolt.data.local.mappers.server.*
 import chat.revolt.data.remote.data_source.UserDataSource
 import chat.revolt.data.remote.data_source.UserDataSourceImpl
 import chat.revolt.data.remote.data_source.channel.ChannelDataSource
 import chat.revolt.data.remote.data_source.channel.ChannelDataSourceImpl
 import chat.revolt.data.remote.dto.server.ServerCategoryMapper
+import chat.revolt.data.remote.dto.server.RolePermissionsMapper
 import chat.revolt.data.remote.dto.server.ServerRolesMapper
 import chat.revolt.data.remote.dto.server.SystemMessagesMapper
 import chat.revolt.data.remote.mappers.MetadataMapper
 import chat.revolt.data.remote.mappers.channel.ChannelMapper
-import chat.revolt.data.remote.mappers.member.MemberMapper
 import chat.revolt.data.remote.mappers.message.AttachmentMapper
 import chat.revolt.data.remote.mappers.message.MasqueradeMapper
 import chat.revolt.data.remote.mappers.message.MessageContentMapper
@@ -78,7 +77,8 @@ val userModule = module {
     single {
         ChannelMapper(
             attachmentMapper = get(),
-            userRepository = get()
+            userRepository = get(),
+            permissionsMapper = get()
         )
     }
 
@@ -95,7 +95,8 @@ val userModule = module {
 
     single { SystemMessagesMapper() }
     single { ServerCategoryMapper() }
-    single { ServerRolesMapper() }
+    single { ServerRolesMapper(permissionsMapper = get()) }
+    single { RolePermissionsMapper() }
     single { ServerFlagsMapper() }
     single {
         ServerMapper(
@@ -118,7 +119,8 @@ val userModule = module {
     }
     single { ServerCategoryEntityMapper() }
     single { SystemMessagesEntityMapper() }
-    single { ServerRolesEntityMapper() }
+    single { ServerRolesEntityMapper(permissionsMapper = get()) }
+    single { RolePermissionsEntityMapper() }
     single { ServerFlagsEntityMapper() }
     single<ServerRepository> {
         ServerRepositoryImpl(
@@ -128,7 +130,7 @@ val userModule = module {
         )
     }
 
-    single { ChannelEntityMapper(attachmentMapper = get()) }
+    single { ChannelEntityMapper(attachmentMapper = get(), permissionsMapper = get()) }
     single { AttachmentEntityMapper(metadataMapper = get()) }
     single<ChannelService> { get<Retrofit>().create(ChannelService::class.java) }
     single<ChannelDataSource> { ChannelDataSourceImpl(service = get()) }

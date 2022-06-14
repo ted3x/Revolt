@@ -9,12 +9,12 @@ package chat.revolt.data.local.mappers.server
 import chat.revolt.data.local.entity.server.ServerEntity
 import chat.revolt.domain.models.server.Server
 
-class ServerRolesEntityMapper {
+class ServerRolesEntityMapper(private val permissionsMapper: RolePermissionsEntityMapper) {
     fun mapToDomain(id: String, from: ServerEntity.Role): Server.Role {
         return Server.Role(
             id = id,
             name = from.name,
-            permissions = from.permissions,
+            permissions = permissionsMapper.mapToDomain(from.permissions),
             color = from.color,
             hoist = from.hoist,
             rank = from.rank
@@ -25,7 +25,7 @@ class ServerRolesEntityMapper {
         return from.associate {
             it.id to ServerEntity.Role(
                 name = it.name,
-                permissions = it.permissions,
+                permissions = permissionsMapper.mapToEntity(it.permissions),
                 color = it.color,
                 hoist = it.hoist,
                 rank = it.rank
