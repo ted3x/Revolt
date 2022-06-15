@@ -6,7 +6,6 @@
 
 package chat.revolt.socket.di
 
-import androidx.lifecycle.LifecycleOwner
 import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.socket.SocketAPI
 import chat.revolt.socket.adapter.CoroutinesStreamAdapterFactory
@@ -18,9 +17,7 @@ import chat.revolt.socket.server.ServerDataSource
 import chat.revolt.socket.server.ServerDataSourceImpl
 import chat.revolt.socket.server.authenticate.AuthenticateDataSource
 import chat.revolt.socket.server.authenticate.AuthenticateDataSourceImpl
-import com.tinder.scarlet.Lifecycle
 import com.tinder.scarlet.Scarlet
-import com.tinder.scarlet.lifecycle.android.AndroidLifecycle
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -33,8 +30,8 @@ val revoltSocketModule = module {
             it.level = HttpLoggingInterceptor.Level.BODY
         })
     }
-    single(StringQualifier("WSS_URL")) { get<RevoltConfigManager>().getConfig().ws }
-    single { get<OkHttpClient>().newWebSocketFactory("wss://ws.revolt.chat") }
+    single(StringQualifier(WSS_URL)) { get<RevoltConfigManager>().getConfig().ws }
+    single { get<OkHttpClient>().newWebSocketFactory(get<String>(StringQualifier(WSS_URL))) }
     single {
         Scarlet.Builder()
             .webSocketFactory(factory = get())
@@ -62,3 +59,5 @@ val revoltSocketModule = module {
         )
     }
 }
+
+private const val WSS_URL = "WSS_URL"
