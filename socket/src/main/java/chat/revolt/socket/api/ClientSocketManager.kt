@@ -8,7 +8,6 @@ package chat.revolt.socket.api
 
 import chat.revolt.socket.SocketAPI
 import com.tinder.scarlet.WebSocket
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 class ClientSocketManager(private val socket: SocketAPI) {

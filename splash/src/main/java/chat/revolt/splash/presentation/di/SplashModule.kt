@@ -29,7 +29,6 @@ private val splashViewModelModule = module {
                 getUserUseCase = get(),
                 addUserInDbUseCase = get(),
                 accountRepository = get(),
-                socketManager = get()
             )
         }
     }

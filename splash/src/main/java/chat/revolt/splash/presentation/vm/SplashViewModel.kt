@@ -7,21 +7,23 @@
 package chat.revolt.splash.presentation.vm
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import chat.revolt.core.extensions.execute
 import chat.revolt.core.server_config.RevoltConfigManager
 import chat.revolt.core.view_model.BaseViewModel
 import chat.revolt.core_navigation.features.Feature
 import chat.revolt.core_navigation.features.auth.AuthStates
+import chat.revolt.core_navigation.features.dashboard.DashboardStates
 import chat.revolt.core_navigation.navigator.GlobalNavigator
 import chat.revolt.domain.interactors.AddUserInDbUseCase
 import chat.revolt.domain.interactors.GetUserUseCase
 import chat.revolt.domain.repository.AccountRepository
 import chat.revolt.socket.api.ClientSocketManager
 import chat.revolt.socket.api.RevoltSocketListener
+import chat.revolt.socket.di.revoltSocketModule
 import chat.revolt.splash.domain.interactors.GetRevoltConfigUseCase
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.get
 
 class SplashViewModel(
     private val globalNavigator: GlobalNavigator,
@@ -30,9 +32,9 @@ class SplashViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val addUserInDbUseCase: AddUserInDbUseCase,
     private val accountRepository: AccountRepository,
-    private val socketManager: ClientSocketManager
 ) : BaseViewModel(), RevoltSocketListener {
 
+    private var isUserLoggedIn = false
     fun fetchRevoltConfig() {
         viewModelScope.launch {
             getRevoltConfigUseCase.execute(params = Unit,
@@ -47,16 +49,27 @@ class SplashViewModel(
     private suspend fun fetchUser(userId: String) {
         getUserUseCase.execute(params = userId, onSuccess = {
             addUserInDbUseCase.execute(params = it!!,
-                onSuccess = { initializeSocket() }
+                onSuccess = {
+                    isUserLoggedIn = true
+                    initializeSocket()
+                }
             )
         })
     }
 
     private fun initializeSocket() {
-        viewModelScope.launch { socketManager.initialize(this@SplashViewModel) }
+        viewModelScope.launch {
+            // workaround because when created in constructor, socket instance is created before initializer
+            // so socket fails and skips onOpen
+            get<ClientSocketManager>(ClientSocketManager::class.java).initialize(
+                this@SplashViewModel
+            )
+        }
     }
+
     override fun onConnectionOpened() {
-        globalNavigator.navigateTo(Feature.Auth(state = AuthStates.SignIn))
+        if(isUserLoggedIn) globalNavigator.navigateTo(Feature.Dashboard(state = DashboardStates.Dashboard))
+        else globalNavigator.navigateTo(Feature.Auth(state = AuthStates.SignIn))
     }
 
     override fun onMessageReceived(message: String) {
