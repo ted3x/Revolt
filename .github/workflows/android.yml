@@ -14,7 +14,7 @@ jobs:
       with:
         java-version: 11
     - name: Build with Gradle (Pull Request)
-      run: ./build_pull_request.sh
+      run: bash ./build_pull_request.sh
       if: github.event_name == 'pull_request'
     - name: Build with Gradle (Push)
       run: ./gradlew clean ktlint build
