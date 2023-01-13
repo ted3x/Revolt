@@ -25,5 +25,5 @@ jobs:
         cache: gradle
 
     - name: Build with Gradle (Pull Request)
-      run: ./build_pull_request.sh
+      run: chmod +x ./build_pull_request.sh
       if: github.event_name == 'pull_request'
