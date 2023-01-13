@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Building Pull Request with 1"
 # Exit on error
-set -e
+# set -e
 echo "Building Pull Request with 2"
 # unshallow since GitHub actions does a shallow clone
 git fetch --unshallow
